@@ -31,7 +31,7 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
           <div className="flex items-start justify-between">
             <div>
               <DialogTitle className="text-2xl">{opportunity.description}</DialogTitle>
-              <p className="text-sm text-muted-foreground mt-1">ID: {opportunity.id}</p>
+              <p className="text-sm text-muted-foreground mt-1">Opportunity Number: {opportunity.id}</p>
             </div>
             {opportunity.isUrgent && (
               <Badge variant="destructive" className="flex items-center gap-1">

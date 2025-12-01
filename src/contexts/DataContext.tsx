@@ -35,6 +35,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     division: '',
     generalContractor: '',
     showBehindPAR: false,
+    status: '',
   });
 
   // Load data on mount
@@ -78,6 +79,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return jobSites.filter(site => {
       // Sales Rep filter
       if (filters.salesRepId && site.salesRepId !== parseInt(filters.salesRepId)) {
+        return false;
+      }
+
+      // Status filter
+      if (filters.status && site.statusId !== filters.status) {
         return false;
       }
 

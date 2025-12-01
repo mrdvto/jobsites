@@ -16,6 +16,7 @@ interface DataContextType {
   createNewOpportunity: (opportunity: Opportunity) => void;
   addSiteCompany: (siteId: number, company: any) => void;
   removeSiteCompany: (siteId: number, companyName: string) => void;
+  updateJobSite: (siteId: number, updates: Partial<JobSite>) => void;
   getSalesRepName: (id: number) => string;
   getStageName: (id: number) => string;
   calculateSiteRevenue: (site: JobSite) => number;
@@ -212,6 +213,20 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
   };
 
+  const updateJobSite = (siteId: number, updates: Partial<JobSite>) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          return {
+            ...site,
+            ...updates
+          };
+        }
+        return site;
+      })
+    );
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -225,6 +240,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         createNewOpportunity,
         addSiteCompany,
         removeSiteCompany,
+        updateJobSite,
         getSalesRepName,
         getStageName,
         calculateSiteRevenue,

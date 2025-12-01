@@ -290,7 +290,7 @@ const JobSiteDetail = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
+                  <TableHead>Opportunity Number</TableHead>
                   <TableHead>Description</TableHead>
                   <TableHead>Stage</TableHead>
                   <TableHead className="text-right">Est. Revenue</TableHead>

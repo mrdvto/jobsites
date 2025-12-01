@@ -152,7 +152,9 @@ const JobSiteDetail = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       <Mail className="h-3 w-3" />
-                      <span>{site.projectPrimaryContact.email}</span>
+                      <a href={`mailto:${site.projectPrimaryContact.email}`} className="text-primary hover:underline">
+                        {site.projectPrimaryContact.email}
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -239,7 +241,9 @@ const JobSiteDetail = () => {
                     </div>
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Mail className="h-3 w-3" />
-                      <span>{primaryGC.companyContact.email}</span>
+                      <a href={`mailto:${primaryGC.companyContact.email}`} className="text-primary hover:underline">
+                        {primaryGC.companyContact.email}
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -358,7 +362,11 @@ const JobSiteDetail = () => {
                       </div>
                     </TableCell>
                     <TableCell className="text-sm">{company.companyContact.phone}</TableCell>
-                    <TableCell className="text-sm">{company.companyContact.email}</TableCell>
+                    <TableCell className="text-sm">
+                      <a href={`mailto:${company.companyContact.email}`} className="text-primary hover:underline">
+                        {company.companyContact.email}
+                      </a>
+                    </TableCell>
                     <TableCell>
                       <Button
                         variant="ghost"

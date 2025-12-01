@@ -4,10 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useData } from '@/contexts/DataContext';
 import { useToast } from '@/hooks/use-toast';
 import { JobSite } from '@/types';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Check, ChevronsUpDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface EditJobSiteModalProps {
   site: JobSite;
@@ -16,9 +19,11 @@ interface EditJobSiteModalProps {
 }
 
 export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalProps) => {
-  const { updateJobSite } = useData();
+  const { updateJobSite, salesReps, getSalesRepName } = useData();
   const { toast } = useToast();
 
+  const [salesRepId, setSalesRepId] = useState(site.salesRepId);
+  const [salesRepOpen, setSalesRepOpen] = useState(false);
   const [description, setDescription] = useState(site.description);
   const [notes, setNotes] = useState<string[]>(site.notes || []);
   const [contactName, setContactName] = useState(site.projectPrimaryContact.name);
@@ -34,6 +39,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
 
   useEffect(() => {
     if (open) {
+      setSalesRepId(site.salesRepId);
       setDescription(site.description);
       setNotes(site.notes || []);
       setContactName(site.projectPrimaryContact.name);
@@ -82,6 +88,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
     }
 
     updateJobSite(site.id, {
+      salesRepId,
       description: description.trim(),
       notes,
       address: {
@@ -120,6 +127,55 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4 pb-4 border-b">
+            <h3 className="font-semibold">Sales Representative</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="salesRep">Assigned Sales Rep *</Label>
+              <Popover open={salesRepOpen} onOpenChange={setSalesRepOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={salesRepOpen}
+                    className="w-full justify-between"
+                  >
+                    {salesRepId ? getSalesRepName(salesRepId) : "Select sales rep..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search sales rep..." />
+                    <CommandList>
+                      <CommandEmpty>No sales rep found.</CommandEmpty>
+                      <CommandGroup>
+                        {salesReps.map((rep) => (
+                          <CommandItem
+                            key={rep.salesrepid}
+                            value={`${rep.firstname} ${rep.lastname}`}
+                            onSelect={() => {
+                              setSalesRepId(rep.salesrepid);
+                              setSalesRepOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                salesRepId === rep.salesrepid ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {rep.firstname} {rep.lastname}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+
           <div className="space-y-4 pb-4 border-b">
             <h3 className="font-semibold">Address</h3>
             

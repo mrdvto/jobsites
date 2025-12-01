@@ -140,7 +140,7 @@ const JobSiteDetail = () => {
                 </div>
                 <div>
                   <span className="text-muted-foreground">Planned Annual Rate</span>
-                  <p className="font-medium">{site.plannedAnnualRate} opportunities/year</p>
+                  <p className="font-medium">{site.plannedAnnualRate} sales activities/year</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Current Opportunities</span>

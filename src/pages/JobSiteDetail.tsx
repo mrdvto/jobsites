@@ -12,7 +12,8 @@ import { AssociateOpportunityModal } from '@/components/AssociateOpportunityModa
 import { CreateOpportunityModal } from '@/components/CreateOpportunityModal';
 import { AddGCModal } from '@/components/AddGCModal';
 import { AssociateCompanyModal } from '@/components/AssociateCompanyModal';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X } from 'lucide-react';
+import { EditJobSiteModal } from '@/components/EditJobSiteModal';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const JobSiteDetail = () => {
@@ -29,6 +30,7 @@ const JobSiteDetail = () => {
   const [showAssociateCompanyModal, setShowAssociateCompanyModal] = useState(false);
   const [showRemoveCompanyDialog, setShowRemoveCompanyDialog] = useState(false);
   const [companyToRemove, setCompanyToRemove] = useState<string | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -109,7 +111,17 @@ const JobSiteDetail = () => {
       <main className="container mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <Card className="p-6 lg:col-span-2">
-            <h2 className="text-lg font-semibold mb-4">Site Information</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Site Information</h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowEditModal(true)}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+            </div>
             
             <div className="space-y-4">
               <div className="flex items-start gap-3">
@@ -421,6 +433,12 @@ const JobSiteDetail = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <EditJobSiteModal
+        site={site}
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+      />
     </div>
   );
 };

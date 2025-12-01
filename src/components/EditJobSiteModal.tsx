@@ -115,7 +115,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
         <DialogHeader>
           <DialogTitle>Edit Job Site Details</DialogTitle>
           <DialogDescription>
-            Update the description, notes, and primary contact information for {site.name}.
+            Update the details for {site.name}.
           </DialogDescription>
         </DialogHeader>
 

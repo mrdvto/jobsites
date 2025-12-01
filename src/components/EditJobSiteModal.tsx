@@ -24,6 +24,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
 
   const [salesRepId, setSalesRepId] = useState(site.salesRepId);
   const [salesRepOpen, setSalesRepOpen] = useState(false);
+  const [plannedAnnualRate, setPlannedAnnualRate] = useState(site.plannedAnnualRate.toString());
   const [description, setDescription] = useState(site.description);
   const [notes, setNotes] = useState<string[]>(site.notes || []);
   const [contactName, setContactName] = useState(site.projectPrimaryContact.name);
@@ -40,6 +41,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
   useEffect(() => {
     if (open) {
       setSalesRepId(site.salesRepId);
+      setPlannedAnnualRate(site.plannedAnnualRate.toString());
       setDescription(site.description);
       setNotes(site.notes || []);
       setContactName(site.projectPrimaryContact.name);
@@ -87,8 +89,19 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
       return;
     }
 
+    const parsedRate = parseFloat(plannedAnnualRate);
+    if (isNaN(parsedRate) || parsedRate < 0) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid planned annual rate (must be 0 or greater).",
+        variant: "destructive"
+      });
+      return;
+    }
+
     updateJobSite(site.id, {
       salesRepId,
+      plannedAnnualRate: parseFloat(plannedAnnualRate),
       description: description.trim(),
       notes,
       address: {
@@ -128,51 +141,67 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4 pb-4 border-b">
-            <h3 className="font-semibold">Sales Representative</h3>
+            <h3 className="font-semibold">Sales Information</h3>
             
-            <div className="space-y-2">
-              <Label htmlFor="salesRep">Assigned Sales Rep *</Label>
-              <Popover open={salesRepOpen} onOpenChange={setSalesRepOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={salesRepOpen}
-                    className="w-full justify-between"
-                  >
-                    {salesRepId ? getSalesRepName(salesRepId) : "Select sales rep..."}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-full p-0" align="start">
-                  <Command>
-                    <CommandInput placeholder="Search sales rep..." />
-                    <CommandList>
-                      <CommandEmpty>No sales rep found.</CommandEmpty>
-                      <CommandGroup>
-                        {salesReps.map((rep) => (
-                          <CommandItem
-                            key={rep.salesrepid}
-                            value={`${rep.firstname} ${rep.lastname}`}
-                            onSelect={() => {
-                              setSalesRepId(rep.salesrepid);
-                              setSalesRepOpen(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                salesRepId === rep.salesrepid ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                            {rep.firstname} {rep.lastname}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="salesRep">Assigned Sales Rep *</Label>
+                <Popover open={salesRepOpen} onOpenChange={setSalesRepOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={salesRepOpen}
+                      className="w-full justify-between"
+                    >
+                      {salesRepId ? getSalesRepName(salesRepId) : "Select sales rep..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0" align="start">
+                    <Command>
+                      <CommandInput placeholder="Search sales rep..." />
+                      <CommandList>
+                        <CommandEmpty>No sales rep found.</CommandEmpty>
+                        <CommandGroup>
+                          {salesReps.map((rep) => (
+                            <CommandItem
+                              key={rep.salesrepid}
+                              value={`${rep.firstname} ${rep.lastname}`}
+                              onSelect={() => {
+                                setSalesRepId(rep.salesrepid);
+                                setSalesRepOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  salesRepId === rep.salesrepid ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {rep.firstname} {rep.lastname}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="plannedAnnualRate">Planned Annual Rate ($) *</Label>
+                <Input
+                  id="plannedAnnualRate"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={plannedAnnualRate}
+                  onChange={(e) => setPlannedAnnualRate(e.target.value)}
+                  placeholder="0.00"
+                  required
+                />
+              </div>
             </div>
           </div>
 

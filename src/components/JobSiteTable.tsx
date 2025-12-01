@@ -42,7 +42,9 @@ export const JobSiteTable = () => {
                 <TableCell>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                     site.statusId === 'Active' 
-                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400' 
+                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
+                      : site.statusId === 'Planning'
+                      ? 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-400'
                       : 'bg-muted text-muted-foreground'
                   }`}>
                     {site.statusId}

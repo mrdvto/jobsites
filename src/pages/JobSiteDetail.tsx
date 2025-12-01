@@ -6,21 +6,25 @@ import { Card } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { OpportunityDetailModal } from '@/components/OpportunityDetailModal';
 import { AssociateOpportunityModal } from '@/components/AssociateOpportunityModal';
 import { CreateOpportunityModal } from '@/components/CreateOpportunityModal';
 import { AddGCModal } from '@/components/AddGCModal';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon } from 'lucide-react';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const JobSiteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { jobSites, getSalesRepName, opportunities, getStageName } = useData();
+  const { jobSites, getSalesRepName, opportunities, getStageName, removeSiteCompany } = useData();
+  const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
   const [showOpportunityDetail, setShowOpportunityDetail] = useState(false);
   const [showAssociateModal, setShowAssociateModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showAddGCModal, setShowAddGCModal] = useState(false);
+  const [showRemoveGCDialog, setShowRemoveGCDialog] = useState(false);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -51,6 +55,17 @@ const JobSiteDetail = () => {
   };
 
   const primaryGC = site.siteCompanies.find(c => c.roleId === 'GC' && c.isPrimaryContact);
+
+  const handleRemoveGC = () => {
+    if (primaryGC) {
+      removeSiteCompany(site.id, primaryGC.companyName);
+      toast({
+        title: "Success",
+        description: "General Contractor removed successfully."
+      });
+      setShowRemoveGCDialog(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -152,9 +167,21 @@ const JobSiteDetail = () => {
             </Card>
 
             <Card className="p-6">
-              <div className="flex items-center gap-2 mb-3">
-                <Building2 className="h-4 w-4" />
-                <h3 className="font-semibold">General Contractor</h3>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4" />
+                  <h3 className="font-semibold">General Contractor</h3>
+                </div>
+                {primaryGC && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={() => setShowRemoveGCDialog(true)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
               {primaryGC ? (
                 <div className="space-y-2 text-sm">
@@ -315,6 +342,21 @@ const JobSiteDetail = () => {
         open={showAddGCModal}
         onOpenChange={setShowAddGCModal}
       />
+
+      <AlertDialog open={showRemoveGCDialog} onOpenChange={setShowRemoveGCDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove General Contractor?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove {primaryGC?.companyName} as the general contractor for this job site? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleRemoveGC}>Remove</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

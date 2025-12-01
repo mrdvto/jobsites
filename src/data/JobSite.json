@@ -1,0 +1,523 @@
+{
+    "content": [
+        {
+            "id": 500101,
+            "name": "St. Mary's Hospital - West Wing Expansion",
+            "description": "Construction of a new 4-story wing for the cardiology department, including underground parking structure.",
+            "statusId": "Active",
+            "salesRepId": 313,
+            "plannedAnnualRate": 24,
+            "projectPrimaryContact": {
+                "name": "Sarah Jenkins",
+                "title": "Senior Project Manager",
+                "phone": "312-555-0101",
+                "email": "sjenkins@stmarysprojects.com"
+            },
+            "address": {
+                "street": "1200 Medical Center Dr",
+                "city": "Chicago",
+                "state": "IL",
+                "zipCode": "60612",
+                "country": "USA",
+                "latitude": 41.872,
+                "longitude": -87.665
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "998810",
+                    "companyName": "TURNER CONSTRUCTION",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContact": {
+                        "name": "Michael Ross",
+                        "title": "Site Superintendent",
+                        "phone": "312-555-8821",
+                        "email": "mross@turner.com"
+                    }
+                },
+                {
+                    "companyId": "1019550",
+                    "companyName": "JDT CONTRACTOR LTD",
+                    "roleId": "SUB-EXC",
+                    "roleDescription": "Subcontractor - Excavation",
+                    "isPrimaryContact": false,
+                    "companyContact": {
+                        "name": "Latisha Tyler",
+                        "title": "Fleet Manager",
+                        "phone": "312-555-0192",
+                        "email": "latisha.tyler@jdtcontractor.com"
+                    }
+                }
+            ],
+            "associatedOpportunities": [
+                {
+                    "id": 100002,
+                    "type": "Rental",
+                    "description": "12-month rental of 950M Heavy Duty Loader",
+                    "status": "Won",
+                    "revenue": 2590
+                }
+            ],
+            "notes": [
+                "Strict noise ordinances after 6 PM.",
+                "Badging required for site access."
+            ]
+        },
+        {
+            "id": 500102,
+            "name": "Riverfront Stadium Renovation",
+            "description": "Complete resurfacing of playing field and installation of new structural seating.",
+            "statusId": "Planning",
+            "salesRepId": 305,
+            "plannedAnnualRate": 12,
+            "projectPrimaryContact": {
+                "name": "David Ortiz",
+                "title": "Facilities Director",
+                "phone": "312-555-9988",
+                "email": "dortiz@riverfrontstadium.com"
+            },
+            "address": {
+                "street": null,
+                "city": null,
+                "state": "IL",
+                "zipCode": null,
+                "country": "USA",
+                "latitude": 41.8623,
+                "longitude": -87.6167
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "1067200",
+                    "companyName": "UPJ CONSTRUCTION INC",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContact": {
+                        "name": "Aisha Bartlett",
+                        "title": "Procurement Manager",
+                        "phone": "815-555-0332",
+                        "email": "aisha.b@upjconstruction.com"
+                    }
+                }
+            ],
+            "associatedOpportunities": [
+                {
+                    "id": 100015,
+                    "type": "Sale",
+                    "description": "Purchase of new CAT 320 Excavator",
+                    "status": "Proposal",
+                    "revenue": 200000
+                }
+            ],
+            "notes": []
+        },
+        {
+            "id": 500103,
+            "name": "I-55 Highway Resurfacing (Mile Marker 20-35)",
+            "description": "Night work only. Asphalt removal and resurfacing of southbound lanes.",
+            "statusId": "Active",
+            "salesRepId": 303,
+            "plannedAnnualRate": 6,
+            "projectPrimaryContact": {
+                "name": "State Dept of Transportation",
+                "title": "District Engineer",
+                "phone": "217-555-0000",
+                "email": "dist3@idot.gov"
+            },
+            "address": {
+                "street": "I-55 Southbound",
+                "city": "Bolingbrook",
+                "state": "IL",
+                "zipCode": "60440",
+                "country": "USA",
+                "latitude": 41.698,
+                "longitude": -88.068
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "NON-DBS",
+                    "companyName": "PXC PAVING",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContact": {
+                        "name": "Wesley Moss",
+                        "title": "Site Foreman",
+                        "phone": "309-555-0821",
+                        "email": "wesley.moss@pxcpaving.com"
+                    }
+                },
+                {
+                    "companyId": "NON-DBS",
+                    "companyName": "YUQ PAVING",
+                    "roleId": "SUB-PAV",
+                    "roleDescription": "Subcontractor - Finish Paving",
+                    "isPrimaryContact": false,
+                    "companyContact": {
+                        "name": "Angelia Sexton",
+                        "title": "Owner",
+                        "phone": "630-555-0441",
+                        "email": "angelia.s@yuqpaving.com"
+                    }
+                }
+            ],
+            "associatedOpportunities": [
+                {
+                    "id": 100003,
+                    "type": "Rental",
+                    "description": "Short-term rental of asphalt paver",
+                    "status": "Active",
+                    "revenue": 15000
+                },
+                {
+                    "id": 100027,
+                    "type": "Rental",
+                    "description": "Rental of double drum rollers",
+                    "status": "Lead",
+                    "revenue": 5500
+                }
+            ],
+            "notes": [
+                "Safety vest required at all times.",
+                "Deliveries must be scheduled between 10 PM and 4 AM."
+            ]
+        },
+        {
+            "id": 500104,
+            "name": "Fox Valley Mall - Landscaping Refurbishment",
+            "description": "Updating exterior landscaping, tree removal, and new retaining walls.",
+            "statusId": "Completed",
+            "salesRepId": 292,
+            "plannedAnnualRate": 2,
+            "projectPrimaryContact": {
+                "name": "Karen Fields",
+                "title": "Property Manager",
+                "phone": "630-555-1234",
+                "email": "kfields@foxvalleymall.com"
+            },
+            "address": {
+                "street": "195 Fox Valley Center",
+                "city": "Aurora",
+                "state": "IL",
+                "zipCode": "60504",
+                "country": "USA",
+                "latitude": 41.755,
+                "longitude": -88.214
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "1764465",
+                    "companyName": "HUZ CONTRACTOR LTD",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContact": {
+                        "name": "Michael Trent",
+                        "title": "Landscape Architect",
+                        "phone": "217-555-0221",
+                        "email": "michael.trent@huzcontractor.com"
+                    }
+                }
+            ],
+            "associatedOpportunities": [
+                {
+                    "id": 100024,
+                    "type": "Rental",
+                    "description": "Monthly rental of 262D Skid Steer",
+                    "status": "Closed",
+                    "revenue": 1433.84
+                }
+            ],
+            "notes": []
+        },
+        {
+            "id": 500105,
+            "name": "Amazon Fulfillment Center #ORD5",
+            "description": "Ground-up construction of 800,000 sq ft distribution warehouse.",
+            "statusId": "Active",
+            "salesRepId": 305,
+            "plannedAnnualRate": 48,
+            "projectPrimaryContact": {
+                "name": "Jeff Bezos (Proxy)",
+                "title": "Regional Construction Lead",
+                "phone": "206-555-9999",
+                "email": "construction-ord5@amazon.com"
+            },
+            "address": {
+                "street": "3000 Duke Parkway",
+                "city": "Aurora",
+                "state": "IL",
+                "zipCode": "60502",
+                "country": "USA",
+                "latitude": 41.785,
+                "longitude": -88.250
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "1140350",
+                    "companyName": "HUJ CONTRACTOR LTD",
+                    "roleId": "SUB-ELEC",
+                    "roleDescription": "Subcontractor - Power Systems",
+                    "isPrimaryContact": false,
+                    "companyContact": {
+                        "name": "Wendi Delacruz",
+                        "title": "Project Engineer",
+                        "phone": "630-555-0992",
+                        "email": "wendi.d@hujcontractor.com"
+                    }
+                },
+                {
+                    "companyId": "1035040",
+                    "companyName": "YYP CONTRACTOR LTD",
+                    "roleId": "SUB-MECH",
+                    "roleDescription": "Subcontractor - Mechanical",
+                    "isPrimaryContact": false,
+                    "companyContact": {
+                        "name": "Victoria Flowers",
+                        "title": "Purchasing Agent",
+                        "phone": "217-555-0774",
+                        "email": "v.flowers@yypcontractor.com"
+                    }
+                }
+            ],
+            "associatedOpportunities": [
+                {
+                    "id": 100004,
+                    "type": "Rental",
+                    "description": "6-month rental of used 3508 Generator Set",
+                    "status": "Active",
+                    "revenue": 5366
+                },
+                {
+                    "id": 100005,
+                    "type": "Lease",
+                    "description": "24-month lease of new 3516 Diesel Engine",
+                    "status": "Active",
+                    "revenue": 2894
+                }
+            ],
+            "notes": ["Security clearance required for all deliveries."]
+        },
+        {
+            "id": 500106,
+            "name": "City Water Treatment Plant Upgrade",
+            "description": "Installation of new filtration pumps and backup power systems.",
+            "statusId": "Active",
+            "salesRepId": 304,
+            "plannedAnnualRate": 8,
+            "projectPrimaryContact": {
+                "name": "City of Springfield",
+                "title": "Public Works Director",
+                "phone": "217-555-1122",
+                "email": "publicworks@springfield.il.us"
+            },
+            "address": {
+                "street": "100 Water Works Rd",
+                "city": "Springfield",
+                "state": "IL",
+                "zipCode": "62702",
+                "country": "USA",
+                "latitude": 39.801,
+                "longitude": -89.643
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "1293500",
+                    "companyName": "VHK WELL DRILLING INC",
+                    "roleId": "SUB-SPEC",
+                    "roleDescription": "Subcontractor - Specialized Drilling",
+                    "isPrimaryContact": true,
+                    "companyContact": {
+                        "name": "Robert Vance",
+                        "title": "Owner",
+                        "phone": "217-555-0991",
+                        "email": "robert.vance@vhkdrilling.com"
+                    }
+                }
+            ],
+            "associatedOpportunities": [
+                {
+                    "id": 100016,
+                    "type": "Service",
+                    "description": "Emergency service for high-pressure air compressor",
+                    "status": "Completed",
+                    "revenue": 12500
+                }
+            ],
+            "notes": []
+        },
+        {
+            "id": 500107,
+            "name": "Willow Creek Residential Subdivision",
+            "description": "Phase 2 development: Grading and utility installation for 50 new single-family homes.",
+            "statusId": "Planning",
+            "salesRepId": 260,
+            "plannedAnnualRate": 18,
+            "projectPrimaryContact": {
+                "name": "Tom Builders",
+                "title": "Development Manager",
+                "phone": "815-555-7788",
+                "email": "tom@willowcreekdev.com"
+            },
+            "address": {
+                "street": "Willow Creek Dr & Route 20",
+                "city": "Rockford",
+                "state": "IL",
+                "zipCode": "61108",
+                "country": "USA",
+                "latitude": 42.259,
+                "longitude": -89.064
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "1174395",
+                    "companyName": "RON CONTRACTOR LTD",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContact": {
+                        "name": "Angelina Cline",
+                        "title": "Equipment Manager",
+                        "phone": "815-555-0112",
+                        "email": "angelina.cline@roncontractor.com"
+                    }
+                }
+            ],
+            "associatedOpportunities": [
+                {
+                    "id": 100018,
+                    "type": "Service",
+                    "description": "Undercarriage overhaul for fleet Dozer",
+                    "status": "Active",
+                    "revenue": 8750
+                }
+            ],
+            "notes": ["Heavy clay soil conditions reported."]
+        },
+        {
+            "id": 500108,
+            "name": "Downtown Bridge Rehabilitation",
+            "description": "Structural steel repairs and repainting of the main street bridge.",
+            "statusId": "Active",
+            "salesRepId": 292,
+            "plannedAnnualRate": 4,
+            "projectPrimaryContact": {
+                "name": "Civil Eng Corp",
+                "title": "Chief Engineer",
+                "phone": "309-555-4433",
+                "email": "eng@civilcorp.com"
+            },
+            "address": {
+                "street": "Main St Bridge",
+                "city": "Bloomington",
+                "state": "IL",
+                "zipCode": "61701",
+                "country": "USA",
+                "latitude": 40.484,
+                "longitude": -88.993
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "$000313",
+                    "companyName": "PHO CONTRACTOR LTD",
+                    "roleId": "SUB-STEEL",
+                    "roleDescription": "Subcontractor - Steel Fabrication",
+                    "isPrimaryContact": true,
+                    "companyContact": {
+                        "name": "Betsy Owens",
+                        "title": "Parts Coordinator",
+                        "phone": "309-555-0663",
+                        "email": "betsy.owens@phocontractor.com"
+                    }
+                }
+            ],
+            "associatedOpportunities": [
+                {
+                    "id": 100026,
+                    "type": "Parts",
+                    "description": "Supply of C7 Industrial Engine parts",
+                    "status": "Won",
+                    "revenue": 1300
+                }
+            ],
+            "notes": ["Work barge required for under-bridge access."]
+        },
+        {
+            "id": 500109,
+            "name": "University Tech Park - Incubator Building",
+            "description": "New 3-story mixed-use office and lab space.",
+            "statusId": "Planning",
+            "salesRepId": 313,
+            "plannedAnnualRate": 10,
+            "projectPrimaryContact": {
+                "name": "Dr. Alan Grant",
+                "title": "University Liaison",
+                "phone": "217-555-3993",
+                "email": "agrant@university.edu"
+            },
+            "address": {
+                "street": "1800 Research Park Dr",
+                "city": "Champaign",
+                "state": "IL",
+                "zipCode": "61820",
+                "country": "USA",
+                "latitude": 40.096,
+                "longitude": -88.243
+            },
+            "siteCompanies": [],
+            "associatedOpportunities": [],
+            "notes": ["Awaiting final funding approval."]
+        },
+        {
+            "id": 500110,
+            "name": "Limestone Quarry - South Face Expansion",
+            "description": "Stripping overburden to access new aggregate veins.",
+            "statusId": "Active",
+            "salesRepId": 305,
+            "plannedAnnualRate": 20,
+            "projectPrimaryContact": {
+                "name": "Fred Flint",
+                "title": "Quarry Manager",
+                "phone": "815-555-0011",
+                "email": "fred@rocksolidmaterials.com"
+            },
+            "address": {
+                "street": "5500 Quarry Rd",
+                "city": "Joliet",
+                "state": "IL",
+                "zipCode": "60436",
+                "country": "USA",
+                "latitude": 41.525,
+                "longitude": -88.081
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "1067200",
+                    "companyName": "UPJ CONSTRUCTION INC",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContact": {
+                        "name": "Aisha Bartlett",
+                        "title": "Procurement Manager",
+                        "phone": "815-555-0332",
+                        "email": "aisha.b@upjconstruction.com"
+                    }
+                }
+            ],
+            "associatedOpportunities": [],
+            "notes": ["Mandatory MSHA training for all site visitors."]
+        }
+    ],
+    "sorting": "id",
+    "pagination": {
+        "size": 10,
+        "page": 0,
+        "totalPages": 732,
+        "totalElements": 7318,
+        "last": false,
+        "first": true
+    },
+    "duration": "1.842 seconds"
+}

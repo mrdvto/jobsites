@@ -6,17 +6,20 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card } from '@/components/ui/card';
 
 export const FilterBar = () => {
-  const { filters, setFilters, salesReps } = useData();
+  const { filters, setFilters, salesReps, jobSites } = useData();
 
   // Sort sales reps alphabetically by lastname
   const sortedSalesReps = [...salesReps].sort((a, b) => 
     a.lastname.localeCompare(b.lastname)
   );
 
+  // Get unique statuses from job sites
+  const uniqueStatuses = Array.from(new Set(jobSites.map(site => site.statusId))).sort();
+
   return (
     <Card className="p-6 mb-6">
       <h2 className="text-lg font-semibold mb-4">Filters</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="space-y-2">
           <Label htmlFor="salesRep">Sales Rep</Label>
           <Select 
@@ -53,6 +56,26 @@ export const FilterBar = () => {
               <SelectItem value="B">B</SelectItem>
               <SelectItem value="C">C</SelectItem>
               <SelectItem value="D">D</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="status">Status</Label>
+          <Select 
+            value={filters.status || "all"} 
+            onValueChange={(value) => setFilters({ ...filters, status: value === "all" ? "" : value })}
+          >
+            <SelectTrigger id="status">
+              <SelectValue placeholder="All Statuses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              {uniqueStatuses.map(status => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

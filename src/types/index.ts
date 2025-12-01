@@ -136,4 +136,5 @@ export interface Filters {
   division: string;
   generalContractor: string;
   showBehindPAR: boolean;
+  status: string;
 }

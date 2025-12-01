@@ -15,14 +15,14 @@ export const FilterBar = () => {
         <div className="space-y-2">
           <Label htmlFor="salesRep">Sales Rep</Label>
           <Select 
-            value={filters.salesRepId} 
-            onValueChange={(value) => setFilters({ ...filters, salesRepId: value })}
+            value={filters.salesRepId || "all"} 
+            onValueChange={(value) => setFilters({ ...filters, salesRepId: value === "all" ? "" : value })}
           >
             <SelectTrigger id="salesRep">
               <SelectValue placeholder="All Sales Reps" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Sales Reps</SelectItem>
+              <SelectItem value="all">All Sales Reps</SelectItem>
               {salesReps.map(rep => (
                 <SelectItem key={rep.salesrepid} value={rep.salesrepid.toString()}>
                   {rep.lastname}, {rep.firstname}
@@ -35,14 +35,14 @@ export const FilterBar = () => {
         <div className="space-y-2">
           <Label htmlFor="division">Division</Label>
           <Select 
-            value={filters.division} 
-            onValueChange={(value) => setFilters({ ...filters, division: value })}
+            value={filters.division || "all"} 
+            onValueChange={(value) => setFilters({ ...filters, division: value === "all" ? "" : value })}
           >
             <SelectTrigger id="division">
               <SelectValue placeholder="All Divisions" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Divisions</SelectItem>
+              <SelectItem value="all">All Divisions</SelectItem>
               <SelectItem value="E">E</SelectItem>
               <SelectItem value="A">A</SelectItem>
               <SelectItem value="B">B</SelectItem>

@@ -11,6 +11,7 @@ import { OpportunityDetailModal } from '@/components/OpportunityDetailModal';
 import { AssociateOpportunityModal } from '@/components/AssociateOpportunityModal';
 import { CreateOpportunityModal } from '@/components/CreateOpportunityModal';
 import { AddGCModal } from '@/components/AddGCModal';
+import { AssociateCompanyModal } from '@/components/AssociateCompanyModal';
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -25,6 +26,7 @@ const JobSiteDetail = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showAddGCModal, setShowAddGCModal] = useState(false);
   const [showRemoveGCDialog, setShowRemoveGCDialog] = useState(false);
+  const [showAssociateCompanyModal, setShowAssociateCompanyModal] = useState(false);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -277,7 +279,17 @@ const JobSiteDetail = () => {
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-lg font-semibold mb-4">Subcontractors & Companies</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">Subcontractors & Companies</h2>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowAssociateCompanyModal(true)}
+            >
+              <LinkIcon className="h-4 w-4 mr-2" />
+              Associate Existing
+            </Button>
+          </div>
           {site.siteCompanies.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
               No companies associated with this site yet.
@@ -341,6 +353,13 @@ const JobSiteDetail = () => {
         siteId={site.id}
         open={showAddGCModal}
         onOpenChange={setShowAddGCModal}
+      />
+
+      <AssociateCompanyModal
+        siteId={site.id}
+        currentCompanyNames={site.siteCompanies.map(c => c.companyName)}
+        open={showAssociateCompanyModal}
+        onOpenChange={setShowAssociateCompanyModal}
       />
 
       <AlertDialog open={showRemoveGCDialog} onOpenChange={setShowRemoveGCDialog}>

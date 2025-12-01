@@ -27,6 +27,8 @@ const JobSiteDetail = () => {
   const [showAddGCModal, setShowAddGCModal] = useState(false);
   const [showRemoveGCDialog, setShowRemoveGCDialog] = useState(false);
   const [showAssociateCompanyModal, setShowAssociateCompanyModal] = useState(false);
+  const [showRemoveCompanyDialog, setShowRemoveCompanyDialog] = useState(false);
+  const [companyToRemove, setCompanyToRemove] = useState<string | null>(null);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -67,6 +69,23 @@ const JobSiteDetail = () => {
       });
       setShowRemoveGCDialog(false);
     }
+  };
+
+  const handleRemoveCompany = () => {
+    if (companyToRemove) {
+      removeSiteCompany(site.id, companyToRemove);
+      toast({
+        title: "Success",
+        description: "Company removed successfully."
+      });
+      setCompanyToRemove(null);
+      setShowRemoveCompanyDialog(false);
+    }
+  };
+
+  const initiateRemoveCompany = (companyName: string) => {
+    setCompanyToRemove(companyName);
+    setShowRemoveCompanyDialog(true);
   };
 
   return (
@@ -303,6 +322,7 @@ const JobSiteDetail = () => {
                   <TableHead>Contact Person</TableHead>
                   <TableHead>Phone</TableHead>
                   <TableHead>Email</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -322,6 +342,16 @@ const JobSiteDetail = () => {
                     </TableCell>
                     <TableCell className="text-sm">{company.companyContact.phone}</TableCell>
                     <TableCell className="text-sm">{company.companyContact.email}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => initiateRemoveCompany(company.companyName)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -373,6 +403,21 @@ const JobSiteDetail = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleRemoveGC}>Remove</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showRemoveCompanyDialog} onOpenChange={setShowRemoveCompanyDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Company?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove {companyToRemove} from this job site? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleRemoveCompany}>Remove</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

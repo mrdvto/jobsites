@@ -13,6 +13,7 @@ import { CreateOpportunityModal } from '@/components/CreateOpportunityModal';
 import { AddGCModal } from '@/components/AddGCModal';
 import { AssociateCompanyModal } from '@/components/AssociateCompanyModal';
 import { EditJobSiteModal } from '@/components/EditJobSiteModal';
+import { EditGCModal } from '@/components/EditGCModal';
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -31,6 +32,7 @@ const JobSiteDetail = () => {
   const [showRemoveCompanyDialog, setShowRemoveCompanyDialog] = useState(false);
   const [companyToRemove, setCompanyToRemove] = useState<string | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditGCModal, setShowEditGCModal] = useState(false);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -205,14 +207,24 @@ const JobSiteDetail = () => {
                   <h3 className="font-semibold">General Contractor</h3>
                 </div>
                 {primaryGC && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => setShowRemoveGCDialog(true)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setShowEditGCModal(true)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setShowRemoveGCDialog(true)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
                 )}
               </div>
               {primaryGC ? (
@@ -432,6 +444,15 @@ const JobSiteDetail = () => {
         open={showEditModal}
         onOpenChange={setShowEditModal}
       />
+
+      {primaryGC && (
+        <EditGCModal
+          siteId={site.id}
+          currentGC={primaryGC}
+          open={showEditGCModal}
+          onOpenChange={setShowEditGCModal}
+        />
+      )}
     </div>
   );
 };

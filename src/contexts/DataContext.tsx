@@ -17,6 +17,7 @@ interface DataContextType {
   createJobSite: (site: Omit<JobSite, 'id'>) => void;
   addSiteCompany: (siteId: number, company: any) => void;
   removeSiteCompany: (siteId: number, companyName: string) => void;
+  updateSiteCompany: (siteId: number, oldCompanyName: string, updatedCompany: any) => void;
   updateJobSite: (siteId: number, updates: Partial<JobSite>) => void;
   getSalesRepName: (id: number) => string;
   getStageName: (id: number) => string;
@@ -214,6 +215,22 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
   };
 
+  const updateSiteCompany = (siteId: number, oldCompanyName: string, updatedCompany: any) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          return {
+            ...site,
+            siteCompanies: site.siteCompanies.map(c => 
+              c.companyName === oldCompanyName ? updatedCompany : c
+            )
+          };
+        }
+        return site;
+      })
+    );
+  };
+
   const updateJobSite = (siteId: number, updates: Partial<JobSite>) => {
     setJobSites(prevSites =>
       prevSites.map(site => {
@@ -251,6 +268,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         createJobSite,
         addSiteCompany,
         removeSiteCompany,
+        updateSiteCompany,
         updateJobSite,
         getSalesRepName,
         getStageName,

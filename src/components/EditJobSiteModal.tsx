@@ -190,7 +190,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="plannedAnnualRate">Planned Annual Rate ($) *</Label>
+                <Label htmlFor="plannedAnnualRate">Planned Annual Rate *</Label>
                 <Input
                   id="plannedAnnualRate"
                   type="number"

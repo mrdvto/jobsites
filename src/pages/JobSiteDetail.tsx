@@ -104,7 +104,7 @@ const JobSiteDetail = () => {
             }`}>
               {site.statusId}
             </span>
-            <span className="text-sm text-muted-foreground">ID: {site.id}</span>
+            <span className="text-sm text-muted-foreground">Opportunity Number: {site.id}</span>
           </div>
         </div>
       </header>

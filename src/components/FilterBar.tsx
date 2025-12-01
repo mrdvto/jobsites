@@ -8,6 +8,11 @@ import { Card } from '@/components/ui/card';
 export const FilterBar = () => {
   const { filters, setFilters, salesReps } = useData();
 
+  // Sort sales reps alphabetically by lastname
+  const sortedSalesReps = [...salesReps].sort((a, b) => 
+    a.lastname.localeCompare(b.lastname)
+  );
+
   return (
     <Card className="p-6 mb-6">
       <h2 className="text-lg font-semibold mb-4">Filters</h2>
@@ -23,7 +28,7 @@ export const FilterBar = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Sales Reps</SelectItem>
-              {salesReps.map(rep => (
+              {sortedSalesReps.map(rep => (
                 <SelectItem key={rep.salesrepid} value={rep.salesrepid.toString()}>
                   {rep.lastname}, {rep.firstname}
                 </SelectItem>

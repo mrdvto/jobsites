@@ -1,35 +1,148 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '@/contexts/DataContext';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
+import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { JobSite } from '@/types';
+
+type SortColumn = 'name' | 'address' | 'salesRep' | 'contact' | 'status' | 'revenue';
+type SortDirection = 'asc' | 'desc' | null;
 
 export const JobSiteTable = () => {
   const navigate = useNavigate();
   const { getFilteredSites, getSalesRepName, calculateSiteRevenue } = useData();
+  const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
   const filteredSites = getFilteredSites();
+
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn === column) {
+      // Cycle through: asc -> desc -> null
+      if (sortDirection === 'asc') {
+        setSortDirection('desc');
+      } else if (sortDirection === 'desc') {
+        setSortDirection(null);
+        setSortColumn(null);
+      }
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  const sortedSites = [...filteredSites].sort((a, b) => {
+    if (!sortColumn || !sortDirection) return 0;
+
+    let comparison = 0;
+
+    switch (sortColumn) {
+      case 'name':
+        comparison = a.name.localeCompare(b.name);
+        break;
+      case 'address':
+        comparison = `${a.address.city}, ${a.address.state}`.localeCompare(
+          `${b.address.city}, ${b.address.state}`
+        );
+        break;
+      case 'salesRep':
+        comparison = getSalesRepName(a.salesRepId).localeCompare(getSalesRepName(b.salesRepId));
+        break;
+      case 'contact':
+        comparison = a.projectPrimaryContact.name.localeCompare(b.projectPrimaryContact.name);
+        break;
+      case 'status':
+        comparison = a.statusId.localeCompare(b.statusId);
+        break;
+      case 'revenue':
+        comparison = calculateSiteRevenue(a) - calculateSiteRevenue(b);
+        break;
+    }
+
+    return sortDirection === 'asc' ? comparison : -comparison;
+  });
+
+  const SortIcon = ({ column }: { column: SortColumn }) => {
+    if (sortColumn !== column) {
+      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-50 transition-opacity" />;
+    }
+    if (sortDirection === 'asc') {
+      return <ArrowUp className="h-4 w-4 ml-1" />;
+    }
+    return <ArrowDown className="h-4 w-4 ml-1" />;
+  };
 
   return (
     <Card>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Site Name</TableHead>
-            <TableHead>Address</TableHead>
-            <TableHead>Sales Rep</TableHead>
-            <TableHead>Primary Contact</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Revenue</TableHead>
+            <TableHead 
+              className="cursor-pointer select-none group hover:bg-muted/50"
+              onClick={() => handleSort('name')}
+            >
+              <div className="flex items-center">
+                Site Name
+                <SortIcon column="name" />
+              </div>
+            </TableHead>
+            <TableHead 
+              className="cursor-pointer select-none group hover:bg-muted/50"
+              onClick={() => handleSort('address')}
+            >
+              <div className="flex items-center">
+                Address
+                <SortIcon column="address" />
+              </div>
+            </TableHead>
+            <TableHead 
+              className="cursor-pointer select-none group hover:bg-muted/50"
+              onClick={() => handleSort('salesRep')}
+            >
+              <div className="flex items-center">
+                Sales Rep
+                <SortIcon column="salesRep" />
+              </div>
+            </TableHead>
+            <TableHead 
+              className="cursor-pointer select-none group hover:bg-muted/50"
+              onClick={() => handleSort('contact')}
+            >
+              <div className="flex items-center">
+                Primary Contact
+                <SortIcon column="contact" />
+              </div>
+            </TableHead>
+            <TableHead 
+              className="cursor-pointer select-none group hover:bg-muted/50"
+              onClick={() => handleSort('status')}
+            >
+              <div className="flex items-center">
+                Status
+                <SortIcon column="status" />
+              </div>
+            </TableHead>
+            <TableHead 
+              className="text-right cursor-pointer select-none group hover:bg-muted/50"
+              onClick={() => handleSort('revenue')}
+            >
+              <div className="flex items-center justify-end">
+                Revenue
+                <SortIcon column="revenue" />
+              </div>
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredSites.length === 0 ? (
+          {sortedSites.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                 No job sites found matching the current filters.
               </TableCell>
             </TableRow>
           ) : (
-            filteredSites.map(site => (
+            sortedSites.map(site => (
               <TableRow 
                 key={site.id} 
                 className="cursor-pointer hover:bg-muted/50"

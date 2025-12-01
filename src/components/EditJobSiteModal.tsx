@@ -25,6 +25,11 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
   const [contactTitle, setContactTitle] = useState(site.projectPrimaryContact.title);
   const [contactPhone, setContactPhone] = useState(site.projectPrimaryContact.phone);
   const [contactEmail, setContactEmail] = useState(site.projectPrimaryContact.email);
+  const [street, setStreet] = useState(site.address.street);
+  const [city, setCity] = useState(site.address.city);
+  const [state, setState] = useState(site.address.state);
+  const [zipCode, setZipCode] = useState(site.address.zipCode);
+  const [country, setCountry] = useState(site.address.country);
   const [newNote, setNewNote] = useState('');
 
   useEffect(() => {
@@ -35,6 +40,11 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
       setContactTitle(site.projectPrimaryContact.title);
       setContactPhone(site.projectPrimaryContact.phone);
       setContactEmail(site.projectPrimaryContact.email);
+      setStreet(site.address.street);
+      setCity(site.address.city);
+      setState(site.address.state);
+      setZipCode(site.address.zipCode);
+      setCountry(site.address.country);
       setNewNote('');
     }
   }, [open, site]);
@@ -62,9 +72,27 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
       return;
     }
 
+    if (!street.trim() || !city.trim() || !state.trim() || !zipCode.trim() || !country.trim()) {
+      toast({
+        title: "Error",
+        description: "Please fill in all address fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     updateJobSite(site.id, {
       description: description.trim(),
       notes,
+      address: {
+        street: street.trim(),
+        city: city.trim(),
+        state: state.trim(),
+        zipCode: zipCode.trim(),
+        country: country.trim(),
+        latitude: site.address.latitude,
+        longitude: site.address.longitude
+      },
       projectPrimaryContact: {
         name: contactName.trim(),
         title: contactTitle.trim(),
@@ -92,6 +120,67 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4 pb-4 border-b">
+            <h3 className="font-semibold">Address</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="street">Street Address *</Label>
+              <Input
+                id="street"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+                placeholder="123 Main Street"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="city">City *</Label>
+                <Input
+                  id="city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="City"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="state">State *</Label>
+                <Input
+                  id="state"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  placeholder="CA"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="zipCode">Zip Code *</Label>
+                <Input
+                  id="zipCode"
+                  value={zipCode}
+                  onChange={(e) => setZipCode(e.target.value)}
+                  placeholder="12345"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="country">Country *</Label>
+                <Input
+                  id="country"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  placeholder="USA"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea

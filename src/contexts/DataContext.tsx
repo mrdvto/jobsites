@@ -14,6 +14,7 @@ interface DataContextType {
   setFilters: (filters: Filters) => void;
   addOpportunityToSite: (siteId: number, opportunityId: number) => void;
   createNewOpportunity: (opportunity: Opportunity) => void;
+  createJobSite: (site: Omit<JobSite, 'id'>) => void;
   addSiteCompany: (siteId: number, company: any) => void;
   removeSiteCompany: (siteId: number, companyName: string) => void;
   updateJobSite: (siteId: number, updates: Partial<JobSite>) => void;
@@ -227,6 +228,15 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
   };
 
+  const createJobSite = (site: Omit<JobSite, 'id'>) => {
+    const newId = Math.max(...jobSites.map(s => s.id), 0) + 1;
+    const newSite: JobSite = {
+      ...site,
+      id: newId
+    };
+    setJobSites(prevSites => [...prevSites, newSite]);
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -238,6 +248,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setFilters,
         addOpportunityToSite,
         createNewOpportunity,
+        createJobSite,
         addSiteCompany,
         removeSiteCompany,
         updateJobSite,

@@ -1,0 +1,377 @@
+import { useState } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { useData } from '@/contexts/DataContext';
+import { useToast } from '@/hooks/use-toast';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface CreateJobSiteModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalProps) => {
+  const { createJobSite, salesReps, getSalesRepName } = useData();
+  const { toast } = useToast();
+
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [statusId, setStatusId] = useState('Active');
+  const [salesRepId, setSalesRepId] = useState<number | null>(null);
+  const [salesRepOpen, setSalesRepOpen] = useState(false);
+  const [plannedAnnualRate, setPlannedAnnualRate] = useState('0');
+  const [contactName, setContactName] = useState('');
+  const [contactTitle, setContactTitle] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [street, setStreet] = useState('');
+  const [city, setCity] = useState('');
+  const [state, setState] = useState('');
+  const [zipCode, setZipCode] = useState('');
+  const [country, setCountry] = useState('USA');
+
+  const resetForm = () => {
+    setName('');
+    setDescription('');
+    setStatusId('Active');
+    setSalesRepId(null);
+    setPlannedAnnualRate('0');
+    setContactName('');
+    setContactTitle('');
+    setContactPhone('');
+    setContactEmail('');
+    setStreet('');
+    setCity('');
+    setState('');
+    setZipCode('');
+    setCountry('USA');
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!name.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a job site name.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!salesRepId) {
+      toast({
+        title: "Error",
+        description: "Please select a sales rep.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!contactName.trim() || !contactEmail.trim() || !contactPhone.trim()) {
+      toast({
+        title: "Error",
+        description: "Please fill in all primary contact fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!street.trim() || !city.trim() || !state.trim() || !zipCode.trim() || !country.trim()) {
+      toast({
+        title: "Error",
+        description: "Please fill in all address fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const parsedRate = parseFloat(plannedAnnualRate);
+    if (isNaN(parsedRate) || parsedRate < 0) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid planned annual rate (must be 0 or greater).",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    createJobSite({
+      name: name.trim(),
+      description: description.trim(),
+      statusId,
+      salesRepId,
+      plannedAnnualRate: parsedRate,
+      projectPrimaryContact: {
+        name: contactName.trim(),
+        title: contactTitle.trim(),
+        phone: contactPhone.trim(),
+        email: contactEmail.trim()
+      },
+      address: {
+        street: street.trim(),
+        city: city.trim(),
+        state: state.trim(),
+        zipCode: zipCode.trim(),
+        country: country.trim(),
+        latitude: 0,
+        longitude: 0
+      },
+      siteCompanies: [],
+      associatedOpportunities: [],
+      notes: []
+    });
+
+    toast({
+      title: "Success",
+      description: `Job site "${name.trim()}" created successfully.`
+    });
+
+    resetForm();
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(open) => {
+      if (!open) resetForm();
+      onOpenChange(open);
+    }}>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Create New Job Site</DialogTitle>
+          <DialogDescription>
+            Enter the details for the new job site.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4 pb-4 border-b">
+            <h3 className="font-semibold">Basic Information</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="name">Job Site Name *</Label>
+              <Input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter job site name"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="status">Status *</Label>
+              <Select value={statusId} onValueChange={setStatusId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Active">Active</SelectItem>
+                  <SelectItem value="Planning">Planning</SelectItem>
+                  <SelectItem value="Inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="salesRep">Assigned Sales Rep *</Label>
+                <Popover open={salesRepOpen} onOpenChange={setSalesRepOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={salesRepOpen}
+                      className="w-full justify-between"
+                    >
+                      {salesRepId ? getSalesRepName(salesRepId) : "Select sales rep..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0" align="start">
+                    <Command>
+                      <CommandInput placeholder="Search sales rep..." />
+                      <CommandList>
+                        <CommandEmpty>No sales rep found.</CommandEmpty>
+                        <CommandGroup>
+                          {salesReps.map((rep) => (
+                            <CommandItem
+                              key={rep.salesrepid}
+                              value={`${rep.firstname} ${rep.lastname}`}
+                              onSelect={() => {
+                                setSalesRepId(rep.salesrepid);
+                                setSalesRepOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  salesRepId === rep.salesrepid ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {rep.firstname} {rep.lastname}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="plannedAnnualRate">Planned Annual Rate *</Label>
+                <Input
+                  id="plannedAnnualRate"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={plannedAnnualRate}
+                  onChange={(e) => setPlannedAnnualRate(e.target.value)}
+                  placeholder="0.00"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4 pb-4 border-b">
+            <h3 className="font-semibold">Address</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="street">Street Address *</Label>
+              <Input
+                id="street"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+                placeholder="123 Main Street"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="city">City *</Label>
+                <Input
+                  id="city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="City"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="state">State *</Label>
+                <Input
+                  id="state"
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  placeholder="CA"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="zipCode">Zip Code *</Label>
+                <Input
+                  id="zipCode"
+                  value={zipCode}
+                  onChange={(e) => setZipCode(e.target.value)}
+                  placeholder="12345"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="country">Country *</Label>
+                <Input
+                  id="country"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  placeholder="USA"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter site description..."
+              rows={4}
+            />
+          </div>
+
+          <div className="space-y-4 pt-4 border-t">
+            <h3 className="font-semibold">Primary Contact</h3>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="contactName">Name *</Label>
+                <Input
+                  id="contactName"
+                  value={contactName}
+                  onChange={(e) => setContactName(e.target.value)}
+                  placeholder="Contact name"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="contactTitle">Title</Label>
+                <Input
+                  id="contactTitle"
+                  value={contactTitle}
+                  onChange={(e) => setContactTitle(e.target.value)}
+                  placeholder="Contact title"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="contactPhone">Phone *</Label>
+                <Input
+                  id="contactPhone"
+                  value={contactPhone}
+                  onChange={(e) => setContactPhone(e.target.value)}
+                  placeholder="(555) 123-4567"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="contactEmail">Email *</Label>
+                <Input
+                  id="contactEmail"
+                  type="email"
+                  value={contactEmail}
+                  onChange={(e) => setContactEmail(e.target.value)}
+                  placeholder="contact@example.com"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button type="submit">Create Job Site</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};

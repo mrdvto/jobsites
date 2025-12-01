@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { OpportunityDetailModal } from '@/components/OpportunityDetailModal';
 import { AssociateOpportunityModal } from '@/components/AssociateOpportunityModal';
 import { CreateOpportunityModal } from '@/components/CreateOpportunityModal';
+import { AddGCModal } from '@/components/AddGCModal';
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon } from 'lucide-react';
 
 const JobSiteDetail = () => {
@@ -19,6 +20,7 @@ const JobSiteDetail = () => {
   const [showOpportunityDetail, setShowOpportunityDetail] = useState(false);
   const [showAssociateModal, setShowAssociateModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showAddGCModal, setShowAddGCModal] = useState(false);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -149,12 +151,12 @@ const JobSiteDetail = () => {
               </div>
             </Card>
 
-            {primaryGC && (
-              <Card className="p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <Building2 className="h-4 w-4" />
-                  <h3 className="font-semibold">General Contractor</h3>
-                </div>
+            <Card className="p-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Building2 className="h-4 w-4" />
+                <h3 className="font-semibold">General Contractor</h3>
+              </div>
+              {primaryGC ? (
                 <div className="space-y-2 text-sm">
                   <p className="font-medium">{primaryGC.companyName}</p>
                   <p className="text-muted-foreground">{primaryGC.companyContact.name}</p>
@@ -170,8 +172,16 @@ const JobSiteDetail = () => {
                     </div>
                   </div>
                 </div>
-              </Card>
-            )}
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">No general contractor assigned</p>
+                  <Button size="sm" onClick={() => setShowAddGCModal(true)}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add GC
+                  </Button>
+                </div>
+              )}
+            </Card>
           </div>
         </div>
 
@@ -298,6 +308,12 @@ const JobSiteDetail = () => {
         siteId={site.id}
         open={showCreateModal}
         onOpenChange={setShowCreateModal}
+      />
+
+      <AddGCModal
+        siteId={site.id}
+        open={showAddGCModal}
+        onOpenChange={setShowAddGCModal}
       />
     </div>
   );

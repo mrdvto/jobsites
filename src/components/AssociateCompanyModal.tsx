@@ -4,8 +4,12 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface AssociateCompanyModalProps {
   siteId: number;
@@ -37,6 +41,7 @@ export const AssociateCompanyModal = ({ siteId, currentCompanyNames, open, onOpe
   const [selectedCompany, setSelectedCompany] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [isPrimaryContact, setIsPrimaryContact] = useState(false);
+  const [comboboxOpen, setComboboxOpen] = useState(false);
 
   // Get all unique companies from all job sites, excluding current site's companies
   const availableCompanies = useMemo(() => {
@@ -94,6 +99,7 @@ export const AssociateCompanyModal = ({ siteId, currentCompanyNames, open, onOpe
     setSelectedCompany('');
     setSelectedRole('');
     setIsPrimaryContact(false);
+    setComboboxOpen(false);
     onOpenChange(false);
   };
 
@@ -117,18 +123,48 @@ export const AssociateCompanyModal = ({ siteId, currentCompanyNames, open, onOpe
               <>
                 <div className="grid gap-2">
                   <Label htmlFor="company">Company *</Label>
-                  <Select value={selectedCompany} onValueChange={setSelectedCompany}>
-                    <SelectTrigger id="company">
-                      <SelectValue placeholder="Select a company" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-popover z-50">
-                      {availableCompanies.map((company) => (
-                        <SelectItem key={company.companyName} value={company.companyName}>
-                          {company.companyName}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        id="company"
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={comboboxOpen}
+                        className="w-full justify-between"
+                      >
+                        {selectedCompany || "Select a company..."}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0 bg-popover z-50">
+                      <Command>
+                        <CommandInput placeholder="Search companies..." />
+                        <CommandList>
+                          <CommandEmpty>No company found.</CommandEmpty>
+                          <CommandGroup>
+                            {availableCompanies.map((company) => (
+                              <CommandItem
+                                key={company.companyName}
+                                value={company.companyName}
+                                onSelect={(currentValue) => {
+                                  setSelectedCompany(currentValue === selectedCompany ? "" : currentValue);
+                                  setComboboxOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    selectedCompany === company.companyName ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                                {company.companyName}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <div className="grid gap-2">

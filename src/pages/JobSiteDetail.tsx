@@ -238,6 +238,47 @@ const JobSiteDetail = () => {
             </Table>
           )}
         </Card>
+
+        <Card className="p-6">
+          <h2 className="text-lg font-semibold mb-4">Subcontractors & Companies</h2>
+          {site.siteCompanies.length === 0 ? (
+            <p className="text-center text-muted-foreground py-8">
+              No companies associated with this site yet.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Company</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Contact Person</TableHead>
+                  <TableHead>Phone</TableHead>
+                  <TableHead>Email</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {site.siteCompanies.map((company, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell className="font-medium">{company.companyName}</TableCell>
+                    <TableCell>
+                      <Badge variant={company.roleId === 'GC' ? 'default' : 'secondary'}>
+                        {company.roleDescription}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <p className="font-medium text-sm">{company.companyContact.name}</p>
+                        <p className="text-xs text-muted-foreground">{company.companyContact.title}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm">{company.companyContact.phone}</TableCell>
+                    <TableCell className="text-sm">{company.companyContact.email}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </Card>
       </main>
 
       <OpportunityDetailModal

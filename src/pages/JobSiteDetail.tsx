@@ -53,13 +53,6 @@ const JobSiteDetail = () => {
     }
   };
 
-  const getOpportunityStatus = (oppId: number): string => {
-    const fullOpp = opportunities.find(o => o.id === oppId);
-    if (!fullOpp) return 'Unknown';
-    // Phase 3 is Closed, otherwise Open
-    return fullOpp.phaseId === 3 || fullOpp.phaseId === 4 ? 'Closed' : 'Open';
-  };
-
   const primaryGC = site.siteCompanies.find(c => c.roleId === 'GC' && c.isPrimaryContact);
 
   const handleRemoveGC = () => {
@@ -284,7 +277,6 @@ const JobSiteDetail = () => {
                   <TableHead>ID</TableHead>
                   <TableHead>Description</TableHead>
                   <TableHead>Stage</TableHead>
-                  <TableHead>Status</TableHead>
                   <TableHead className="text-right">Est. Revenue</TableHead>
                 </TableRow>
               </TableHeader>
@@ -299,11 +291,6 @@ const JobSiteDetail = () => {
                     <TableCell>{opp.description}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{opp.status}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={getOpportunityStatus(opp.id) === 'Open' ? 'default' : 'secondary'}>
-                        {getOpportunityStatus(opp.id)}
-                      </Badge>
                     </TableCell>
                     <TableCell className="text-right font-medium">
                       ${opp.revenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}

@@ -28,17 +28,17 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <div className="flex items-start justify-between">
-            <div>
-              <DialogTitle className="text-2xl">{opportunity.description}</DialogTitle>
-              <p className="text-sm text-muted-foreground mt-1">Opportunity Number: {opportunity.id}</p>
+          <div>
+            <DialogTitle className="text-2xl">{opportunity.description}</DialogTitle>
+            <div className="flex items-center gap-2 mt-1">
+              <p className="text-sm text-muted-foreground">Opportunity Number: {opportunity.id}</p>
+              {opportunity.isUrgent && (
+                <Badge variant="destructive" className="flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  Urgent
+                </Badge>
+              )}
             </div>
-            {opportunity.isUrgent && (
-              <Badge variant="destructive" className="flex items-center gap-1">
-                <AlertCircle className="h-3 w-3" />
-                Urgent
-              </Badge>
-            )}
           </div>
         </DialogHeader>
 

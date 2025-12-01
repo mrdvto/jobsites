@@ -100,9 +100,15 @@ const JobSiteDetail = () => {
           </Button>
           <h1 className="text-3xl font-bold">{site.name}</h1>
           <div className="flex items-center gap-2 mt-2">
-            <Badge variant={site.statusId === 'Active' ? 'default' : 'secondary'}>
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+              site.statusId === 'Active' 
+                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
+                : site.statusId === 'Planning'
+                ? 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-400'
+                : 'bg-muted text-muted-foreground'
+            }`}>
               {site.statusId}
-            </Badge>
+            </span>
             <span className="text-sm text-muted-foreground">ID: {site.id}</span>
           </div>
         </div>

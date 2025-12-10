@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '@/contexts/DataContext';
+import { useStatusColors } from '@/hooks/useStatusColors';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
@@ -12,6 +13,7 @@ type SortDirection = 'asc' | 'desc' | null;
 export const JobSiteTable = () => {
   const navigate = useNavigate();
   const { getFilteredSites, getSalesRepName, calculateSiteRevenue } = useData();
+  const { getStatusColorClasses } = useStatusColors();
   const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
@@ -153,13 +155,7 @@ export const JobSiteTable = () => {
                 <TableCell>{getSalesRepName(site.salesRepId)}</TableCell>
                 <TableCell>{site.projectPrimaryContact.name}</TableCell>
                 <TableCell>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    site.statusId === 'Active' 
-                      ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
-                      : site.statusId === 'Planning'
-                      ? 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-400'
-                      : 'bg-muted text-muted-foreground'
-                  }`}>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColorClasses(site.statusId)}`}>
                     {site.statusId}
                   </span>
                 </TableCell>

@@ -8,30 +8,46 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 type DropdownType = 'projectStatus' | 'subcontractorRole';
+
 interface DropdownOption {
   id: string;
   label: string;
   displayOrder: number;
+  color?: string; // Only used for projectStatus
 }
+
+// Color palette for status pills
+const STATUS_COLORS = [
+  { id: 'emerald', label: 'Green', bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-700 dark:text-emerald-300' },
+  { id: 'sky', label: 'Blue', bg: 'bg-sky-100 dark:bg-sky-900/30', text: 'text-sky-700 dark:text-sky-300' },
+  { id: 'amber', label: 'Yellow', bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300' },
+  { id: 'rose', label: 'Red', bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-700 dark:text-rose-300' },
+  { id: 'violet', label: 'Purple', bg: 'bg-violet-100 dark:bg-violet-900/30', text: 'text-violet-700 dark:text-violet-300' },
+  { id: 'slate', label: 'Gray', bg: 'bg-slate-100 dark:bg-slate-900/30', text: 'text-slate-700 dark:text-slate-300' },
+];
 
 // Initial dropdown data
 const initialDropdowns: Record<DropdownType, DropdownOption[]> = {
   projectStatus: [{
     id: 'Active',
     label: 'Active',
-    displayOrder: 1
+    displayOrder: 1,
+    color: 'emerald'
   }, {
     id: 'Planning',
     label: 'Planning',
-    displayOrder: 2
+    displayOrder: 2,
+    color: 'sky'
   }, {
     id: 'On Hold',
     label: 'On Hold',
-    displayOrder: 3
+    displayOrder: 3,
+    color: 'amber'
   }, {
     id: 'Completed',
     label: 'Completed',
-    displayOrder: 4
+    displayOrder: 4,
+    color: 'slate'
   }],
   subcontractorRole: [{
     id: 'GC',
@@ -82,9 +98,11 @@ const ManageDropdowns = () => {
   const [newItem, setNewItem] = useState<{
     label: string;
     displayOrder: string;
+    color: string;
   }>({
     label: '',
-    displayOrder: ''
+    displayOrder: '',
+    color: 'emerald'
   });
   const [showAddForm, setShowAddForm] = useState(false);
   const dropdownOptions: {
@@ -198,7 +216,8 @@ const ManageDropdowns = () => {
       const newOption: DropdownOption = {
         id: generatedId,
         label: newItem.label,
-        displayOrder: newItem.displayOrder ? parseInt(newItem.displayOrder) : maxOrder + 1
+        displayOrder: newItem.displayOrder ? parseInt(newItem.displayOrder) : maxOrder + 1,
+        ...(selectedDropdown === 'projectStatus' && { color: newItem.color })
       };
       if (isEditing) {
         setEditedValues(prev => [...prev, newOption]);
@@ -210,7 +229,8 @@ const ManageDropdowns = () => {
       }
       setNewItem({
         label: '',
-        displayOrder: ''
+        displayOrder: '',
+        color: 'emerald'
       });
       setShowAddForm(false);
       toast({
@@ -293,6 +313,22 @@ const ManageDropdowns = () => {
                     displayOrder: e.target.value
                   }))} />
                       </div>
+                      {selectedDropdown === 'projectStatus' && (
+                        <div className="mt-3">
+                          <p className="text-sm font-medium mb-2">Color</p>
+                          <div className="flex gap-2 flex-wrap">
+                            {STATUS_COLORS.map(c => (
+                              <button
+                                key={c.id}
+                                type="button"
+                                onClick={() => setNewItem(prev => ({ ...prev, color: c.id }))}
+                                className={`w-8 h-8 rounded-full ${c.bg} border-2 ${newItem.color === c.id ? 'border-primary ring-2 ring-primary/30' : 'border-transparent'}`}
+                                title={c.label}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       <div className="flex gap-2 mt-3">
                         <Button size="sm" onClick={handleAddItem}>
                           Add
@@ -301,7 +337,8 @@ const ManageDropdowns = () => {
                     setShowAddForm(false);
                     setNewItem({
                       label: '',
-                      displayOrder: ''
+                      displayOrder: '',
+                      color: 'emerald'
                     });
                   }}>
                           Cancel
@@ -312,32 +349,55 @@ const ManageDropdowns = () => {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Label</TableHead>
+                        {selectedDropdown === 'projectStatus' && <TableHead className="w-[120px]">Color</TableHead>}
                         <TableHead className="w-[120px]">Display Order</TableHead>
                         <TableHead className="w-[80px]">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {currentValues.map((item, index) => {
-                    const editIndex = isEditing ? editedValues.findIndex(e => e.id === item.id) : index;
-                    return <TableRow key={item.id}>
-                            <TableCell>
-                              {isEditing ? <Input value={editedValues[editIndex]?.label || ''} onChange={e => handleEditValue(editIndex, 'label', e.target.value)} className="h-8" /> : item.label}
-                            </TableCell>
-                            <TableCell>
-                              {isEditing ? <Input type="number" value={editedValues[editIndex]?.displayOrder || 0} onChange={e => handleEditValue(editIndex, 'displayOrder', e.target.value)} className="h-8 w-20" /> : item.displayOrder}
-                            </TableCell>
-                            <TableCell>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => handleDeleteClick(item)}>
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>;
-                  })}
-                      {currentValues.length === 0 && <TableRow>
-                          <TableCell colSpan={3} className="text-center text-muted-foreground">
-                            No values configured
+                        const editIndex = isEditing ? editedValues.findIndex(e => e.id === item.id) : index;
+                        const colorConfig = STATUS_COLORS.find(c => c.id === item.color) || STATUS_COLORS[0];
+                        return <TableRow key={item.id}>
+                          <TableCell>
+                            {isEditing ? <Input value={editedValues[editIndex]?.label || ''} onChange={e => handleEditValue(editIndex, 'label', e.target.value)} className="h-8" /> : item.label}
                           </TableCell>
-                        </TableRow>}
+                          {selectedDropdown === 'projectStatus' && (
+                            <TableCell>
+                              {isEditing ? (
+                                <div className="flex gap-1 flex-wrap">
+                                  {STATUS_COLORS.map(c => (
+                                    <button
+                                      key={c.id}
+                                      type="button"
+                                      onClick={() => handleEditValue(editIndex, 'color', c.id)}
+                                      className={`w-6 h-6 rounded-full ${c.bg} border-2 ${editedValues[editIndex]?.color === c.id ? 'border-primary ring-2 ring-primary/30' : 'border-transparent'}`}
+                                      title={c.label}
+                                    />
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${colorConfig.bg} ${colorConfig.text}`}>
+                                  {colorConfig.label}
+                                </span>
+                              )}
+                            </TableCell>
+                          )}
+                          <TableCell>
+                            {isEditing ? <Input type="number" value={editedValues[editIndex]?.displayOrder || 0} onChange={e => handleEditValue(editIndex, 'displayOrder', e.target.value)} className="h-8 w-20" /> : item.displayOrder}
+                          </TableCell>
+                          <TableCell>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => handleDeleteClick(item)}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>;
+                      })}
+                      {currentValues.length === 0 && <TableRow>
+                        <TableCell colSpan={selectedDropdown === 'projectStatus' ? 4 : 3} className="text-center text-muted-foreground">
+                          No values configured
+                        </TableCell>
+                      </TableRow>}
                     </TableBody>
                   </Table>
                   {isEditing && <div className="mt-4 p-4 border rounded-md bg-muted/50">
@@ -352,6 +412,22 @@ const ManageDropdowns = () => {
                     displayOrder: e.target.value
                   }))} />
                       </div>
+                      {selectedDropdown === 'projectStatus' && (
+                        <div className="mt-3">
+                          <p className="text-sm font-medium mb-2">Color</p>
+                          <div className="flex gap-2 flex-wrap">
+                            {STATUS_COLORS.map(c => (
+                              <button
+                                key={c.id}
+                                type="button"
+                                onClick={() => setNewItem(prev => ({ ...prev, color: c.id }))}
+                                className={`w-8 h-8 rounded-full ${c.bg} border-2 ${newItem.color === c.id ? 'border-primary ring-2 ring-primary/30' : 'border-transparent'}`}
+                                title={c.label}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
                       <div className="flex gap-2 mt-3">
                         <Button size="sm" onClick={handleAddItem}>
                           Add

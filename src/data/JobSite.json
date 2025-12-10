@@ -7,6 +7,7 @@
             "statusId": "Active",
             "salesRepId": 313,
             "plannedAnnualRate": 24,
+            "parStartDate": "2025-01-15T00:00:00.000Z",
             "projectPrimaryContact": {
                 "name": "Sarah Jenkins",
                 "title": "Senior Project Manager",
@@ -119,6 +120,7 @@
             "statusId": "Active",
             "salesRepId": 303,
             "plannedAnnualRate": 6,
+            "parStartDate": "2025-03-01T00:00:00.000Z",
             "projectPrimaryContact": {
                 "name": "State Dept of Transportation",
                 "title": "District Engineer",
@@ -238,6 +240,7 @@
             "statusId": "Active",
             "salesRepId": 305,
             "plannedAnnualRate": 48,
+            "parStartDate": "2024-11-01T00:00:00.000Z",
             "projectPrimaryContact": {
                 "name": "Jeff Bezos (Proxy)",
                 "title": "Regional Construction Lead",
@@ -306,6 +309,7 @@
             "statusId": "Active",
             "salesRepId": 304,
             "plannedAnnualRate": 8,
+            "parStartDate": "2025-06-01T00:00:00.000Z",
             "projectPrimaryContact": {
                 "name": "City of Springfield",
                 "title": "Public Works Director",
@@ -402,6 +406,7 @@
             "statusId": "Active",
             "salesRepId": 292,
             "plannedAnnualRate": 4,
+            "parStartDate": "2025-09-15T00:00:00.000Z",
             "projectPrimaryContact": {
                 "name": "Civil Eng Corp",
                 "title": "Chief Engineer",

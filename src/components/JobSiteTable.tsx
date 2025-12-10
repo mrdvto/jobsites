@@ -10,6 +10,18 @@ import { JobSite } from '@/types';
 type SortColumn = 'name' | 'address' | 'salesRep' | 'contact' | 'status' | 'revenue';
 type SortDirection = 'asc' | 'desc' | null;
 
+// Status display order mapping (matches ManageDropdowns configuration)
+const STATUS_DISPLAY_ORDER: Record<string, number> = {
+  'Active': 1,
+  'Planning': 2,
+  'On Hold': 3,
+  'Completed': 99,
+};
+
+const getStatusOrder = (statusId: string): number => {
+  return STATUS_DISPLAY_ORDER[statusId] ?? 999;
+};
+
 export const JobSiteTable = () => {
   const navigate = useNavigate();
   const { getFilteredSites, getSalesRepName, calculateSiteRevenue } = useData();
@@ -55,7 +67,7 @@ export const JobSiteTable = () => {
         comparison = a.projectPrimaryContact.name.localeCompare(b.projectPrimaryContact.name);
         break;
       case 'status':
-        comparison = a.statusId.localeCompare(b.statusId);
+        comparison = getStatusOrder(a.statusId) - getStatusOrder(b.statusId);
         break;
       case 'revenue':
         comparison = calculateSiteRevenue(a) - calculateSiteRevenue(b);

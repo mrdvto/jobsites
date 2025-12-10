@@ -3,6 +3,7 @@ import { FilterBar } from '@/components/FilterBar';
 import { KPICard } from '@/components/KPICard';
 import { JobSiteTable } from '@/components/JobSiteTable';
 import { CreateJobSiteModal } from '@/components/CreateJobSiteModal';
+import { SettingsPanel } from '@/components/SettingsPanel';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 
@@ -18,10 +19,13 @@ const JobSiteList = () => {
               <h1 className="text-2xl font-bold">Job Site Management</h1>
               <p className="text-sm text-muted-foreground">Manage construction sites and opportunities</p>
             </div>
-            <Button onClick={() => setShowCreateModal(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              New Job Site
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button onClick={() => setShowCreateModal(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Job Site
+              </Button>
+              <SettingsPanel />
+            </div>
           </div>
         </div>
       </header>

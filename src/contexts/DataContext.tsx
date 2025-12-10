@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { JobSite, SalesRep, Opportunity, OpportunityStage, Filters } from '@/types';
+import { JobSite, SalesRep, Opportunity, OpportunityStage, Filters, Activity } from '@/types';
 import jobSitesData from '@/data/JobSite.json';
 import salesRepsData from '@/data/SalesReps.json';
 import opportunitiesData from '@/data/Opportunity.json';
@@ -19,6 +19,9 @@ interface DataContextType {
   removeSiteCompany: (siteId: number, companyName: string) => void;
   updateSiteCompany: (siteId: number, oldCompanyName: string, updatedCompany: any) => void;
   updateJobSite: (siteId: number, updates: Partial<JobSite>) => void;
+  addActivity: (siteId: number, activity: Omit<Activity, 'id'>) => void;
+  updateActivity: (siteId: number, activityId: number, updates: Partial<Activity>) => void;
+  deleteActivity: (siteId: number, activityId: number) => void;
   getSalesRepName: (id: number) => string;
   getStageName: (id: number) => string;
   calculateSiteRevenue: (site: JobSite) => number;
@@ -45,7 +48,12 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Load data on mount
   useEffect(() => {
-    setJobSites(jobSitesData.content);
+    // Add activities array to job sites that don't have it (for backwards compatibility)
+    const sitesWithActivities = jobSitesData.content.map(site => ({
+      ...site,
+      activities: (site as any).activities || []
+    }));
+    setJobSites(sitesWithActivities as JobSite[]);
     setSalesReps(salesRepsData.content);
     setOpportunities(opportunitiesData.content);
     setOpportunityStages(opportunityStagesData.content);
@@ -254,6 +262,55 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setJobSites(prevSites => [...prevSites, newSite]);
   };
 
+  const addActivity = (siteId: number, activity: Omit<Activity, 'id'>) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          const maxActivityId = Math.max(...site.activities.map(a => a.id), 0);
+          const newActivity: Activity = {
+            ...activity,
+            id: maxActivityId + 1
+          };
+          return {
+            ...site,
+            activities: [...site.activities, newActivity]
+          };
+        }
+        return site;
+      })
+    );
+  };
+
+  const updateActivity = (siteId: number, activityId: number, updates: Partial<Activity>) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          return {
+            ...site,
+            activities: site.activities.map(activity =>
+              activity.id === activityId ? { ...activity, ...updates } : activity
+            )
+          };
+        }
+        return site;
+      })
+    );
+  };
+
+  const deleteActivity = (siteId: number, activityId: number) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          return {
+            ...site,
+            activities: site.activities.filter(activity => activity.id !== activityId)
+          };
+        }
+        return site;
+      })
+    );
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -270,6 +327,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         removeSiteCompany,
         updateSiteCompany,
         updateJobSite,
+        addActivity,
+        updateActivity,
+        deleteActivity,
         getSalesRepName,
         getStageName,
         calculateSiteRevenue,

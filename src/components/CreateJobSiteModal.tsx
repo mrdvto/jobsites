@@ -161,7 +161,8 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
           },
       siteCompanies: [],
       associatedOpportunities: [],
-      notes: []
+      notes: [],
+      activities: []
     });
 
     toast({

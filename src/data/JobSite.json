@@ -63,6 +63,29 @@
             "notes": [
                 "Strict noise ordinances after 6 PM.",
                 "Badging required for site access."
+            ],
+            "activities": [
+                {
+                    "id": 1001,
+                    "assigneeId": 313,
+                    "activityType": "Site Visit",
+                    "date": "2025-01-20T00:00:00.000Z",
+                    "description": "Initial site walkthrough with project manager"
+                },
+                {
+                    "id": 1002,
+                    "assigneeId": 313,
+                    "activityType": "Phone Call",
+                    "date": "2025-02-05T00:00:00.000Z",
+                    "description": "Follow-up call regarding equipment needs"
+                },
+                {
+                    "id": 1003,
+                    "assigneeId": 305,
+                    "activityType": "Meeting",
+                    "date": "2025-02-15T00:00:00.000Z",
+                    "description": "Quarterly review meeting with Turner Construction"
+                }
             ]
         },
         {
@@ -111,7 +134,23 @@
                     "revenue": 200000
                 }
             ],
-            "notes": []
+            "notes": [],
+            "activities": [
+                {
+                    "id": 1004,
+                    "assigneeId": 305,
+                    "activityType": "Email",
+                    "date": "2025-03-01T00:00:00.000Z",
+                    "description": "Sent proposal for excavator purchase"
+                },
+                {
+                    "id": 1005,
+                    "assigneeId": 305,
+                    "activityType": "Site Visit",
+                    "date": "2025-03-10T00:00:00.000Z",
+                    "description": "Equipment demonstration scheduled"
+                }
+            ]
         },
         {
             "id": 500103,
@@ -183,6 +222,15 @@
             "notes": [
                 "Safety vest required at all times.",
                 "Deliveries must be scheduled between 10 PM and 4 AM."
+            ],
+            "activities": [
+                {
+                    "id": 1006,
+                    "assigneeId": 303,
+                    "activityType": "Phone Call",
+                    "date": "2025-02-28T00:00:00.000Z",
+                    "description": "Confirmed delivery schedule for paving equipment"
+                }
             ]
         },
         {
@@ -231,7 +279,16 @@
                     "revenue": 1433.84
                 }
             ],
-            "notes": []
+            "notes": [],
+            "activities": [
+                {
+                    "id": 1007,
+                    "assigneeId": 292,
+                    "activityType": "Site Visit",
+                    "date": "2024-11-15T00:00:00.000Z",
+                    "description": "Final walkthrough and project closeout"
+                }
+            ]
         },
         {
             "id": 500105,
@@ -300,7 +357,30 @@
                     "revenue": 2894
                 }
             ],
-            "notes": ["Security clearance required for all deliveries."]
+            "notes": ["Security clearance required for all deliveries."],
+            "activities": [
+                {
+                    "id": 1008,
+                    "assigneeId": 305,
+                    "activityType": "Meeting",
+                    "date": "2025-01-10T00:00:00.000Z",
+                    "description": "Weekly progress meeting with Amazon construction team"
+                },
+                {
+                    "id": 1009,
+                    "assigneeId": 305,
+                    "activityType": "Site Visit",
+                    "date": "2025-01-17T00:00:00.000Z",
+                    "description": "Generator installation inspection"
+                },
+                {
+                    "id": 1010,
+                    "assigneeId": 313,
+                    "activityType": "Phone Call",
+                    "date": "2025-02-01T00:00:00.000Z",
+                    "description": "Discussed additional equipment requirements"
+                }
+            ]
         },
         {
             "id": 500106,
@@ -349,7 +429,16 @@
                     "revenue": 12500
                 }
             ],
-            "notes": []
+            "notes": [],
+            "activities": [
+                {
+                    "id": 1011,
+                    "assigneeId": 304,
+                    "activityType": "Email",
+                    "date": "2025-05-15T00:00:00.000Z",
+                    "description": "Sent service contract renewal proposal"
+                }
+            ]
         },
         {
             "id": 500107,
@@ -397,7 +486,23 @@
                     "revenue": 8750
                 }
             ],
-            "notes": ["Heavy clay soil conditions reported."]
+            "notes": ["Heavy clay soil conditions reported."],
+            "activities": [
+                {
+                    "id": 1012,
+                    "assigneeId": 260,
+                    "activityType": "Meeting",
+                    "date": "2025-04-01T00:00:00.000Z",
+                    "description": "Initial planning meeting with developer"
+                },
+                {
+                    "id": 1013,
+                    "assigneeId": 260,
+                    "activityType": "Site Visit",
+                    "date": "2025-04-10T00:00:00.000Z",
+                    "description": "Soil assessment and equipment evaluation"
+                }
+            ]
         },
         {
             "id": 500108,
@@ -446,7 +551,16 @@
                     "revenue": 1300
                 }
             ],
-            "notes": ["Work barge required for under-bridge access."]
+            "notes": ["Work barge required for under-bridge access."],
+            "activities": [
+                {
+                    "id": 1014,
+                    "assigneeId": 292,
+                    "activityType": "Phone Call",
+                    "date": "2025-08-20T00:00:00.000Z",
+                    "description": "Coordinated parts delivery schedule"
+                }
+            ]
         },
         {
             "id": 500109,
@@ -472,7 +586,16 @@
             },
             "siteCompanies": [],
             "associatedOpportunities": [],
-            "notes": ["Awaiting final funding approval."]
+            "notes": ["Awaiting final funding approval."],
+            "activities": [
+                {
+                    "id": 1015,
+                    "assigneeId": 313,
+                    "activityType": "Email",
+                    "date": "2025-03-15T00:00:00.000Z",
+                    "description": "Sent equipment catalog and pricing"
+                }
+            ]
         },
         {
             "id": 500110,
@@ -512,7 +635,23 @@
                 }
             ],
             "associatedOpportunities": [],
-            "notes": ["Mandatory MSHA training for all site visitors."]
+            "notes": ["Mandatory MSHA training for all site visitors."],
+            "activities": [
+                {
+                    "id": 1016,
+                    "assigneeId": 305,
+                    "activityType": "Site Visit",
+                    "date": "2025-02-20T00:00:00.000Z",
+                    "description": "Equipment assessment for overburden removal"
+                },
+                {
+                    "id": 1017,
+                    "assigneeId": 305,
+                    "activityType": "Meeting",
+                    "date": "2025-03-05T00:00:00.000Z",
+                    "description": "Quarterly review with quarry operations team"
+                }
+            ]
         }
     ],
     "sorting": "id",

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '@/contexts/DataContext';
+import { useStatusColors } from '@/hooks/useStatusColors';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -23,6 +24,7 @@ const JobSiteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { jobSites, getSalesRepName, opportunities, getStageName, removeSiteCompany } = useData();
+  const { getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
   const [showOpportunityDetail, setShowOpportunityDetail] = useState(false);
@@ -112,13 +114,7 @@ const JobSiteDetail = () => {
           </Button>
           <h1 className="text-3xl font-bold">{site.name}</h1>
           <div className="flex items-center gap-2 mt-2">
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-              site.statusId === 'Active' 
-                ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400'
-                : site.statusId === 'Planning'
-                ? 'bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-400'
-                : 'bg-muted text-muted-foreground'
-            }`}>
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColorClasses(site.statusId)}`}>
               {site.statusId}
             </span>
             <span className="text-sm text-muted-foreground">ID: {site.id}</span>

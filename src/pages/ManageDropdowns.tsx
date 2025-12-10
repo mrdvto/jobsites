@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Pencil, Plus, Trash2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useStatusColors, STATUS_COLORS } from '@/hooks/useStatusColors';
+
 type DropdownType = 'projectStatus' | 'subcontractorRole';
 
 interface DropdownOption {
@@ -15,16 +17,6 @@ interface DropdownOption {
   displayOrder: number;
   color?: string; // Only used for projectStatus
 }
-
-// Color palette for status pills
-const STATUS_COLORS = [
-  { id: 'emerald', label: 'Green', bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-700 dark:text-emerald-300' },
-  { id: 'sky', label: 'Blue', bg: 'bg-sky-100 dark:bg-sky-900/30', text: 'text-sky-700 dark:text-sky-300' },
-  { id: 'amber', label: 'Yellow', bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-700 dark:text-amber-300' },
-  { id: 'rose', label: 'Red', bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-700 dark:text-rose-300' },
-  { id: 'violet', label: 'Purple', bg: 'bg-violet-100 dark:bg-violet-900/30', text: 'text-violet-700 dark:text-violet-300' },
-  { id: 'slate', label: 'Gray', bg: 'bg-slate-100 dark:bg-slate-900/30', text: 'text-slate-700 dark:text-slate-300' },
-];
 
 // Initial dropdown data
 const initialDropdowns: Record<DropdownType, DropdownOption[]> = {
@@ -81,11 +73,20 @@ const initialDropdowns: Record<DropdownType, DropdownOption[]> = {
 };
 const ManageDropdowns = () => {
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  const { statusColors, updateAllStatusColors } = useStatusColors();
   const [selectedDropdown, setSelectedDropdown] = useState<DropdownType | null>(null);
-  const [dropdowns, setDropdowns] = useState<Record<DropdownType, DropdownOption[]>>(initialDropdowns);
+  const [dropdowns, setDropdowns] = useState<Record<DropdownType, DropdownOption[]>>(() => {
+    // Initialize project status with saved colors from localStorage
+    const projectStatusWithColors = initialDropdowns.projectStatus.map(status => ({
+      ...status,
+      color: statusColors[status.id] || status.color
+    }));
+    return {
+      ...initialDropdowns,
+      projectStatus: projectStatusWithColors
+    };
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [editedValues, setEditedValues] = useState<DropdownOption[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<{
@@ -139,6 +140,18 @@ const ManageDropdowns = () => {
         ...prev,
         [selectedDropdown]: editedValues
       }));
+      
+      // If editing project status, sync colors to the shared hook
+      if (selectedDropdown === 'projectStatus') {
+        const colorMap: Record<string, string> = {};
+        editedValues.forEach(item => {
+          if (item.color) {
+            colorMap[item.id] = item.color;
+          }
+        });
+        updateAllStatusColors(colorMap);
+      }
+      
       setIsEditing(false);
       toast({
         title: 'Changes saved',
@@ -226,6 +239,19 @@ const ManageDropdowns = () => {
           ...prev,
           [selectedDropdown]: [...prev[selectedDropdown], newOption]
         }));
+        
+        // If adding project status, sync color to the shared hook
+        if (selectedDropdown === 'projectStatus' && newOption.color) {
+          const currentDropdown = dropdowns[selectedDropdown];
+          const colorMap: Record<string, string> = {};
+          currentDropdown.forEach(item => {
+            if (item.color) {
+              colorMap[item.id] = item.color;
+            }
+          });
+          colorMap[newOption.id] = newOption.color;
+          updateAllStatusColors(colorMap);
+        }
       }
       setNewItem({
         label: '',

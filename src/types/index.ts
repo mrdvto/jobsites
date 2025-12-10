@@ -147,4 +147,5 @@ export interface Filters {
   generalContractor: string;
   showBehindPAR: boolean;
   status: string;
+  hideCompleted: boolean;
 }

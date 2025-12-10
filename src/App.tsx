@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DataProvider } from "./contexts/DataContext";
 import JobSiteList from "./pages/JobSiteList";
 import JobSiteDetail from "./pages/JobSiteDetail";
+import ManageDropdowns from "./pages/ManageDropdowns";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<JobSiteList />} />
             <Route path="/site/:id" element={<JobSiteDetail />} />
+            <Route path="/settings/dropdowns" element={<ManageDropdowns />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -39,6 +39,20 @@ const JobSiteDetail = () => {
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
+  const hasAddress = site?.address.street && site?.address.city && site?.address.state;
+  const hasCoordinates = site?.address.latitude != null && site?.address.longitude != null && 
+    !isNaN(site?.address.latitude) && !isNaN(site?.address.longitude);
+  
+  // Determine default location view: address if available, otherwise coordinates
+  const defaultLocationView: LocationViewType = hasAddress ? 'address' : (hasCoordinates ? 'coordinates' : 'address');
+  
+  // Set initial location view when site changes - must be before any early returns
+  useEffect(() => {
+    if (site) {
+      setLocationViewType(defaultLocationView);
+    }
+  }, [site?.id, defaultLocationView]);
+
   if (!site) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -57,18 +71,6 @@ const JobSiteDetail = () => {
       setShowOpportunityDetail(true);
     }
   };
-
-  const hasAddress = site.address.street && site.address.city && site.address.state;
-  const hasCoordinates = site.address.latitude != null && site.address.longitude != null && 
-    !isNaN(site.address.latitude) && !isNaN(site.address.longitude);
-  
-  // Determine default location view: address if available, otherwise coordinates
-  const defaultLocationView: LocationViewType = hasAddress ? 'address' : (hasCoordinates ? 'coordinates' : 'address');
-  
-  // Set initial location view when site changes
-  useEffect(() => {
-    setLocationViewType(defaultLocationView);
-  }, [site.id]);
 
   const primaryGC = site.siteCompanies.find(c => c.roleId === 'GC' && c.isPrimaryContact);
 

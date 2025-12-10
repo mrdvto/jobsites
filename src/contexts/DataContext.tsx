@@ -44,6 +44,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     generalContractor: '',
     showBehindPAR: false,
     status: '',
+    hideCompleted: true,
   });
 
   // Load data on mount
@@ -90,6 +91,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const getFilteredSites = (): JobSite[] => {
     return jobSites.filter(site => {
+      // Hide Completed filter
+      if (filters.hideCompleted && site.statusId === 'Completed') {
+        return false;
+      }
+
       // Sales Rep filter
       if (filters.salesRepId && site.salesRepId !== parseInt(filters.salesRepId)) {
         return false;

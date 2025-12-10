@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import { Card } from '@/components/ui/card';
 
 export const FilterBar = () => {
@@ -19,7 +20,7 @@ export const FilterBar = () => {
   return (
     <Card className="p-6 mb-6">
       <h2 className="text-lg font-semibold mb-4">Filters</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
         <div className="space-y-2">
           <Label htmlFor="salesRep">Sales Rep</Label>
           <Select 
@@ -105,6 +106,25 @@ export const FilterBar = () => {
               className="text-sm font-normal cursor-pointer"
             >
               Show 'Behind on PAR' only
+            </Label>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label className="opacity-0">Completed</Label>
+          <div className="flex items-center space-x-2 h-10">
+            <Switch 
+              id="hideCompleted"
+              checked={filters.hideCompleted}
+              onCheckedChange={(checked) => 
+                setFilters({ ...filters, hideCompleted: checked })
+              }
+            />
+            <Label 
+              htmlFor="hideCompleted" 
+              className="text-sm font-normal cursor-pointer"
+            >
+              Hide Completed
             </Label>
           </div>
         </div>

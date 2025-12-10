@@ -38,7 +38,7 @@ const initialDropdowns: Record<DropdownType, DropdownOption[]> = {
   }, {
     id: 'Completed',
     label: 'Completed',
-    displayOrder: 4,
+    displayOrder: 99,
     color: 'slate'
   }],
   subcontractorRole: [{

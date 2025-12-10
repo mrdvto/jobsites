@@ -14,8 +14,8 @@ export const JobSiteTable = () => {
   const navigate = useNavigate();
   const { getFilteredSites, getSalesRepName, calculateSiteRevenue } = useData();
   const { getStatusColorClasses } = useStatusColors();
-  const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [sortColumn, setSortColumn] = useState<SortColumn | null>('status');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
   const filteredSites = getFilteredSites();
 

@@ -31,11 +31,14 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
   const [contactTitle, setContactTitle] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [contactEmail, setContactEmail] = useState('');
+  const [locationType, setLocationType] = useState<'address' | 'coordinates'>('address');
   const [street, setStreet] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [zipCode, setZipCode] = useState('');
   const [country, setCountry] = useState('USA');
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
 
   const resetForm = () => {
     setName('');
@@ -47,11 +50,14 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
     setContactTitle('');
     setContactPhone('');
     setContactEmail('');
+    setLocationType('address');
     setStreet('');
     setCity('');
     setState('');
     setZipCode('');
     setCountry('USA');
+    setLatitude('');
+    setLongitude('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -84,13 +90,26 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
       return;
     }
 
-    if (!street.trim() || !city.trim() || !state.trim() || !zipCode.trim() || !country.trim()) {
-      toast({
-        title: "Error",
-        description: "Please fill in all address fields.",
-        variant: "destructive"
-      });
-      return;
+    if (locationType === 'address') {
+      if (!street.trim() || !city.trim() || !state.trim() || !zipCode.trim() || !country.trim()) {
+        toast({
+          title: "Error",
+          description: "Please fill in all address fields.",
+          variant: "destructive"
+        });
+        return;
+      }
+    } else {
+      const lat = parseFloat(latitude);
+      const lon = parseFloat(longitude);
+      if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        toast({
+          title: "Error",
+          description: "Please enter valid coordinates (latitude: -90 to 90, longitude: -180 to 180).",
+          variant: "destructive"
+        });
+        return;
+      }
     }
 
     const parsedRate = parseFloat(plannedAnnualRate);
@@ -115,15 +134,25 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
         phone: contactPhone.trim(),
         email: contactEmail.trim()
       },
-      address: {
-        street: street.trim(),
-        city: city.trim(),
-        state: state.trim(),
-        zipCode: zipCode.trim(),
-        country: country.trim(),
-        latitude: 0,
-        longitude: 0
-      },
+      address: locationType === 'address' 
+        ? {
+            street: street.trim(),
+            city: city.trim(),
+            state: state.trim(),
+            zipCode: zipCode.trim(),
+            country: country.trim(),
+            latitude: 0,
+            longitude: 0
+          }
+        : {
+            street: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            country: '',
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude)
+          },
       siteCompanies: [],
       associatedOpportunities: [],
       notes: []
@@ -243,64 +272,111 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
           </div>
 
           <div className="space-y-4 pb-4 border-b">
-            <h3 className="font-semibold">Address</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold">Location</h3>
+              <div className="flex rounded-md border border-input overflow-hidden">
+                <Button
+                  type="button"
+                  variant={locationType === 'address' ? 'default' : 'ghost'}
+                  size="sm"
+                  className="rounded-none h-7 text-xs"
+                  onClick={() => setLocationType('address')}
+                >
+                  Address
+                </Button>
+                <Button
+                  type="button"
+                  variant={locationType === 'coordinates' ? 'default' : 'ghost'}
+                  size="sm"
+                  className="rounded-none h-7 text-xs"
+                  onClick={() => setLocationType('coordinates')}
+                >
+                  Coordinates
+                </Button>
+              </div>
+            </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="street">Street Address *</Label>
-              <Input
-                id="street"
-                value={street}
-                onChange={(e) => setStreet(e.target.value)}
-                placeholder="123 Main Street"
-                required
-              />
-            </div>
+            {locationType === 'address' ? (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="street">Street Address *</Label>
+                  <Input
+                    id="street"
+                    value={street}
+                    onChange={(e) => setStreet(e.target.value)}
+                    placeholder="123 Main Street"
+                  />
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="city">City *</Label>
-                <Input
-                  id="city"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  placeholder="City"
-                  required
-                />
-              </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="city">City *</Label>
+                    <Input
+                      id="city"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      placeholder="City"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="state">State *</Label>
-                <Input
-                  id="state"
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  placeholder="CA"
-                  required
-                />
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="state">State *</Label>
+                    <Input
+                      id="state"
+                      value={state}
+                      onChange={(e) => setState(e.target.value)}
+                      placeholder="CA"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="zipCode">Zip Code *</Label>
-                <Input
-                  id="zipCode"
-                  value={zipCode}
-                  onChange={(e) => setZipCode(e.target.value)}
-                  placeholder="12345"
-                  required
-                />
-              </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="zipCode">Zip Code *</Label>
+                    <Input
+                      id="zipCode"
+                      value={zipCode}
+                      onChange={(e) => setZipCode(e.target.value)}
+                      placeholder="12345"
+                    />
+                  </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="country">Country *</Label>
-                <Input
-                  id="country"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  placeholder="USA"
-                  required
-                />
+                  <div className="space-y-2">
+                    <Label htmlFor="country">Country *</Label>
+                    <Input
+                      id="country"
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      placeholder="USA"
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="latitude">Latitude *</Label>
+                  <Input
+                    id="latitude"
+                    type="number"
+                    step="any"
+                    value={latitude}
+                    onChange={(e) => setLatitude(e.target.value)}
+                    placeholder="-90 to 90"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="longitude">Longitude *</Label>
+                  <Input
+                    id="longitude"
+                    type="number"
+                    step="any"
+                    value={longitude}
+                    onChange={(e) => setLongitude(e.target.value)}
+                    placeholder="-180 to 180"
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="space-y-2">

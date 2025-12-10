@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '@/contexts/DataContext';
-import { useStatusColors } from '@/hooks/useStatusColors';
+import { useStatusColors, STATUS_COLORS } from '@/hooks/useStatusColors';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { OpportunityDetailModal } from '@/components/OpportunityDetailModal';
 import { AssociateOpportunityModal } from '@/components/AssociateOpportunityModal';
@@ -23,8 +24,8 @@ type LocationViewType = 'address' | 'coordinates';
 const JobSiteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { jobSites, getSalesRepName, opportunities, getStageName, removeSiteCompany } = useData();
-  const { getStatusColorClasses } = useStatusColors();
+  const { jobSites, getSalesRepName, opportunities, getStageName, removeSiteCompany, updateJobSite } = useData();
+  const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
   const [showOpportunityDetail, setShowOpportunityDetail] = useState(false);
@@ -104,6 +105,17 @@ const JobSiteDetail = () => {
     setShowRemoveCompanyDialog(true);
   };
 
+  // Get available status options from saved colors
+  const statusOptions = Object.keys(statusColors);
+
+  const handleStatusChange = (newStatus: string) => {
+    updateJobSite(site.id, { statusId: newStatus });
+    toast({
+      title: "Status updated",
+      description: `Project status changed to "${newStatus}".`
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card">
@@ -114,9 +126,25 @@ const JobSiteDetail = () => {
           </Button>
           <h1 className="text-3xl font-bold">{site.name}</h1>
           <div className="flex items-center gap-2 mt-2">
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColorClasses(site.statusId)}`}>
-              {site.statusId}
-            </span>
+            <Select value={site.statusId} onValueChange={handleStatusChange}>
+              <SelectTrigger className={`w-auto h-7 text-xs font-medium rounded-full border-0 ${getStatusColorClasses(site.statusId)}`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {statusOptions.map(status => {
+                  const colorId = statusColors[status];
+                  const colorConfig = STATUS_COLORS.find(c => c.id === colorId);
+                  return (
+                    <SelectItem key={status} value={status}>
+                      <div className="flex items-center gap-2">
+                        <span className={`w-3 h-3 rounded-full ${colorConfig?.bg || 'bg-muted'}`} />
+                        {status}
+                      </div>
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
             <span className="text-sm text-muted-foreground">ID: {site.id}</span>
           </div>
         </div>

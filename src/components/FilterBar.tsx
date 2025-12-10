@@ -2,7 +2,7 @@ import { useData } from '@/contexts/DataContext';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
+
 import { Switch } from '@/components/ui/switch';
 import { Card } from '@/components/ui/card';
 
@@ -94,18 +94,18 @@ export const FilterBar = () => {
         <div className="space-y-2">
           <Label className="opacity-0">PAR</Label>
           <div className="flex items-center space-x-2 h-10">
-            <Checkbox 
+            <Switch 
               id="parStatus"
               checked={filters.showBehindPAR}
               onCheckedChange={(checked) => 
-                setFilters({ ...filters, showBehindPAR: checked as boolean })
+                setFilters({ ...filters, showBehindPAR: checked })
               }
             />
             <Label 
               htmlFor="parStatus" 
               className="text-sm font-normal cursor-pointer"
             >
-              Show 'Behind on PAR' only
+              Behind on PAR only
             </Label>
           </div>
         </div>

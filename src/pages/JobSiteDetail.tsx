@@ -16,15 +16,17 @@ import { AddGCModal } from '@/components/AddGCModal';
 import { AssociateCompanyModal } from '@/components/AssociateCompanyModal';
 import { EditJobSiteModal } from '@/components/EditJobSiteModal';
 import { EditGCModal } from '@/components/EditGCModal';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil } from 'lucide-react';
+import { ActivityModal } from '@/components/ActivityModal';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Activity } from '@/types';
 
 type LocationViewType = 'address' | 'coordinates';
 
 const JobSiteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { jobSites, getSalesRepName, opportunities, getStageName, removeSiteCompany, updateJobSite } = useData();
+  const { jobSites, getSalesRepName, opportunities, getStageName, removeSiteCompany, updateJobSite, deleteActivity } = useData();
   const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
@@ -39,6 +41,11 @@ const JobSiteDetail = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showEditGCModal, setShowEditGCModal] = useState(false);
   const [locationViewType, setLocationViewType] = useState<LocationViewType>('address');
+  const [showActivityModal, setShowActivityModal] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
+  const [activityModalMode, setActivityModalMode] = useState<'create' | 'edit'>('create');
+  const [showDeleteActivityDialog, setShowDeleteActivityDialog] = useState(false);
+  const [activityToDelete, setActivityToDelete] = useState<number | null>(null);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -114,6 +121,35 @@ const JobSiteDetail = () => {
       title: "Status updated",
       description: `Project status changed to "${newStatus}".`
     });
+  };
+
+  const handleCreateActivity = () => {
+    setSelectedActivity(undefined);
+    setActivityModalMode('create');
+    setShowActivityModal(true);
+  };
+
+  const handleEditActivity = (activity: Activity) => {
+    setSelectedActivity(activity);
+    setActivityModalMode('edit');
+    setShowActivityModal(true);
+  };
+
+  const handleDeleteActivity = () => {
+    if (activityToDelete !== null) {
+      deleteActivity(site.id, activityToDelete);
+      toast({
+        title: "Success",
+        description: "Activity deleted successfully."
+      });
+      setActivityToDelete(null);
+      setShowDeleteActivityDialog(false);
+    }
+  };
+
+  const initiateDeleteActivity = (activityId: number) => {
+    setActivityToDelete(activityId);
+    setShowDeleteActivityDialog(true);
   };
 
   return (
@@ -469,6 +505,68 @@ const JobSiteDetail = () => {
             </Table>
           )}
         </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold">Activities</h2>
+            <Button size="sm" onClick={handleCreateActivity}>
+              <Plus className="h-4 w-4 mr-2" />
+              Create New
+            </Button>
+          </div>
+
+          {(!site.activities || site.activities.length === 0) ? (
+            <p className="text-center text-muted-foreground py-8">
+              No activities recorded for this site yet.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Assignee</TableHead>
+                  <TableHead>Activity Type</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead className="w-[80px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {site.activities.map(activity => (
+                  <TableRow key={activity.id}>
+                    <TableCell className="font-medium">{getSalesRepName(activity.assigneeId)}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{activity.activityType}</Badge>
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      {new Date(activity.date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-sm">{activity.description}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => handleEditActivity(activity)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => initiateDeleteActivity(activity.id)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </Card>
       </main>
 
       <OpportunityDetailModal
@@ -547,6 +645,29 @@ const JobSiteDetail = () => {
           onOpenChange={setShowEditGCModal}
         />
       )}
+
+      <ActivityModal
+        open={showActivityModal}
+        onOpenChange={setShowActivityModal}
+        siteId={site.id}
+        activity={selectedActivity}
+        mode={activityModalMode}
+      />
+
+      <AlertDialog open={showDeleteActivityDialog} onOpenChange={setShowDeleteActivityDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Activity?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the activity.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteActivity}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

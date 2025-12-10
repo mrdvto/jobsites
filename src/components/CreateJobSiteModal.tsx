@@ -7,10 +7,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Calendar } from '@/components/ui/calendar';
 import { useData } from '@/contexts/DataContext';
 import { useToast } from '@/hooks/use-toast';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { Check, ChevronsUpDown, CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 
 interface CreateJobSiteModalProps {
   open: boolean;
@@ -27,6 +29,8 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
   const [salesRepId, setSalesRepId] = useState<number | null>(null);
   const [salesRepOpen, setSalesRepOpen] = useState(false);
   const [plannedAnnualRate, setPlannedAnnualRate] = useState('0');
+  const [parStartDate, setParStartDate] = useState<Date | undefined>(undefined);
+  const [parStartDateOpen, setParStartDateOpen] = useState(false);
   const [contactName, setContactName] = useState('');
   const [contactTitle, setContactTitle] = useState('');
   const [contactPhone, setContactPhone] = useState('');
@@ -46,6 +50,7 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
     setStatusId('Active');
     setSalesRepId(null);
     setPlannedAnnualRate('0');
+    setParStartDate(undefined);
     setContactName('');
     setContactTitle('');
     setContactPhone('');
@@ -128,6 +133,7 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
       statusId,
       salesRepId,
       plannedAnnualRate: parsedRate,
+      parStartDate: parStartDate ? parStartDate.toISOString() : undefined,
       projectPrimaryContact: {
         name: contactName.trim(),
         title: contactTitle.trim(),
@@ -268,6 +274,36 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
                   required
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>PAR Start Date</Label>
+              <Popover open={parStartDateOpen} onOpenChange={setParStartDateOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !parStartDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {parStartDate ? format(parStartDate, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={parStartDate}
+                    onSelect={(date) => {
+                      setParStartDate(date);
+                      setParStartDateOpen(false);
+                    }}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
 

@@ -7,6 +7,7 @@ export interface JobSite {
   statusId: string;
   salesRepId: number;
   plannedAnnualRate: number;
+  parStartDate?: string;
   projectPrimaryContact: {
     name: string;
     title: string;

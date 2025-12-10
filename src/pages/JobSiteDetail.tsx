@@ -252,6 +252,10 @@ const JobSiteDetail = () => {
                   <p className="font-medium">{site.plannedAnnualRate} sales activities/year</p>
                 </div>
                 <div>
+                  <span className="text-muted-foreground">PAR Start Date</span>
+                  <p className="font-medium">{site.parStartDate ? new Date(site.parStartDate).toLocaleDateString() : 'Not set'}</p>
+                </div>
+                <div>
                   <span className="text-muted-foreground">Current Opportunities</span>
                   <p className="font-medium">{site.associatedOpportunities.length}</p>
                 </div>

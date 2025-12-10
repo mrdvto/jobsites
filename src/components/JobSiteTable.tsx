@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { JobSite } from '@/types';
 
-type SortColumn = 'name' | 'address' | 'salesRep' | 'contact' | 'status' | 'par' | 'revenue';
+type SortColumn = 'name' | 'address' | 'salesRep' | 'contact' | 'status' | 'revenue';
 type SortDirection = 'asc' | 'desc' | null;
 
 export const JobSiteTable = () => {
@@ -54,9 +54,6 @@ export const JobSiteTable = () => {
         break;
       case 'status':
         comparison = a.statusId.localeCompare(b.statusId);
-        break;
-      case 'par':
-        comparison = a.plannedAnnualRate - b.plannedAnnualRate;
         break;
       case 'revenue':
         comparison = calculateSiteRevenue(a) - calculateSiteRevenue(b);
@@ -128,15 +125,6 @@ export const JobSiteTable = () => {
             </TableHead>
             <TableHead 
               className="text-right cursor-pointer select-none group hover:bg-muted/50"
-              onClick={() => handleSort('par')}
-            >
-              <div className="flex items-center justify-end">
-                PAR
-                <SortIcon column="par" />
-              </div>
-            </TableHead>
-            <TableHead 
-              className="text-right cursor-pointer select-none group hover:bg-muted/50"
               onClick={() => handleSort('revenue')}
             >
               <div className="flex items-center justify-end">
@@ -149,7 +137,7 @@ export const JobSiteTable = () => {
         <TableBody>
           {sortedSites.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+              <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
                 No job sites found matching the current filters.
               </TableCell>
             </TableRow>
@@ -174,9 +162,6 @@ export const JobSiteTable = () => {
                   }`}>
                     {site.statusId}
                   </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  ${site.plannedAnnualRate.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                 </TableCell>
                 <TableCell className="text-right font-medium">
                   ${calculateSiteRevenue(site).toLocaleString('en-US', { minimumFractionDigits: 2 })}

@@ -17,6 +17,7 @@ import { AssociateCompanyModal } from '@/components/AssociateCompanyModal';
 import { EditJobSiteModal } from '@/components/EditJobSiteModal';
 import { EditGCModal } from '@/components/EditGCModal';
 import { ActivityModal } from '@/components/ActivityModal';
+import { AssociateActivityModal } from '@/components/AssociateActivityModal';
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity } from '@/types';
@@ -46,6 +47,7 @@ const JobSiteDetail = () => {
   const [activityModalMode, setActivityModalMode] = useState<'create' | 'edit'>('create');
   const [showDeleteActivityDialog, setShowDeleteActivityDialog] = useState(false);
   const [activityToDelete, setActivityToDelete] = useState<number | null>(null);
+  const [showAssociateActivityModal, setShowAssociateActivityModal] = useState(false);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -509,10 +511,20 @@ const JobSiteDetail = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Activities</h2>
-            <Button size="sm" onClick={handleCreateActivity}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create New
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowAssociateActivityModal(true)}
+              >
+                <LinkIcon className="h-4 w-4 mr-2" />
+                Associate Existing
+              </Button>
+              <Button size="sm" onClick={handleCreateActivity}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create New
+              </Button>
+            </div>
           </div>
 
           {(!site.activities || site.activities.length === 0) ? (
@@ -668,6 +680,13 @@ const JobSiteDetail = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AssociateActivityModal
+        siteId={site.id}
+        currentActivityIds={site.activities?.map(a => a.id) || []}
+        open={showAssociateActivityModal}
+        onOpenChange={setShowAssociateActivityModal}
+      />
     </div>
   );
 };

@@ -6,11 +6,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Calendar } from '@/components/ui/calendar';
 import { useData } from '@/contexts/DataContext';
 import { useToast } from '@/hooks/use-toast';
 import { JobSite } from '@/types';
-import { Plus, X, Check, ChevronsUpDown } from 'lucide-react';
+import { Plus, X, Check, ChevronsUpDown, CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 
 type LocationType = 'address' | 'coordinates';
 
@@ -27,6 +29,8 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
   const [salesRepId, setSalesRepId] = useState(site.salesRepId);
   const [salesRepOpen, setSalesRepOpen] = useState(false);
   const [plannedAnnualRate, setPlannedAnnualRate] = useState(site.plannedAnnualRate.toString());
+  const [parStartDate, setParStartDate] = useState<Date | undefined>(site.parStartDate ? new Date(site.parStartDate) : undefined);
+  const [parStartDateOpen, setParStartDateOpen] = useState(false);
   const [description, setDescription] = useState(site.description);
   const [notes, setNotes] = useState<string[]>(site.notes || []);
   const [contactName, setContactName] = useState(site.projectPrimaryContact.name);
@@ -47,6 +51,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
     if (open) {
       setSalesRepId(site.salesRepId);
       setPlannedAnnualRate(site.plannedAnnualRate.toString());
+      setParStartDate(site.parStartDate ? new Date(site.parStartDate) : undefined);
       setDescription(site.description);
       setNotes(site.notes || []);
       setContactName(site.projectPrimaryContact.name);
@@ -126,6 +131,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
     updateJobSite(site.id, {
       salesRepId,
       plannedAnnualRate: parseFloat(plannedAnnualRate),
+      parStartDate: parStartDate ? parStartDate.toISOString() : undefined,
       description: description.trim(),
       notes,
       address: {
@@ -225,6 +231,36 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
                   placeholder="0.00"
                   required
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label>PAR Start Date</Label>
+                <Popover open={parStartDateOpen} onOpenChange={setParStartDateOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !parStartDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {parStartDate ? format(parStartDate, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={parStartDate}
+                      onSelect={(date) => {
+                        setParStartDate(date);
+                        setParStartDateOpen(false);
+                      }}
+                      initialFocus
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
           </div>

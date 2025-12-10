@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '@/contexts/DataContext';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,8 @@ import { EditGCModal } from '@/components/EditGCModal';
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+type LocationViewType = 'address' | 'coordinates';
+
 const JobSiteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -33,6 +35,7 @@ const JobSiteDetail = () => {
   const [companyToRemove, setCompanyToRemove] = useState<string | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showEditGCModal, setShowEditGCModal] = useState(false);
+  const [locationViewType, setLocationViewType] = useState<LocationViewType>('address');
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -54,6 +57,18 @@ const JobSiteDetail = () => {
       setShowOpportunityDetail(true);
     }
   };
+
+  const hasAddress = site.address.street && site.address.city && site.address.state;
+  const hasCoordinates = site.address.latitude != null && site.address.longitude != null && 
+    !isNaN(site.address.latitude) && !isNaN(site.address.longitude);
+  
+  // Determine default location view: address if available, otherwise coordinates
+  const defaultLocationView: LocationViewType = hasAddress ? 'address' : (hasCoordinates ? 'coordinates' : 'address');
+  
+  // Set initial location view when site changes
+  useEffect(() => {
+    setLocationViewType(defaultLocationView);
+  }, [site.id]);
 
   const primaryGC = site.siteCompanies.find(c => c.roleId === 'GC' && c.isPrimaryContact);
 
@@ -127,13 +142,54 @@ const JobSiteDetail = () => {
             <div className="space-y-4">
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div>
-                  <p className="font-medium">Address</p>
-                  <p className="text-sm text-muted-foreground">
-                    {site.address.street}<br />
-                    {site.address.city}, {site.address.state} {site.address.zipCode}<br />
-                    {site.address.country}
-                  </p>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="font-medium">Location</p>
+                    {(hasAddress || hasCoordinates) && (
+                      <div className="flex rounded-md border border-input overflow-hidden">
+                        <Button
+                          type="button"
+                          variant={locationViewType === 'address' ? 'default' : 'ghost'}
+                          size="sm"
+                          className="rounded-none h-7 text-xs"
+                          onClick={() => setLocationViewType('address')}
+                          disabled={!hasAddress}
+                        >
+                          Address
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={locationViewType === 'coordinates' ? 'default' : 'ghost'}
+                          size="sm"
+                          className="rounded-none h-7 text-xs"
+                          onClick={() => setLocationViewType('coordinates')}
+                          disabled={!hasCoordinates}
+                        >
+                          Coordinates
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                  {locationViewType === 'address' ? (
+                    hasAddress ? (
+                      <p className="text-sm text-muted-foreground">
+                        {site.address.street}<br />
+                        {site.address.city}, {site.address.state} {site.address.zipCode}<br />
+                        {site.address.country}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">No address available</p>
+                    )
+                  ) : (
+                    hasCoordinates ? (
+                      <p className="text-sm text-muted-foreground">
+                        Latitude: {site.address.latitude}<br />
+                        Longitude: {site.address.longitude}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">No coordinates available</p>
+                    )
+                  )}
                 </div>
               </div>
 

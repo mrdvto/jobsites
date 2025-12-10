@@ -29,25 +29,25 @@ type DropdownType = 'projectStatus' | 'subcontractorRole';
 interface DropdownOption {
   id: string;
   label: string;
-  description?: string;
+  displayOrder: number;
 }
 
 // Initial dropdown data
 const initialDropdowns: Record<DropdownType, DropdownOption[]> = {
   projectStatus: [
-    { id: 'Active', label: 'Active', description: 'Currently in progress' },
-    { id: 'Planning', label: 'Planning', description: 'In planning phase' },
-    { id: 'Completed', label: 'Completed', description: 'Project finished' },
-    { id: 'On Hold', label: 'On Hold', description: 'Temporarily paused' },
+    { id: 'Active', label: 'Active', displayOrder: 1 },
+    { id: 'Planning', label: 'Planning', displayOrder: 2 },
+    { id: 'On Hold', label: 'On Hold', displayOrder: 3 },
+    { id: 'Completed', label: 'Completed', displayOrder: 4 },
   ],
   subcontractorRole: [
-    { id: 'GC', label: 'GC', description: 'General Contractor' },
-    { id: 'SUB-EXC', label: 'SUB-EXC', description: 'Subcontractor - Excavation' },
-    { id: 'SUB-PAV', label: 'SUB-PAV', description: 'Subcontractor - Paving' },
-    { id: 'SUB-ELEC', label: 'SUB-ELEC', description: 'Subcontractor - Electrical' },
-    { id: 'SUB-MECH', label: 'SUB-MECH', description: 'Subcontractor - Mechanical' },
-    { id: 'SUB-SPEC', label: 'SUB-SPEC', description: 'Subcontractor - Specialized' },
-    { id: 'SUB-STEEL', label: 'SUB-STEEL', description: 'Subcontractor - Steel' },
+    { id: 'GC', label: 'General Contractor', displayOrder: 1 },
+    { id: 'SUB-EXC', label: 'Subcontractor - Excavation', displayOrder: 2 },
+    { id: 'SUB-PAV', label: 'Subcontractor - Paving', displayOrder: 3 },
+    { id: 'SUB-ELEC', label: 'Subcontractor - Electrical', displayOrder: 4 },
+    { id: 'SUB-MECH', label: 'Subcontractor - Mechanical', displayOrder: 5 },
+    { id: 'SUB-SPEC', label: 'Subcontractor - Specialized', displayOrder: 6 },
+    { id: 'SUB-STEEL', label: 'Subcontractor - Steel', displayOrder: 7 },
   ],
 };
 
@@ -63,10 +63,9 @@ const ManageDropdowns = () => {
     open: false,
     item: null,
   });
-  const [newItem, setNewItem] = useState<{ id: string; label: string; description: string }>({
-    id: '',
+  const [newItem, setNewItem] = useState<{ label: string; displayOrder: string }>({
     label: '',
-    description: '',
+    displayOrder: '',
   });
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -74,6 +73,10 @@ const ManageDropdowns = () => {
     { key: 'projectStatus', label: 'Project Status' },
     { key: 'subcontractorRole', label: 'Subcontractor Role' },
   ];
+
+  const sortByDisplayOrder = (items: DropdownOption[]) => {
+    return [...items].sort((a, b) => a.displayOrder - b.displayOrder);
+  };
 
   const handleSelectDropdown = (key: DropdownType) => {
     setSelectedDropdown(key);
@@ -83,7 +86,7 @@ const ManageDropdowns = () => {
 
   const handleStartEdit = () => {
     if (selectedDropdown) {
-      setEditedValues([...dropdowns[selectedDropdown]]);
+      setEditedValues(sortByDisplayOrder([...dropdowns[selectedDropdown]]));
       setIsEditing(true);
     }
   };
@@ -107,10 +110,14 @@ const ManageDropdowns = () => {
     }
   };
 
-  const handleEditValue = (index: number, field: keyof DropdownOption, value: string) => {
+  const handleEditValue = (index: number, field: keyof DropdownOption, value: string | number) => {
     setEditedValues(prev => {
       const updated = [...prev];
-      updated[index] = { ...updated[index], [field]: value };
+      if (field === 'displayOrder') {
+        updated[index] = { ...updated[index], [field]: parseInt(value as string) || 0 };
+      } else {
+        updated[index] = { ...updated[index], [field]: value };
+      }
       return updated;
     });
   };
@@ -137,11 +144,15 @@ const ManageDropdowns = () => {
     setDeleteConfirm({ open: false, item: null });
   };
 
+  const generateId = (label: string) => {
+    return label.toUpperCase().replace(/\s+/g, '-').replace(/[^A-Z0-9-]/g, '');
+  };
+
   const handleAddItem = () => {
-    if (!newItem.id || !newItem.label) {
+    if (!newItem.label) {
       toast({
         title: 'Missing fields',
-        description: 'ID and Label are required.',
+        description: 'Label is required.',
         variant: 'destructive',
       });
       return;
@@ -149,19 +160,22 @@ const ManageDropdowns = () => {
 
     if (selectedDropdown) {
       const currentValues = isEditing ? editedValues : dropdowns[selectedDropdown];
-      if (currentValues.some(v => v.id === newItem.id)) {
+      const generatedId = generateId(newItem.label);
+      
+      if (currentValues.some(v => v.id === generatedId)) {
         toast({
-          title: 'Duplicate ID',
-          description: 'An item with this ID already exists.',
+          title: 'Duplicate entry',
+          description: 'An item with this label already exists.',
           variant: 'destructive',
         });
         return;
       }
 
+      const maxOrder = Math.max(0, ...currentValues.map(v => v.displayOrder));
       const newOption: DropdownOption = {
-        id: newItem.id,
+        id: generatedId,
         label: newItem.label,
-        description: newItem.description || undefined,
+        displayOrder: newItem.displayOrder ? parseInt(newItem.displayOrder) : maxOrder + 1,
       };
 
       if (isEditing) {
@@ -173,7 +187,7 @@ const ManageDropdowns = () => {
         }));
       }
 
-      setNewItem({ id: '', label: '', description: '' });
+      setNewItem({ label: '', displayOrder: '' });
       setShowAddForm(false);
       toast({
         title: 'Item added',
@@ -183,9 +197,7 @@ const ManageDropdowns = () => {
   };
 
   const currentValues = selectedDropdown
-    ? isEditing
-      ? editedValues
-      : dropdowns[selectedDropdown]
+    ? sortByDisplayOrder(isEditing ? editedValues : dropdowns[selectedDropdown])
     : [];
 
   return (
@@ -269,21 +281,17 @@ const ManageDropdowns = () => {
                   {showAddForm && !isEditing && (
                     <div className="mb-4 p-4 border rounded-md bg-muted/50">
                       <h4 className="font-medium mb-3">Add New Item</h4>
-                      <div className="grid grid-cols-3 gap-3">
-                        <Input
-                          placeholder="ID"
-                          value={newItem.id}
-                          onChange={e => setNewItem(prev => ({ ...prev, id: e.target.value }))}
-                        />
+                      <div className="grid grid-cols-2 gap-3">
                         <Input
                           placeholder="Label"
                           value={newItem.label}
                           onChange={e => setNewItem(prev => ({ ...prev, label: e.target.value }))}
                         />
                         <Input
-                          placeholder="Description (optional)"
-                          value={newItem.description}
-                          onChange={e => setNewItem(prev => ({ ...prev, description: e.target.value }))}
+                          placeholder="Display Order (optional)"
+                          type="number"
+                          value={newItem.displayOrder}
+                          onChange={e => setNewItem(prev => ({ ...prev, displayOrder: e.target.value }))}
                         />
                       </div>
                       <div className="flex gap-2 mt-3">
@@ -295,7 +303,7 @@ const ManageDropdowns = () => {
                           size="sm"
                           onClick={() => {
                             setShowAddForm(false);
-                            setNewItem({ id: '', label: '', description: '' });
+                            setNewItem({ label: '', displayOrder: '' });
                           }}
                         >
                           Cancel
@@ -306,63 +314,55 @@ const ManageDropdowns = () => {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>ID</TableHead>
                         <TableHead>Label</TableHead>
-                        <TableHead>Description</TableHead>
-                        <TableHead className="w-[100px]">Actions</TableHead>
+                        <TableHead className="w-[120px]">Display Order</TableHead>
+                        <TableHead className="w-[80px]">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {currentValues.map((item, index) => (
-                        <TableRow key={item.id}>
-                          <TableCell>
-                            {isEditing ? (
-                              <Input
-                                value={editedValues[index]?.id || ''}
-                                onChange={e => handleEditValue(index, 'id', e.target.value)}
-                                className="h-8"
-                              />
-                            ) : (
-                              item.id
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {isEditing ? (
-                              <Input
-                                value={editedValues[index]?.label || ''}
-                                onChange={e => handleEditValue(index, 'label', e.target.value)}
-                                className="h-8"
-                              />
-                            ) : (
-                              item.label
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {isEditing ? (
-                              <Input
-                                value={editedValues[index]?.description || ''}
-                                onChange={e => handleEditValue(index, 'description', e.target.value)}
-                                className="h-8"
-                              />
-                            ) : (
-                              item.description || '-'
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-destructive hover:text-destructive"
-                              onClick={() => handleDeleteClick(item)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {currentValues.map((item, index) => {
+                        const editIndex = isEditing ? editedValues.findIndex(e => e.id === item.id) : index;
+                        return (
+                          <TableRow key={item.id}>
+                            <TableCell>
+                              {isEditing ? (
+                                <Input
+                                  value={editedValues[editIndex]?.label || ''}
+                                  onChange={e => handleEditValue(editIndex, 'label', e.target.value)}
+                                  className="h-8"
+                                />
+                              ) : (
+                                item.label
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {isEditing ? (
+                                <Input
+                                  type="number"
+                                  value={editedValues[editIndex]?.displayOrder || 0}
+                                  onChange={e => handleEditValue(editIndex, 'displayOrder', e.target.value)}
+                                  className="h-8 w-20"
+                                />
+                              ) : (
+                                item.displayOrder
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-destructive hover:text-destructive"
+                                onClick={() => handleDeleteClick(item)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                       {currentValues.length === 0 && (
                         <TableRow>
-                          <TableCell colSpan={4} className="text-center text-muted-foreground">
+                          <TableCell colSpan={3} className="text-center text-muted-foreground">
                             No values configured
                           </TableCell>
                         </TableRow>
@@ -372,21 +372,17 @@ const ManageDropdowns = () => {
                   {isEditing && (
                     <div className="mt-4 p-4 border rounded-md bg-muted/50">
                       <h4 className="font-medium mb-3">Add New Item</h4>
-                      <div className="grid grid-cols-3 gap-3">
-                        <Input
-                          placeholder="ID"
-                          value={newItem.id}
-                          onChange={e => setNewItem(prev => ({ ...prev, id: e.target.value }))}
-                        />
+                      <div className="grid grid-cols-2 gap-3">
                         <Input
                           placeholder="Label"
                           value={newItem.label}
                           onChange={e => setNewItem(prev => ({ ...prev, label: e.target.value }))}
                         />
                         <Input
-                          placeholder="Description (optional)"
-                          value={newItem.description}
-                          onChange={e => setNewItem(prev => ({ ...prev, description: e.target.value }))}
+                          placeholder="Display Order (optional)"
+                          type="number"
+                          value={newItem.displayOrder}
+                          onChange={e => setNewItem(prev => ({ ...prev, displayOrder: e.target.value }))}
                         />
                       </div>
                       <div className="flex gap-2 mt-3">

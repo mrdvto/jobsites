@@ -30,12 +30,30 @@
                     "roleId": "GC",
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
-                    "companyContact": {
-                        "name": "Michael Ross",
-                        "title": "Site Superintendent",
-                        "phone": "312-555-8821",
-                        "email": "mross@turner.com"
-                    }
+                    "companyContacts": [
+                        {
+                            "id": 1,
+                            "name": "Michael Ross",
+                            "title": "Site Superintendent",
+                            "phone": "312-555-8821",
+                            "email": "mross@turner.com"
+                        },
+                        {
+                            "id": 2,
+                            "name": "Jennifer Walsh",
+                            "title": "Project Manager",
+                            "phone": "312-555-8822",
+                            "email": "jwalsh@turner.com"
+                        },
+                        {
+                            "id": 3,
+                            "name": "Robert Chen",
+                            "title": "Safety Director",
+                            "phone": "312-555-8823",
+                            "email": "rchen@turner.com"
+                        }
+                    ],
+                    "primaryContactIndex": 0
                 },
                 {
                     "companyId": "1019550",
@@ -43,12 +61,23 @@
                     "roleId": "SUB-EXC",
                     "roleDescription": "Subcontractor - Excavation",
                     "isPrimaryContact": false,
-                    "companyContact": {
-                        "name": "Latisha Tyler",
-                        "title": "Fleet Manager",
-                        "phone": "312-555-0192",
-                        "email": "latisha.tyler@jdtcontractor.com"
-                    }
+                    "companyContacts": [
+                        {
+                            "id": 1,
+                            "name": "Latisha Tyler",
+                            "title": "Fleet Manager",
+                            "phone": "312-555-0192",
+                            "email": "latisha.tyler@jdtcontractor.com"
+                        },
+                        {
+                            "id": 2,
+                            "name": "Marcus Johnson",
+                            "title": "Site Foreman",
+                            "phone": "312-555-0193",
+                            "email": "m.johnson@jdtcontractor.com"
+                        }
+                    ],
+                    "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [

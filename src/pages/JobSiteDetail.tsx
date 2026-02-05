@@ -19,9 +19,10 @@ import { EditGCModal } from '@/components/EditGCModal';
 import { ActivityModal } from '@/components/ActivityModal';
 import { AssociateActivityModal } from '@/components/AssociateActivityModal';
 import { NotesSection } from '@/components/NotesSection';
+import { SiteCompaniesTable } from '@/components/SiteCompaniesTable';
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Activity } from '@/types';
+import { Activity, SiteCompany } from '@/types';
 
 type LocationViewType = 'address' | 'coordinates';
 
@@ -343,23 +344,40 @@ const JobSiteDetail = () => {
                 )}
               </div>
               {primaryGC ? (
-                <div className="space-y-2 text-sm">
-                  <p className="font-medium">{primaryGC.companyName}</p>
-                  <p className="text-muted-foreground">{primaryGC.companyContact.name}</p>
-                  <p className="text-muted-foreground">{primaryGC.companyContact.title}</p>
-                  <div className="pt-2 space-y-1">
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <Phone className="h-3 w-3" />
-                      <span>{primaryGC.companyContact.phone}</span>
+                (() => {
+                  const gcPrimaryContact = primaryGC.companyContacts?.[primaryGC.primaryContactIndex || 0];
+                  const gcContactCount = primaryGC.companyContacts?.length || 0;
+                  return (
+                    <div className="space-y-2 text-sm">
+                      <p className="font-medium">{primaryGC.companyName}</p>
+                      {gcPrimaryContact && (
+                        <>
+                          <p className="text-muted-foreground">{gcPrimaryContact.name}</p>
+                          {gcPrimaryContact.title && <p className="text-muted-foreground">{gcPrimaryContact.title}</p>}
+                          <div className="pt-2 space-y-1">
+                            {gcPrimaryContact.phone && (
+                              <div className="flex items-center gap-1 text-muted-foreground">
+                                <Phone className="h-3 w-3" />
+                                <span>{gcPrimaryContact.phone}</span>
+                              </div>
+                            )}
+                            <div className="flex items-center gap-1 text-muted-foreground">
+                              <Mail className="h-3 w-3" />
+                              <a href={`mailto:${gcPrimaryContact.email}`} className="text-primary hover:underline">
+                                {gcPrimaryContact.email}
+                              </a>
+                            </div>
+                          </div>
+                          {gcContactCount > 1 && (
+                            <p className="text-xs text-muted-foreground pt-1">
+                              + {gcContactCount - 1} more contact{gcContactCount > 2 ? 's' : ''}
+                            </p>
+                          )}
+                        </>
+                      )}
                     </div>
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <Mail className="h-3 w-3" />
-                      <a href={`mailto:${primaryGC.companyContact.email}`} className="text-primary hover:underline">
-                        {primaryGC.companyContact.email}
-                      </a>
-                    </div>
-                  </div>
-                </div>
+                  );
+                })()
               ) : (
                 <div className="space-y-3">
                   <p className="text-sm text-muted-foreground">No general contractor assigned</p>
@@ -448,52 +466,11 @@ const JobSiteDetail = () => {
               No companies associated with this site yet.
             </p>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Company</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Contact Person</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead className="w-[50px]"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {site.siteCompanies.map((company, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell className="font-medium">{company.companyName}</TableCell>
-                    <TableCell>
-                      <Badge variant={company.roleId === 'GC' ? 'default' : 'secondary'}>
-                        {company.roleDescription}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <p className="font-medium text-sm">{company.companyContact.name}</p>
-                        <p className="text-xs text-muted-foreground">{company.companyContact.title}</p>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-sm">{company.companyContact.phone}</TableCell>
-                    <TableCell className="text-sm">
-                      <a href={`mailto:${company.companyContact.email}`} className="text-primary hover:underline">
-                        {company.companyContact.email}
-                      </a>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => initiateRemoveCompany(company.companyName)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <SiteCompaniesTable
+              siteId={site.id}
+              companies={site.siteCompanies}
+              onRemoveCompany={initiateRemoveCompany}
+            />
           )}
         </Card>
 

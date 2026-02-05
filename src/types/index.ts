@@ -33,6 +33,31 @@ export interface NoteTag {
   color: string;
 }
 
+export interface CompanyContact {
+  id: number;
+  name: string;
+  title?: string;
+  phone: string;
+  email: string;
+}
+
+export interface SiteCompany {
+  companyId: string;
+  companyName: string;
+  roleId: string;
+  roleDescription: string;
+  isPrimaryContact: boolean;
+  companyContacts: CompanyContact[];
+  primaryContactIndex?: number;
+  // Legacy field - will be migrated
+  companyContact?: {
+    name: string;
+    title: string;
+    phone: string;
+    email: string;
+  };
+}
+
 export interface JobSite {
   id: number;
   name: string;
@@ -56,19 +81,7 @@ export interface JobSite {
     latitude: number;
     longitude: number;
   };
-  siteCompanies: Array<{
-    companyId: string;
-    companyName: string;
-    roleId: string;
-    roleDescription: string;
-    isPrimaryContact: boolean;
-    companyContact: {
-      name: string;
-      title: string;
-      phone: string;
-      email: string;
-    };
-  }>;
+  siteCompanies: SiteCompany[];
   associatedOpportunities: Array<{
     id: number;
     type: string;

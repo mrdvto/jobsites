@@ -81,12 +81,21 @@ export const AssociateCompanyModal = ({ siteId, currentCompanyNames, open, onOpe
     const roleOption = ROLE_OPTIONS.find(r => r.id === selectedRole);
     if (!roleOption) return;
 
+    // Get all contacts from this company across all sites to allow selection
+    const allContacts = company.companyContacts || [];
+    
     const newCompany = {
+      companyId: company.companyId || `ASSOC-${Date.now()}`,
       companyName: company.companyName,
       roleId: selectedRole,
       roleDescription: roleOption.label,
       isPrimaryContact: isPrimaryContact,
-      companyContact: company.companyContact
+      companyContacts: allContacts.length > 0 ? allContacts : [{
+        id: 1,
+        name: 'Contact Required',
+        phone: '',
+        email: ''
+      }]
     };
 
     addSiteCompany(siteId, newCompany);

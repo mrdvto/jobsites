@@ -61,8 +61,38 @@
                 }
             ],
             "notes": [
-                "Strict noise ordinances after 6 PM.",
-                "Badging required for site access."
+                {
+                    "id": 1,
+                    "content": "Strict noise ordinances after 6 PM. All equipment must be shut down by 5:45 PM to allow for proper wind-down.",
+                    "createdAt": "2025-01-15T09:30:00.000Z",
+                    "createdById": 313,
+                    "tagIds": ["COMPLIANCE"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "Badging required for site access. All personnel must check in at the security trailer before entering the construction zone.",
+                    "createdAt": "2025-01-16T14:22:00.000Z",
+                    "createdById": 313,
+                    "tagIds": ["SECURITY"],
+                    "attachments": []
+                },
+                {
+                    "id": 3,
+                    "content": "Hard hats and steel-toed boots mandatory at all times. High-visibility vests required in active construction areas.",
+                    "createdAt": "2025-01-20T11:00:00.000Z",
+                    "createdById": 313,
+                    "tagIds": ["SAFETY"],
+                    "attachments": []
+                },
+                {
+                    "id": 4,
+                    "content": "Hospital loading dock available for equipment deliveries on Tuesdays and Thursdays only.",
+                    "createdAt": "2025-02-01T08:45:00.000Z",
+                    "createdById": 313,
+                    "tagIds": ["GENERAL"],
+                    "attachments": []
+                }
             ],
             "activities": [
                 {
@@ -134,7 +164,32 @@
                     "revenue": 200000
                 }
             ],
-            "notes": [],
+            "notes": [
+                {
+                    "id": 1,
+                    "content": "Stadium will remain operational during renovation. Work must be scheduled around game days and events.",
+                    "createdAt": "2025-02-15T10:30:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["GENERAL", "COMPLIANCE"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "All workers must complete crowd safety training before accessing field areas.",
+                    "createdAt": "2025-02-20T09:00:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["SAFETY"],
+                    "attachments": []
+                },
+                {
+                    "id": 3,
+                    "content": "Background checks required for all personnel due to public venue security protocols.",
+                    "createdAt": "2025-03-01T14:15:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["SECURITY"],
+                    "attachments": []
+                }
+            ],
             "activities": [
                 {
                     "id": 1004,
@@ -220,8 +275,38 @@
                 }
             ],
             "notes": [
-                "Safety vest required at all times.",
-                "Deliveries must be scheduled between 10 PM and 4 AM."
+                {
+                    "id": 1,
+                    "content": "Safety vest required at all times. All personnel must wear high-visibility vests when on or near the roadway.",
+                    "createdAt": "2025-02-25T22:30:00.000Z",
+                    "createdById": 303,
+                    "tagIds": ["SAFETY"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "Deliveries must be scheduled between 10 PM and 4 AM due to lane closure restrictions.",
+                    "createdAt": "2025-02-26T10:15:00.000Z",
+                    "createdById": 303,
+                    "tagIds": ["COMPLIANCE", "GENERAL"],
+                    "attachments": []
+                },
+                {
+                    "id": 3,
+                    "content": "IDOT inspector will be on-site every night. All work must meet state highway standards.",
+                    "createdAt": "2025-03-01T23:00:00.000Z",
+                    "createdById": 303,
+                    "tagIds": ["COMPLIANCE"],
+                    "attachments": []
+                },
+                {
+                    "id": 4,
+                    "content": "Emergency vehicle access lane must be maintained at all times during night work operations.",
+                    "createdAt": "2025-03-05T21:45:00.000Z",
+                    "createdById": 303,
+                    "tagIds": ["SAFETY", "COMPLIANCE"],
+                    "attachments": []
+                }
             ],
             "activities": [
                 {
@@ -279,7 +364,24 @@
                     "revenue": 1433.84
                 }
             ],
-            "notes": [],
+            "notes": [
+                {
+                    "id": 1,
+                    "content": "Project completed successfully. All equipment returned and inspected.",
+                    "createdAt": "2024-11-15T16:00:00.000Z",
+                    "createdById": 292,
+                    "tagIds": ["GENERAL"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "Final safety inspection passed with no incidents recorded during project.",
+                    "createdAt": "2024-11-15T17:30:00.000Z",
+                    "createdById": 292,
+                    "tagIds": ["SAFETY", "COMPLIANCE"],
+                    "attachments": []
+                }
+            ],
             "activities": [
                 {
                     "id": 1007,
@@ -357,7 +459,48 @@
                     "revenue": 2894
                 }
             ],
-            "notes": ["Security clearance required for all deliveries."],
+            "notes": [
+                {
+                    "id": 1,
+                    "content": "Security clearance required for all deliveries. Drivers must present valid ID and be on the approved vendor list.",
+                    "createdAt": "2024-11-01T08:00:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["SECURITY"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "All equipment must be delivered to Gate 3. No exceptions - Gate 1 and 2 are for personnel only.",
+                    "createdAt": "2024-11-05T10:30:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["GENERAL", "SECURITY"],
+                    "attachments": []
+                },
+                {
+                    "id": 3,
+                    "content": "Site requires OSHA 30 certification for all operators. Verify credentials before dispatching personnel.",
+                    "createdAt": "2024-11-10T14:15:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["SAFETY", "COMPLIANCE"],
+                    "attachments": []
+                },
+                {
+                    "id": 4,
+                    "content": "Amazon sustainability requirements: all diesel equipment must meet Tier 4 emissions standards.",
+                    "createdAt": "2024-12-01T09:00:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["COMPLIANCE"],
+                    "attachments": []
+                },
+                {
+                    "id": 5,
+                    "content": "Weekly safety meetings held every Monday at 7:00 AM in the main trailer. Attendance is mandatory.",
+                    "createdAt": "2025-01-06T07:30:00.000Z",
+                    "createdById": 313,
+                    "tagIds": ["SAFETY"],
+                    "attachments": []
+                }
+            ],
             "activities": [
                 {
                     "id": 1008,
@@ -429,7 +572,32 @@
                     "revenue": 12500
                 }
             ],
-            "notes": [],
+            "notes": [
+                {
+                    "id": 1,
+                    "content": "Critical infrastructure site - 24/7 operations must be maintained. No scheduled outages without 72-hour advance notice.",
+                    "createdAt": "2025-05-20T08:00:00.000Z",
+                    "createdById": 304,
+                    "tagIds": ["COMPLIANCE", "GENERAL"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "Confined space entry permits required for all tank and pump room work. Contact site safety officer before entry.",
+                    "createdAt": "2025-05-22T10:30:00.000Z",
+                    "createdById": 304,
+                    "tagIds": ["SAFETY"],
+                    "attachments": []
+                },
+                {
+                    "id": 3,
+                    "content": "Municipal security protocols in effect. All visitors must sign in at guard station and display visitor badges.",
+                    "createdAt": "2025-05-25T14:00:00.000Z",
+                    "createdById": 304,
+                    "tagIds": ["SECURITY"],
+                    "attachments": []
+                }
+            ],
             "activities": [
                 {
                     "id": 1011,
@@ -486,7 +654,32 @@
                     "revenue": 8750
                 }
             ],
-            "notes": ["Heavy clay soil conditions reported."],
+            "notes": [
+                {
+                    "id": 1,
+                    "content": "Heavy clay soil conditions reported. Recommend track-type equipment over wheeled machines for better flotation.",
+                    "createdAt": "2025-04-10T15:30:00.000Z",
+                    "createdById": 260,
+                    "tagIds": ["GENERAL"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "Residential area - strict noise ordinances. No heavy equipment operation before 7 AM or after 7 PM.",
+                    "createdAt": "2025-04-12T09:00:00.000Z",
+                    "createdById": 260,
+                    "tagIds": ["COMPLIANCE"],
+                    "attachments": []
+                },
+                {
+                    "id": 3,
+                    "content": "School bus route runs through site entrance. Extra caution required during morning and afternoon school hours.",
+                    "createdAt": "2025-04-15T08:30:00.000Z",
+                    "createdById": 260,
+                    "tagIds": ["SAFETY"],
+                    "attachments": []
+                }
+            ],
             "activities": [
                 {
                     "id": 1012,
@@ -551,7 +744,32 @@
                     "revenue": 1300
                 }
             ],
-            "notes": ["Work barge required for under-bridge access."],
+            "notes": [
+                {
+                    "id": 1,
+                    "content": "Work barge required for under-bridge access. Barge must be secured at night to prevent drift.",
+                    "createdAt": "2025-08-20T11:00:00.000Z",
+                    "createdById": 292,
+                    "tagIds": ["GENERAL", "SAFETY"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "Fall protection required for all work over water. Personal flotation devices must be worn at all times.",
+                    "createdAt": "2025-08-22T09:30:00.000Z",
+                    "createdById": 292,
+                    "tagIds": ["SAFETY"],
+                    "attachments": []
+                },
+                {
+                    "id": 3,
+                    "content": "Bridge remains open to traffic during construction. Work zones must be clearly marked with proper signage.",
+                    "createdAt": "2025-09-01T14:00:00.000Z",
+                    "createdById": 292,
+                    "tagIds": ["SAFETY", "COMPLIANCE"],
+                    "attachments": []
+                }
+            ],
             "activities": [
                 {
                     "id": 1014,
@@ -586,7 +804,24 @@
             },
             "siteCompanies": [],
             "associatedOpportunities": [],
-            "notes": ["Awaiting final funding approval."],
+            "notes": [
+                {
+                    "id": 1,
+                    "content": "Awaiting final funding approval. Project timeline contingent on state grant disbursement expected Q3 2025.",
+                    "createdAt": "2025-03-15T10:00:00.000Z",
+                    "createdById": 313,
+                    "tagIds": ["GENERAL"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "University lab safety protocols will apply. All contractors must complete online safety orientation before site access.",
+                    "createdAt": "2025-03-20T14:30:00.000Z",
+                    "createdById": 313,
+                    "tagIds": ["SAFETY", "COMPLIANCE"],
+                    "attachments": []
+                }
+            ],
             "activities": [
                 {
                     "id": 1015,
@@ -635,7 +870,40 @@
                 }
             ],
             "associatedOpportunities": [],
-            "notes": ["Mandatory MSHA training for all site visitors."],
+            "notes": [
+                {
+                    "id": 1,
+                    "content": "Mandatory MSHA training for all site visitors. Part 46 or Part 48 certification required depending on role.",
+                    "createdAt": "2025-02-20T08:00:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["SAFETY", "COMPLIANCE"],
+                    "attachments": []
+                },
+                {
+                    "id": 2,
+                    "content": "Blasting operations occur daily at 2:00 PM. All personnel must clear blast zone 30 minutes prior.",
+                    "createdAt": "2025-02-22T13:30:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["SAFETY"],
+                    "attachments": []
+                },
+                {
+                    "id": 3,
+                    "content": "Dust suppression required per EPA permit conditions. Water trucks must operate during all crushing activities.",
+                    "createdAt": "2025-03-01T09:00:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["COMPLIANCE"],
+                    "attachments": []
+                },
+                {
+                    "id": 4,
+                    "content": "Quarry security is active 24/7. After-hours access requires advance coordination with quarry manager.",
+                    "createdAt": "2025-03-05T16:00:00.000Z",
+                    "createdById": 305,
+                    "tagIds": ["SECURITY"],
+                    "attachments": []
+                }
+            ],
             "activities": [
                 {
                     "id": 1016,

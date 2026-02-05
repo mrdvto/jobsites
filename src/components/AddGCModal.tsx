@@ -37,16 +37,18 @@ export const AddGCModal = ({ siteId, open, onOpenChange }: AddGCModalProps) => {
     }
 
     const newCompany = {
+      companyId: `NEW-${Date.now()}`,
       companyName: formData.companyName,
       roleId: 'GC',
       roleDescription: 'General Contractor',
       isPrimaryContact: true,
-      companyContact: {
+      companyContacts: [{
+        id: 1,
         name: formData.contactName,
-        title: formData.contactTitle,
+        title: formData.contactTitle || undefined,
         phone: formData.contactPhone,
         email: formData.contactEmail
-      }
+      }]
     };
 
     addSiteCompany(siteId, newCompany);

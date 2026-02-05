@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { JobSite, SalesRep, Opportunity, OpportunityStage, Filters, Activity, Note, NoteTag } from '@/types';
+import { JobSite, SalesRep, Opportunity, OpportunityStage, Filters, Activity, Note, NoteTag, SiteCompany, CompanyContact } from '@/types';
 import jobSitesData from '@/data/JobSite.json';
 import salesRepsData from '@/data/SalesReps.json';
 import opportunitiesData from '@/data/Opportunity.json';
@@ -16,9 +16,9 @@ interface DataContextType {
   addOpportunityToSite: (siteId: number, opportunityId: number) => void;
   createNewOpportunity: (opportunity: Opportunity) => void;
   createJobSite: (site: Omit<JobSite, 'id'>) => void;
-  addSiteCompany: (siteId: number, company: any) => void;
+  addSiteCompany: (siteId: number, company: Omit<SiteCompany, 'companyContacts' | 'primaryContactIndex'> & { companyContacts?: CompanyContact[], companyContact?: { name: string; title: string; phone: string; email: string } }) => void;
   removeSiteCompany: (siteId: number, companyName: string) => void;
-  updateSiteCompany: (siteId: number, oldCompanyName: string, updatedCompany: any) => void;
+  updateSiteCompany: (siteId: number, oldCompanyName: string, updatedCompany: SiteCompany) => void;
   updateJobSite: (siteId: number, updates: Partial<JobSite>) => void;
   addActivity: (siteId: number, activity: Omit<Activity, 'id'>) => void;
   updateActivity: (siteId: number, activityId: number, updates: Partial<Activity>) => void;
@@ -68,6 +68,40 @@ const migrateNotes = (notes: any[]): Note[] => {
   });
 };
 
+// Helper to migrate single companyContact to companyContacts array
+const migrateSiteCompanies = (companies: any[]): SiteCompany[] => {
+  if (!companies || companies.length === 0) return [];
+  
+  return companies.map(company => {
+    // If already has companyContacts array, return as-is
+    if (company.companyContacts && Array.isArray(company.companyContacts)) {
+      return company as SiteCompany;
+    }
+    
+    // Migrate from single companyContact to companyContacts array
+    const contacts: CompanyContact[] = [];
+    if (company.companyContact) {
+      contacts.push({
+        id: 1,
+        name: company.companyContact.name,
+        title: company.companyContact.title || undefined,
+        phone: company.companyContact.phone || '',
+        email: company.companyContact.email || '',
+      });
+    }
+    
+    return {
+      companyId: company.companyId,
+      companyName: company.companyName,
+      roleId: company.roleId,
+      roleDescription: company.roleDescription,
+      isPrimaryContact: company.isPrimaryContact,
+      companyContacts: contacts,
+      primaryContactIndex: 0,
+    } as SiteCompany;
+  });
+};
+
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [jobSites, setJobSites] = useState<JobSite[]>([]);
   const [salesReps, setSalesReps] = useState<SalesRep[]>([]);
@@ -85,11 +119,12 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Load data on mount
   useEffect(() => {
-    // Migrate notes and add activities array to job sites
+    // Migrate notes, activities, and siteCompanies on job sites
     const sitesWithMigratedData = jobSitesData.content.map(site => ({
       ...site,
       activities: (site as any).activities || [],
       notes: migrateNotes((site as any).notes || []),
+      siteCompanies: migrateSiteCompanies((site as any).siteCompanies || []),
     })) as JobSite[];
     
     setJobSites(sitesWithMigratedData);

@@ -1,176 +1,177 @@
 
-# Enhanced Notes Feature for Job Sites
+# Multiple Contacts per Company at Job Sites
 
 ## Overview
-Transform the current simple text-based notes system into a rich, structured notes management system with metadata tracking, file attachments, and tagging capabilities.
+Transform the current single-contact-per-company model into a multi-contact system, allowing users to specify that multiple people from the same company are working at a particular job site.
 
 ## Current State
-- Notes are stored as a simple array of strings: `notes: string[]`
-- Displayed as a basic bullet list in the Job Site Detail view
-- No metadata, no attachments, no categorization
+- Each company association has a single `companyContact` object
+- Site Companies table shows one row per company with one contact displayed
+- Modals (AddGCModal, EditGCModal, AssociateCompanyModal) capture only one contact
 
-## Proposed Changes
+## Proposed Data Model Changes
 
-### 1. Data Model Updates
+### Update SiteCompany Type
+Change from single contact to an array of contacts:
 
-#### New Note Interface
-Create a structured `Note` type replacing the simple string array:
+| Field | Current Type | New Type |
+|-------|-------------|----------|
+| companyContact | `{ name, title, phone, email }` | Removed |
+| companyContacts | N/A | `CompanyContact[]` |
+| primaryContactIndex | N/A | `number` (optional, defaults to 0) |
 
-| UI Label | Field Name | Data Type | Example Value | Mandatory | Notes |
-|----------|------------|-----------|---------------|-----------|-------|
-| Note ID | id | number | 1001 | Yes | Auto-generated unique identifier |
-| Content | content | string | "Safety briefing completed" | Yes | Main note text |
-| Created Date | createdAt | string (ISO) | "2025-02-05T14:30:00Z" | Yes | Auto-populated on creation |
-| Created By | createdById | number | 313 | Yes | Sales Rep ID of note author |
-| Tags | tagIds | string[] | ["SAFETY", "COMPLIANCE"] | No | Array of tag IDs |
-| Attachments | attachments | Attachment[] | See below | No | Array of file references |
+### New CompanyContact Interface
 
-#### New Attachment Interface
+| Field | Data Type | Mandatory | Description |
+|-------|-----------|-----------|-------------|
+| id | number | Yes | Unique identifier within the company |
+| name | string | Yes | Contact person's name |
+| title | string | No | Job title |
+| phone | string | Yes | Phone number |
+| email | string | Yes | Email address (clickable mailto link) |
 
-| UI Label | Field Name | Data Type | Example Value | Mandatory | Notes |
-|----------|------------|-----------|---------------|-----------|-------|
-| Attachment ID | id | number | 1 | Yes | Auto-generated |
-| File Name | fileName | string | "safety_report.pdf" | Yes | Original file name |
-| File URL | fileUrl | string | "blob:..." or external URL | Yes | Location of file |
-| File Type | fileType | string | "application/pdf" | Yes | MIME type |
-| File Size | fileSize | number | 102400 | Yes | Size in bytes |
-| Uploaded At | uploadedAt | string (ISO) | "2025-02-05T14:30:00Z" | Yes | Upload timestamp |
+## UI/UX Design
 
-#### New NoteTag Interface (for Manage Dropdowns)
+### Option A: Expandable Row Pattern (Recommended)
+The Site Companies table shows one row per company. Clicking a row expands to reveal all contacts for that company in a sub-table or card layout.
 
-| UI Label | Field Name | Data Type | Example Value | Mandatory | Notes |
-|----------|------------|-----------|---------------|-----------|-------|
-| Tag ID | id | string | "SAFETY" | Yes | Auto-generated from label |
-| Label | label | string | "Safety" | Yes | Display name |
-| Display Order | displayOrder | number | 1 | Yes | Sort order |
-| Color | color | string | "red" | No | Badge color identifier |
-
-### 2. Component Changes
-
-#### Types (src/types/index.ts)
-- Add `Attachment` interface
-- Add `Note` interface  
-- Update `JobSite` interface: change `notes: string[]` to `notes: Note[]`
-
-#### Data Context (src/contexts/DataContext.tsx)
-- Add `noteTags` state and management
-- Add `addNote(siteId, note)` function
-- Add `updateNote(siteId, noteId, updates)` function
-- Add `deleteNote(siteId, noteId)` function
-- Migrate existing string notes to new structure on load
-
-#### Job Site Detail Page (src/pages/JobSiteDetail.tsx)
-- Replace simple note list with rich Notes section card
-- Display notes with:
-  - Note content
-  - Created date (formatted)
-  - Created by (Sales Rep name)
-  - Tag badges (filterable)
-  - Attachment list with download/preview links
-- Add "Add Note" button opening NoteModal
-- Add note filtering by tag dropdown
-- Add edit/delete actions per note
-
-#### New Component: NoteModal (src/components/NoteModal.tsx)
-- Modal for creating/editing notes
-- Fields:
-  - Content textarea (required)
-  - Tag multi-select with available tags
-  - Attachment upload area (drag-drop or file picker)
-- Show existing attachments with remove option when editing
-- Display created metadata (read-only when editing)
-
-#### Manage Dropdowns (src/pages/ManageDropdowns.tsx)
-- Add new "Note Tags" dropdown type
-- Include color picker for tag badge colors
-- Standard CRUD operations matching existing dropdown patterns
-
-### 3. UI/UX Design
-
-#### Notes Section Layout
 ```text
-+------------------------------------------+
-| Notes                        [+ Add Note] |
-+------------------------------------------+
-| [Filter by Tag: All ▼]                    |
-+------------------------------------------+
-| ┌──────────────────────────────────────┐ |
-| │ Safety briefing completed for all    │ |
-| │ personnel on site.                   │ |
-| │                                      │ |
-| │ [Safety] [Compliance]                │ |
-| │                                      │ |
-| │ 📎 safety_checklist.pdf (View)       │ |
-| │                                      │ |
-| │ Created: Feb 5, 2025 by Smith, John  │ |
-| │                           [Edit] [X] │ |
-| └──────────────────────────────────────┘ |
-+------------------------------------------+
++----------------------------------------------------------+
+| Company          | Role     | Contacts  | Actions        |
++----------------------------------------------------------+
+| ▶ TURNER CONST   | GC       | 3 people  | [Edit] [X]     |
++----------------------------------------------------------+
+| ▼ JDT CONTRACTOR | Plumbing | 2 people  | [Edit] [X]     |
+|   ┌────────────────────────────────────────────────────┐ |
+|   │ ★ Latisha Tyler, Fleet Manager                     │ |
+|   │   312-555-0192 | latisha.tyler@jdtcontractor.com   │ |
+|   ├────────────────────────────────────────────────────┤ |
+|   │   Marcus Johnson, Site Foreman                     │ |
+|   │   312-555-0193 | m.johnson@jdtcontractor.com       │ |
+|   └────────────────────────────────────────────────────┘ |
++----------------------------------------------------------+
 ```
 
-#### Note Modal Layout
+Benefits:
+- Keeps table compact when viewing many companies
+- Clear visual hierarchy between company and contacts
+- Primary contact indicated with star icon
+- Easy to scan which companies have multiple contacts
+
+### Option B: Badge Count with Dialog
+Keep the table simple with a "View X contacts" link that opens a dialog showing all contacts.
+
+### Manage Contacts Modal
+When clicking Edit on a company row, open a modal that allows:
+1. Viewing all current contacts in a list
+2. Adding new contacts (via form at bottom or "Add Contact" button)
+3. Setting one contact as "Primary" (starred)
+4. Removing individual contacts
+5. Editing contact details inline or via sub-modal
+
 ```text
-+------------------------------------------+
-|          Add Note              [X]       |
-+------------------------------------------+
-| Note Content *                           |
-| +--------------------------------------+ |
-| |                                      | |
-| |                                      | |
-| +--------------------------------------+ |
-|                                          |
-| Tags                                     |
-| [Safety ×] [Compliance ×] [+ Add Tag]    |
-|                                          |
-| Attachments                              |
-| +--------------------------------------+ |
-| | Drop files here or click to upload  | |
-| +--------------------------------------+ |
-| 📎 safety_checklist.pdf         [Remove] |
-|                                          |
-|              [Cancel]  [Save Note]       |
-+------------------------------------------+
++------------------------------------------------+
+|     Manage JDT CONTRACTOR Contacts      [X]    |
++------------------------------------------------+
+| Role: Plumbing Subcontractor                   |
++------------------------------------------------+
+| Contacts at this site:                         |
+|                                                |
+| ┌────────────────────────────────────────────┐ |
+| │ ★ Latisha Tyler              [Set Primary] │ |
+| │   Fleet Manager                             │ |
+| │   312-555-0192                              │ |
+| │   latisha.tyler@jdtcontractor.com           │ |
+| │                          [Edit] [Remove]    │ |
+| └────────────────────────────────────────────┘ |
+|                                                |
+| ┌────────────────────────────────────────────┐ |
+| │   Marcus Johnson             [Set Primary] │ |
+| │   Site Foreman                              │ |
+| │   312-555-0193                              │ |
+| │   m.johnson@jdtcontractor.com               │ |
+| │                          [Edit] [Remove]    │ |
+| └────────────────────────────────────────────┘ |
+|                                                |
+|              [+ Add Another Contact]           |
+|                                                |
+|                              [Done]            |
++------------------------------------------------+
 ```
 
-### 4. File Attachment Handling
+### Adding a New Company
+When adding a GC or associating a subcontractor:
+1. First step: Select/enter company name and role
+2. Second step: Add at least one contact (required)
+3. Allow adding additional contacts before saving
+4. Or: Keep initial flow simple (one contact), then use "Manage Contacts" to add more
 
-For this prototype phase, attachments will be handled using:
-- Browser File API for file selection
-- Object URLs (blob:) for local preview/storage
-- Base64 encoding for persistence in localStorage (prototype only)
+## Implementation Plan
 
-**Note for Production**: A proper implementation would use Supabase Storage or similar cloud storage solution. The current approach is suitable for prototyping but would need refactoring for production use.
+### 1. Type Updates (src/types/index.ts)
+- Add `CompanyContact` interface with id, name, title, phone, email
+- Update `JobSite.siteCompanies` to use `companyContacts: CompanyContact[]` instead of `companyContact`
+- Add optional `primaryContactIndex` field
 
-### 5. Implementation Sequence
+### 2. Data Migration (src/data/JobSite.json)
+- Convert existing `companyContact` objects to `companyContacts` arrays
+- Add sample sites with multiple contacts per company for demonstration
 
-1. **Types & Data Layer**
-   - Update `src/types/index.ts` with new interfaces
-   - Update `src/contexts/DataContext.tsx` with note management functions
-   - Add note tags to dropdown management state
+### 3. Context Updates (src/contexts/DataContext.tsx)
+- Update `addSiteCompany` to accept contacts array
+- Add `addContactToCompany(siteId, companyName, contact)` function
+- Add `updateCompanyContact(siteId, companyName, contactId, updates)` function
+- Add `removeCompanyContact(siteId, companyName, contactId)` function
+- Add `setPrimaryContact(siteId, companyName, contactIndex)` function
+- Migrate legacy single-contact data on load
 
-2. **Dropdown Management**
-   - Add "Note Tags" to `ManageDropdowns.tsx`
-   - Include color picker matching Project Status pattern
+### 4. New Component: ManageCompanyContactsModal
+- Create `src/components/ManageCompanyContactsModal.tsx`
+- Display list of all contacts for a company at this site
+- Add/edit/remove contacts
+- Set primary contact designation
+- Validation: at least one contact required
 
-3. **Note Modal Component**
-   - Create `src/components/NoteModal.tsx`
-   - Implement form with validation
-   - Add file upload handling
-   - Add tag multi-select
+### 5. Update AddGCModal
+- Allow adding multiple contacts during creation
+- Or keep simple and direct to ManageContacts modal after creation
 
-4. **Job Site Detail Updates**
-   - Redesign Notes section as dedicated card
-   - Add filtering by tag
-   - Display rich note cards with metadata
-   - Integrate NoteModal for add/edit
+### 6. Update AssociateCompanyModal
+- When associating existing company, show available contacts from that company
+- Allow selecting which contacts to include at this site
+- Multi-select checkbox pattern for contacts
 
-5. **Data Migration**
-   - Add migration logic for existing string notes to new structure
-   - Assign default values (current user, current date) for migrated notes
+### 7. Update Site Companies Table (JobSiteDetail.tsx)
+- Implement expandable row pattern
+- Show contact count badge
+- Display contacts on expand with primary indicator
+- Replace single-row edit with "Manage Contacts" action
 
-### 6. Technical Notes
+### 8. Update EditGCModal
+- Refactor to use ManageCompanyContactsModal or extend for GC-specific handling
 
-- **Tag Storage**: Tags stored in localStorage alongside other dropdown configurations
-- **File Limits**: Suggest reasonable limits (e.g., 5MB per file, 10 files per note) for prototype
-- **Filtering**: Client-side filtering by selected tag(s)
-- **Sorting**: Notes displayed newest-first by default
+## Technical Considerations
+
+### Backward Compatibility
+- Migration function to convert `companyContact` to `companyContacts` array
+- Run migration on DataContext initialization
+
+### Validation Rules
+- Each company at a site must have at least one contact
+- Primary contact is always index 0 or explicitly set
+- Contact email format validation
+- Phone format should be consistent
+
+### Performance
+- Expandable rows use local state, no additional data fetching needed
+- Contact list is typically small (<10 per company)
+
+## Implementation Sequence
+
+1. Update types and interfaces
+2. Update sample data with multi-contact examples
+3. Update DataContext with new functions and migration
+4. Create ManageCompanyContactsModal component
+5. Update Site Companies table with expandable rows
+6. Update AddGCModal and AssociateCompanyModal
+7. Test all workflows end-to-end

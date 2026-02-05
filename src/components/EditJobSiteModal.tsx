@@ -32,7 +32,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
   const [parStartDate, setParStartDate] = useState<Date | undefined>(site.parStartDate ? new Date(site.parStartDate) : undefined);
   const [parStartDateOpen, setParStartDateOpen] = useState(false);
   const [description, setDescription] = useState(site.description);
-  const [notes, setNotes] = useState<string[]>(site.notes || []);
+  // Notes are now managed separately via NotesSection component
   const [contactName, setContactName] = useState(site.projectPrimaryContact.name);
   const [contactTitle, setContactTitle] = useState(site.projectPrimaryContact.title);
   const [contactPhone, setContactPhone] = useState(site.projectPrimaryContact.phone);
@@ -45,7 +45,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
   const [latitude, setLatitude] = useState(site.address.latitude?.toString() || '');
   const [longitude, setLongitude] = useState(site.address.longitude?.toString() || '');
   const [locationType, setLocationType] = useState<LocationType>('address');
-  const [newNote, setNewNote] = useState('');
+  
 
   useEffect(() => {
     if (open) {
@@ -53,7 +53,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
       setPlannedAnnualRate(site.plannedAnnualRate.toString());
       setParStartDate(site.parStartDate ? new Date(site.parStartDate) : undefined);
       setDescription(site.description);
-      setNotes(site.notes || []);
+      // Notes are managed separately
       setContactName(site.projectPrimaryContact.name);
       setContactTitle(site.projectPrimaryContact.title);
       setContactPhone(site.projectPrimaryContact.phone);
@@ -68,20 +68,11 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
       // Default to address if address fields are filled, otherwise coordinates
       const hasAddress = site.address.street && site.address.city && site.address.state;
       setLocationType(hasAddress ? 'address' : 'coordinates');
-      setNewNote('');
+      
     }
   }, [open, site]);
 
-  const handleAddNote = () => {
-    if (newNote.trim()) {
-      setNotes([...notes, newNote.trim()]);
-      setNewNote('');
-    }
-  };
-
-  const handleRemoveNote = (index: number) => {
-    setNotes(notes.filter((_, i) => i !== index));
-  };
+  // Notes CRUD is now handled by NotesSection component
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,7 +124,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
       plannedAnnualRate: parseFloat(plannedAnnualRate),
       parStartDate: parStartDate ? parStartDate.toISOString() : undefined,
       description: description.trim(),
-      notes,
+      // notes are managed separately via NotesSection
       address: {
         street: locationType === 'address' ? street.trim() : '',
         city: locationType === 'address' ? city.trim() : '',
@@ -386,47 +377,7 @@ export const EditJobSiteModal = ({ site, open, onOpenChange }: EditJobSiteModalP
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>Notes</Label>
-            <div className="space-y-2">
-              {notes.map((note, index) => (
-                <div key={index} className="flex items-start gap-2 p-2 bg-muted rounded-md">
-                  <span className="flex-1 text-sm">{note}</span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 shrink-0"
-                    onClick={() => handleRemoveNote(index)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <div className="flex gap-2">
-                <Input
-                  value={newNote}
-                  onChange={(e) => setNewNote(e.target.value)}
-                  placeholder="Add a new note..."
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleAddNote();
-                    }
-                  }}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={handleAddNote}
-                  disabled={!newNote.trim()}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
+          {/* Notes are now managed separately in the Notes Section */}
 
           <div className="space-y-4 pt-4 border-t">
             <h3 className="font-semibold">Primary Contact</h3>

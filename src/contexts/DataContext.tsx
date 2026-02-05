@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { JobSite, SalesRep, Opportunity, OpportunityStage, Filters, Activity } from '@/types';
+import { JobSite, SalesRep, Opportunity, OpportunityStage, Filters, Activity, Note, NoteTag } from '@/types';
 import jobSitesData from '@/data/JobSite.json';
 import salesRepsData from '@/data/SalesReps.json';
 import opportunitiesData from '@/data/Opportunity.json';
@@ -10,6 +10,7 @@ interface DataContextType {
   salesReps: SalesRep[];
   opportunities: Opportunity[];
   opportunityStages: OpportunityStage[];
+  noteTags: NoteTag[];
   filters: Filters;
   setFilters: (filters: Filters) => void;
   addOpportunityToSite: (siteId: number, opportunityId: number) => void;
@@ -22,6 +23,10 @@ interface DataContextType {
   addActivity: (siteId: number, activity: Omit<Activity, 'id'>) => void;
   updateActivity: (siteId: number, activityId: number, updates: Partial<Activity>) => void;
   deleteActivity: (siteId: number, activityId: number) => void;
+  addNote: (siteId: number, noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>) => void;
+  updateNote: (siteId: number, noteId: number, updates: Partial<Note>) => void;
+  deleteNote: (siteId: number, noteId: number) => void;
+  setNoteTags: (tags: NoteTag[]) => void;
   getSalesRepName: (id: number) => string;
   getStageName: (id: number) => string;
   calculateSiteRevenue: (site: JobSite) => number;
@@ -32,12 +37,43 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 const FILTERS_STORAGE_KEY = 'crm-filters';
+const NOTE_TAGS_STORAGE_KEY = 'crm-note-tags';
+
+// Default note tags
+const defaultNoteTags: NoteTag[] = [
+  { id: 'SAFETY', label: 'Safety', displayOrder: 1, color: 'red' },
+  { id: 'SECURITY', label: 'Security', displayOrder: 2, color: 'amber' },
+  { id: 'COMPLIANCE', label: 'Compliance', displayOrder: 3, color: 'sky' },
+  { id: 'GENERAL', label: 'General', displayOrder: 4, color: 'slate' },
+];
+
+// Helper to migrate old string notes to new Note structure
+const migrateNotes = (notes: any[]): Note[] => {
+  if (!notes || notes.length === 0) return [];
+  
+  return notes.map((note, index) => {
+    // If it's already a Note object, return as-is
+    if (typeof note === 'object' && note.content) {
+      return note as Note;
+    }
+    // Otherwise, migrate from string
+    return {
+      id: index + 1,
+      content: String(note),
+      createdAt: new Date().toISOString(),
+      createdById: 313, // Default sales rep
+      tagIds: [],
+      attachments: [],
+    };
+  });
+};
 
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [jobSites, setJobSites] = useState<JobSite[]>([]);
   const [salesReps, setSalesReps] = useState<SalesRep[]>([]);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [opportunityStages, setOpportunityStages] = useState<OpportunityStage[]>([]);
+  const [noteTags, setNoteTagsState] = useState<NoteTag[]>([]);
   const [filters, setFilters] = useState<Filters>({
     salesRepId: '',
     division: '',
@@ -49,15 +85,29 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Load data on mount
   useEffect(() => {
-    // Add activities array to job sites that don't have it (for backwards compatibility)
-    const sitesWithActivities = jobSitesData.content.map(site => ({
+    // Migrate notes and add activities array to job sites
+    const sitesWithMigratedData = jobSitesData.content.map(site => ({
       ...site,
-      activities: (site as any).activities || []
-    }));
-    setJobSites(sitesWithActivities as JobSite[]);
+      activities: (site as any).activities || [],
+      notes: migrateNotes((site as any).notes || []),
+    })) as JobSite[];
+    
+    setJobSites(sitesWithMigratedData);
     setSalesReps(salesRepsData.content);
     setOpportunities(opportunitiesData.content);
     setOpportunityStages(opportunityStagesData.content);
+
+    // Load note tags from localStorage
+    const savedNoteTags = localStorage.getItem(NOTE_TAGS_STORAGE_KEY);
+    if (savedNoteTags) {
+      try {
+        setNoteTagsState(JSON.parse(savedNoteTags));
+      } catch (e) {
+        setNoteTagsState(defaultNoteTags);
+      }
+    } else {
+      setNoteTagsState(defaultNoteTags);
+    }
 
     // Load filters from localStorage
     const savedFilters = localStorage.getItem(FILTERS_STORAGE_KEY);
@@ -74,6 +124,12 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(filters));
   }, [filters]);
+
+  // Save note tags to localStorage
+  const setNoteTags = (tags: NoteTag[]) => {
+    setNoteTagsState(tags);
+    localStorage.setItem(NOTE_TAGS_STORAGE_KEY, JSON.stringify(tags));
+  };
 
   const getSalesRepName = (id: number): string => {
     const rep = salesReps.find(r => r.salesrepid === id);
@@ -317,6 +373,57 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
   };
 
+  const addNote = (siteId: number, noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          const maxNoteId = Math.max(...(site.notes || []).map(n => n.id), 0);
+          const newNote: Note = {
+            ...noteData,
+            id: maxNoteId + 1,
+            createdAt: new Date().toISOString(),
+            createdById: site.salesRepId, // Use site's sales rep as default creator
+          };
+          return {
+            ...site,
+            notes: [...(site.notes || []), newNote]
+          };
+        }
+        return site;
+      })
+    );
+  };
+
+  const updateNote = (siteId: number, noteId: number, updates: Partial<Note>) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          return {
+            ...site,
+            notes: (site.notes || []).map(note =>
+              note.id === noteId ? { ...note, ...updates } : note
+            )
+          };
+        }
+        return site;
+      })
+    );
+  };
+
+  const deleteNote = (siteId: number, noteId: number) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          return {
+            ...site,
+            notes: (site.notes || []).filter(note => note.id !== noteId)
+          };
+        }
+        return site;
+      })
+    );
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -324,6 +431,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         salesReps,
         opportunities,
         opportunityStages,
+        noteTags,
         filters,
         setFilters,
         addOpportunityToSite,
@@ -336,6 +444,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         addActivity,
         updateActivity,
         deleteActivity,
+        addNote,
+        updateNote,
+        deleteNote,
+        setNoteTags,
         getSalesRepName,
         getStageName,
         calculateSiteRevenue,

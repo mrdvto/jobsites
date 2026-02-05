@@ -18,6 +18,7 @@ import { EditJobSiteModal } from '@/components/EditJobSiteModal';
 import { EditGCModal } from '@/components/EditGCModal';
 import { ActivityModal } from '@/components/ActivityModal';
 import { AssociateActivityModal } from '@/components/AssociateActivityModal';
+import { NotesSection } from '@/components/NotesSection';
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity } from '@/types';
@@ -27,7 +28,7 @@ type LocationViewType = 'address' | 'coordinates';
 const JobSiteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { jobSites, getSalesRepName, opportunities, getStageName, removeSiteCompany, updateJobSite, deleteActivity } = useData();
+  const { jobSites, getSalesRepName, opportunities, getStageName, removeSiteCompany, updateJobSite, deleteActivity, noteTags, addNote, updateNote, deleteNote } = useData();
   const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
@@ -287,19 +288,7 @@ const JobSiteDetail = () => {
                 <p className="text-sm text-muted-foreground">{site.description}</p>
               </div>
 
-              {site.notes && site.notes.length > 0 && (
-                <>
-                  <Separator />
-                  <div>
-                    <p className="font-medium mb-2">Notes</p>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      {site.notes.map((note, idx) => (
-                        <li key={idx}>• {note}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </>
-              )}
+              {/* Notes are now managed in the separate Notes Section below */}
             </div>
           </Card>
 
@@ -579,6 +568,16 @@ const JobSiteDetail = () => {
             </Table>
           )}
         </Card>
+
+        <NotesSection
+          notes={site.notes || []}
+          noteTags={noteTags}
+          onAddNote={(noteData) => addNote(site.id, noteData)}
+          onUpdateNote={(noteId, noteData) => updateNote(site.id, noteId, noteData)}
+          onDeleteNote={(noteId) => deleteNote(site.id, noteId)}
+          getSalesRepName={getSalesRepName}
+          siteId={site.id}
+        />
       </main>
 
       <OpportunityDetailModal

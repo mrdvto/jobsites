@@ -8,8 +8,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useStatusColors, STATUS_COLORS } from '@/hooks/useStatusColors';
+import { useData } from '@/contexts/DataContext';
 
-type DropdownType = 'projectStatus' | 'subcontractorRole';
+type DropdownType = 'projectStatus' | 'subcontractorRole' | 'noteTags';
 
 interface DropdownOption {
   id: string;
@@ -69,12 +70,34 @@ const initialDropdowns: Record<DropdownType, DropdownOption[]> = {
     id: 'SUB-STEEL',
     label: 'Subcontractor - Steel',
     displayOrder: 7
+  }],
+  noteTags: [{
+    id: 'SAFETY',
+    label: 'Safety',
+    displayOrder: 1,
+    color: 'red'
+  }, {
+    id: 'SECURITY',
+    label: 'Security',
+    displayOrder: 2,
+    color: 'amber'
+  }, {
+    id: 'COMPLIANCE',
+    label: 'Compliance',
+    displayOrder: 3,
+    color: 'sky'
+  }, {
+    id: 'GENERAL',
+    label: 'General',
+    displayOrder: 4,
+    color: 'slate'
   }]
 };
 const ManageDropdowns = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { statusColors, updateAllStatusColors } = useStatusColors();
+  const { noteTags, setNoteTags } = useData();
   const [selectedDropdown, setSelectedDropdown] = useState<DropdownType | null>(null);
   const [dropdowns, setDropdowns] = useState<Record<DropdownType, DropdownOption[]>>(() => {
     // Initialize project status with saved colors from localStorage
@@ -82,9 +105,17 @@ const ManageDropdowns = () => {
       ...status,
       color: statusColors[status.id] || status.color
     }));
+    // Initialize noteTags from context
+    const noteTagsFromContext = noteTags.map(tag => ({
+      id: tag.id,
+      label: tag.label,
+      displayOrder: tag.displayOrder,
+      color: tag.color
+    }));
     return {
       ...initialDropdowns,
-      projectStatus: projectStatusWithColors
+      projectStatus: projectStatusWithColors,
+      noteTags: noteTagsFromContext.length > 0 ? noteTagsFromContext : initialDropdowns.noteTags
     };
   });
   const [isEditing, setIsEditing] = useState(false);
@@ -115,6 +146,9 @@ const ManageDropdowns = () => {
   }, {
     key: 'subcontractorRole',
     label: 'Subcontractor Role'
+  }, {
+    key: 'noteTags',
+    label: 'Note Tags'
   }];
   const sortByDisplayOrder = (items: DropdownOption[]) => {
     return [...items].sort((a, b) => a.displayOrder - b.displayOrder);
@@ -150,6 +184,16 @@ const ManageDropdowns = () => {
           }
         });
         updateAllStatusColors(colorMap);
+      }
+
+      // If editing note tags, sync to context
+      if (selectedDropdown === 'noteTags') {
+        setNoteTags(editedValues.map(item => ({
+          id: item.id,
+          label: item.label,
+          displayOrder: item.displayOrder,
+          color: item.color || 'slate'
+        })));
       }
       
       setIsEditing(false);
@@ -230,7 +274,7 @@ const ManageDropdowns = () => {
         id: generatedId,
         label: newItem.label,
         displayOrder: newItem.displayOrder ? parseInt(newItem.displayOrder) : maxOrder + 1,
-        ...(selectedDropdown === 'projectStatus' && { color: newItem.color })
+        ...((selectedDropdown === 'projectStatus' || selectedDropdown === 'noteTags') && { color: newItem.color })
       };
       if (isEditing) {
         setEditedValues(prev => [...prev, newOption]);
@@ -251,6 +295,17 @@ const ManageDropdowns = () => {
           });
           colorMap[newOption.id] = newOption.color;
           updateAllStatusColors(colorMap);
+        }
+
+        // If adding note tag, sync to context
+        if (selectedDropdown === 'noteTags') {
+          const updatedTags = [...dropdowns.noteTags, newOption];
+          setNoteTags(updatedTags.map(item => ({
+            id: item.id,
+            label: item.label,
+            displayOrder: item.displayOrder,
+            color: item.color || 'slate'
+          })));
         }
       }
       setNewItem({
@@ -339,7 +394,7 @@ const ManageDropdowns = () => {
                     displayOrder: e.target.value
                   }))} />
                       </div>
-                      {selectedDropdown === 'projectStatus' && (
+                      {(selectedDropdown === 'projectStatus' || selectedDropdown === 'noteTags') && (
                         <div className="mt-3">
                           <p className="text-sm font-medium mb-2">Color</p>
                           <div className="flex gap-2 flex-wrap">
@@ -375,7 +430,7 @@ const ManageDropdowns = () => {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Label</TableHead>
-                        {selectedDropdown === 'projectStatus' && <TableHead className="w-[120px]">Color</TableHead>}
+                        {(selectedDropdown === 'projectStatus' || selectedDropdown === 'noteTags') && <TableHead className="w-[120px]">Color</TableHead>}
                         <TableHead className="w-[120px]">Display Order</TableHead>
                         <TableHead className="w-[80px]">Actions</TableHead>
                       </TableRow>
@@ -388,7 +443,7 @@ const ManageDropdowns = () => {
                           <TableCell>
                             {isEditing ? <Input value={editedValues[editIndex]?.label || ''} onChange={e => handleEditValue(editIndex, 'label', e.target.value)} className="h-8" /> : item.label}
                           </TableCell>
-                          {selectedDropdown === 'projectStatus' && (
+                          {(selectedDropdown === 'projectStatus' || selectedDropdown === 'noteTags') && (
                             <TableCell>
                               {isEditing ? (
                                 <div className="flex gap-1 flex-wrap">
@@ -420,7 +475,7 @@ const ManageDropdowns = () => {
                         </TableRow>;
                       })}
                       {currentValues.length === 0 && <TableRow>
-                        <TableCell colSpan={selectedDropdown === 'projectStatus' ? 4 : 3} className="text-center text-muted-foreground">
+                        <TableCell colSpan={(selectedDropdown === 'projectStatus' || selectedDropdown === 'noteTags') ? 4 : 3} className="text-center text-muted-foreground">
                           No values configured
                         </TableCell>
                       </TableRow>}
@@ -438,7 +493,7 @@ const ManageDropdowns = () => {
                     displayOrder: e.target.value
                   }))} />
                       </div>
-                      {selectedDropdown === 'projectStatus' && (
+                      {(selectedDropdown === 'projectStatus' || selectedDropdown === 'noteTags') && (
                         <div className="mt-3">
                           <p className="text-sm font-medium mb-2">Color</p>
                           <div className="flex gap-2 flex-wrap">

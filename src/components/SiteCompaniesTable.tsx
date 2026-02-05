@@ -16,9 +16,28 @@ interface SiteCompaniesTableProps {
 }
 
 export const SiteCompaniesTable = ({ siteId, companies, onRemoveCompany }: SiteCompaniesTableProps) => {
-  const { updateSiteCompany } = useData();
+  const { updateSiteCompany, jobSites } = useData();
   const [expandedCompanies, setExpandedCompanies] = useState<Set<string>>(new Set());
   const [editingCompany, setEditingCompany] = useState<SiteCompany | null>(null);
+
+  // Gather all unique contacts for a company across all job sites
+  const getAllCompanyContacts = (companyName: string) => {
+    const contactsMap = new Map<string, typeof companies[0]['companyContacts'][0]>();
+    
+    jobSites.forEach(site => {
+      site.siteCompanies.forEach(company => {
+        if (company.companyName === companyName) {
+          company.companyContacts.forEach(contact => {
+            if (!contactsMap.has(contact.email)) {
+              contactsMap.set(contact.email, contact);
+            }
+          });
+        }
+      });
+    });
+    
+    return Array.from(contactsMap.values());
+  };
 
   const toggleExpanded = (companyName: string) => {
     const newExpanded = new Set(expandedCompanies);
@@ -169,6 +188,7 @@ export const SiteCompaniesTable = ({ siteId, companies, onRemoveCompany }: SiteC
       {editingCompany && (
         <ManageCompanyContactsModal
           company={editingCompany}
+          allCompanyContacts={getAllCompanyContacts(editingCompany.companyName)}
           open={!!editingCompany}
           onOpenChange={(open) => !open && setEditingCompany(null)}
           onSave={handleSaveContacts}

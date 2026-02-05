@@ -27,6 +27,25 @@ export const EditGCModal = ({ siteId, currentGC, open, onOpenChange }: EditGCMod
   const [showManageContacts, setShowManageContacts] = useState(false);
   const [workingCompany, setWorkingCompany] = useState<SiteCompany>(currentGC);
 
+  // Gather all unique contacts for a company across all job sites
+  const getAllCompanyContacts = (companyName: string) => {
+    const contactsMap = new Map<string, typeof currentGC.companyContacts[0]>();
+    
+    jobSites.forEach(site => {
+      site.siteCompanies.forEach(company => {
+        if (company.companyName === companyName) {
+          company.companyContacts.forEach(contact => {
+            if (!contactsMap.has(contact.email)) {
+              contactsMap.set(contact.email, contact);
+            }
+          });
+        }
+      });
+    });
+    
+    return Array.from(contactsMap.values());
+  };
+
   // Get all unique companies from all job sites that are GCs
   const availableCompanies = useMemo(() => {
     const companiesMap = new Map();
@@ -226,6 +245,7 @@ export const EditGCModal = ({ siteId, currentGC, open, onOpenChange }: EditGCMod
 
       <ManageCompanyContactsModal
         company={workingCompany}
+        allCompanyContacts={getAllCompanyContacts(workingCompany.companyName)}
         open={showManageContacts}
         onOpenChange={setShowManageContacts}
         onSave={handleSaveContacts}

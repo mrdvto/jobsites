@@ -8,10 +8,12 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { CompanyContact, SiteCompany } from '@/types';
 import { Star, Pencil, Trash2, Plus, X, Check } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 
 interface ManageCompanyContactsModalProps {
   company: SiteCompany;
+  allCompanyContacts: CompanyContact[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (updatedCompany: SiteCompany) => void;
@@ -32,7 +34,8 @@ const emptyContact: ContactFormData = {
 };
 
 export const ManageCompanyContactsModal = ({ 
-  company, 
+  company,
+  allCompanyContacts,
   open, 
   onOpenChange, 
   onSave 
@@ -42,16 +45,21 @@ export const ManageCompanyContactsModal = ({
   const [primaryIndex, setPrimaryIndex] = useState(0);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<ContactFormData>(emptyContact);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [addForm, setAddForm] = useState<ContactFormData>(emptyContact);
+  const [showAddSection, setShowAddSection] = useState(false);
+  const [selectedEmails, setSelectedEmails] = useState<Set<string>>(new Set());
+
+  // Compute available contacts (not already at this site)
+  const availableContacts = allCompanyContacts.filter(
+    ac => !contacts.some(c => c.email === ac.email)
+  );
 
   useEffect(() => {
     if (open && company) {
       setContacts([...(company.companyContacts || [])]);
       setPrimaryIndex(company.primaryContactIndex || 0);
       setEditingId(null);
-      setShowAddForm(false);
-      setAddForm(emptyContact);
+      setShowAddSection(false);
+      setSelectedEmails(new Set());
     }
   }, [open, company]);
 
@@ -114,28 +122,39 @@ export const ManageCompanyContactsModal = ({
     }
   };
 
-  const handleAddContact = () => {
-    if (!addForm.name.trim() || !addForm.email.trim()) {
+  const handleToggleContact = (email: string) => {
+    setSelectedEmails(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(email)) {
+        newSet.delete(email);
+      } else {
+        newSet.add(email);
+      }
+      return newSet;
+    });
+  };
+
+  const handleAddSelectedContacts = () => {
+    if (selectedEmails.size === 0) {
       toast({
-        title: "Missing Information",
-        description: "Name and email are required.",
+        title: "No Contacts Selected",
+        description: "Please select at least one contact to add.",
         variant: "destructive"
       });
       return;
     }
 
-    const newId = Math.max(...contacts.map(c => c.id), 0) + 1;
-    const newContact: CompanyContact = {
-      id: newId,
-      name: addForm.name.trim(),
-      title: addForm.title.trim() || undefined,
-      phone: addForm.phone.trim(),
-      email: addForm.email.trim(),
-    };
+    const contactsToAdd = availableContacts.filter(c => selectedEmails.has(c.email));
+    const maxId = Math.max(...contacts.map(c => c.id), 0);
+    
+    const newContacts = contactsToAdd.map((c, idx) => ({
+      ...c,
+      id: maxId + idx + 1,
+    }));
 
-    setContacts(prev => [...prev, newContact]);
-    setShowAddForm(false);
-    setAddForm(emptyContact);
+    setContacts(prev => [...prev, ...newContacts]);
+    setShowAddSection(false);
+    setSelectedEmails(new Set());
   };
 
   const handleSave = () => {
@@ -282,66 +301,69 @@ export const ManageCompanyContactsModal = ({
             </Card>
           ))}
 
-          {showAddForm ? (
+          {showAddSection ? (
             <Card className="p-4 border-dashed">
-              <h4 className="font-medium mb-3">Add New Contact</h4>
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label className="text-xs">Name *</Label>
-                    <Input
-                      value={addForm.name}
-                      onChange={(e) => setAddForm(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="Contact name"
-                      className="h-8"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs">Title</Label>
-                    <Input
-                      value={addForm.title}
-                      onChange={(e) => setAddForm(prev => ({ ...prev, title: e.target.value }))}
-                      placeholder="Job title"
-                      className="h-8"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs">Phone</Label>
-                    <Input
-                      value={addForm.phone}
-                      onChange={(e) => setAddForm(prev => ({ ...prev, phone: e.target.value }))}
-                      placeholder="(555) 123-4567"
-                      className="h-8"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs">Email *</Label>
-                    <Input
-                      type="email"
-                      value={addForm.email}
-                      onChange={(e) => setAddForm(prev => ({ ...prev, email: e.target.value }))}
-                      placeholder="email@example.com"
-                      className="h-8"
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => setShowAddForm(false)}>
-                    Cancel
-                  </Button>
-                  <Button size="sm" onClick={handleAddContact}>
-                    <Plus className="h-4 w-4 mr-1" /> Add Contact
+              <h4 className="font-medium mb-3">Add Contacts from {company.companyName}</h4>
+              {availableContacts.length === 0 ? (
+                <div className="text-center py-4 text-muted-foreground">
+                  <p>All contacts from this company are already assigned to this site.</p>
+                  <Button variant="ghost" size="sm" className="mt-2" onClick={() => setShowAddSection(false)}>
+                    Close
                   </Button>
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">Select contacts to add to this site:</p>
+                  <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                    {availableContacts.map((contact) => (
+                      <div
+                        key={contact.email}
+                        className={cn(
+                          "flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
+                          selectedEmails.has(contact.email) ? "bg-primary/10 border-primary" : "hover:bg-muted/50"
+                        )}
+                        onClick={() => handleToggleContact(contact.email)}
+                      >
+                        <Checkbox
+                          checked={selectedEmails.has(contact.email)}
+                          onCheckedChange={() => handleToggleContact(contact.email)}
+                          className="mt-1"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium">{contact.name}</div>
+                          {contact.title && (
+                            <div className="text-sm text-muted-foreground">{contact.title}</div>
+                          )}
+                          <div className="text-sm text-muted-foreground truncate">
+                            {contact.phone && <span>{contact.phone} • </span>}
+                            {contact.email}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-end gap-2 pt-2">
+                    <Button variant="ghost" size="sm" onClick={() => { setShowAddSection(false); setSelectedEmails(new Set()); }}>
+                      Cancel
+                    </Button>
+                    <Button size="sm" onClick={handleAddSelectedContacts} disabled={selectedEmails.size === 0}>
+                      <Plus className="h-4 w-4 mr-1" /> Add Selected ({selectedEmails.size})
+                    </Button>
+                  </div>
+                </div>
+              )}
             </Card>
           ) : (
             <Button
               variant="outline"
               className="w-full border-dashed"
-              onClick={() => setShowAddForm(true)}
+              onClick={() => setShowAddSection(true)}
+              disabled={availableContacts.length === 0}
             >
-              <Plus className="h-4 w-4 mr-2" /> Add Another Contact
+              <Plus className="h-4 w-4 mr-2" /> 
+              {availableContacts.length === 0 
+                ? "All company contacts already added" 
+                : "Add Another Contact"}
             </Button>
           )}
         </div>

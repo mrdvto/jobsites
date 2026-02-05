@@ -51,20 +51,6 @@
                             "title": "Safety Director",
                             "phone": "312-555-8823",
                             "email": "rchen@turnerconstruction.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Amanda Foster",
-                            "title": "Procurement Specialist",
-                            "phone": "312-555-8824",
-                            "email": "afoster@turnerconstruction.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "David Kim",
-                            "title": "Assistant Project Manager",
-                            "phone": "312-555-8825",
-                            "email": "dkim@turnerconstruction.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -89,27 +75,6 @@
                             "title": "Site Foreman",
                             "phone": "312-555-0193",
                             "email": "m.johnson@graniteexcavation.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Carlos Mendez",
-                            "title": "Equipment Operator Lead",
-                            "phone": "312-555-0194",
-                            "email": "c.mendez@graniteexcavation.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Tanya Brooks",
-                            "title": "Safety Coordinator",
-                            "phone": "312-555-0195",
-                            "email": "t.brooks@graniteexcavation.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "William Park",
-                            "title": "Project Estimator",
-                            "phone": "312-555-0196",
-                            "email": "w.park@graniteexcavation.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -232,27 +197,30 @@
                             "title": "Field Engineer",
                             "phone": "815-555-0334",
                             "email": "c.ng@mortenson.com"
-                        },
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "998810",
+                    "companyName": "Turner Construction Company",
+                    "roleId": "SUB-STRUCT",
+                    "roleDescription": "Subcontractor - Structural",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
                         {
                             "id": 4,
-                            "name": "Derek Washington",
-                            "title": "Superintendent",
-                            "phone": "815-555-0335",
-                            "email": "d.washington@mortenson.com"
+                            "name": "Amanda Foster",
+                            "title": "Procurement Specialist",
+                            "phone": "312-555-8824",
+                            "email": "afoster@turnerconstruction.com"
                         },
                         {
                             "id": 5,
-                            "name": "Elena Martinez",
-                            "title": "Quality Control Manager",
-                            "phone": "815-555-0336",
-                            "email": "e.martinez@mortenson.com"
-                        },
-                        {
-                            "id": 6,
-                            "name": "Frank Thompson",
-                            "title": "Safety Manager",
-                            "phone": "815-555-0337",
-                            "email": "f.thompson@mortenson.com"
+                            "name": "David Kim",
+                            "title": "Assistant Project Manager",
+                            "phone": "312-555-8825",
+                            "email": "dkim@turnerconstruction.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -354,27 +322,6 @@
                             "title": "Project Manager",
                             "phone": "309-555-0822",
                             "email": "p.lane@gallagherasphalt.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Raymond Cruz",
-                            "title": "Night Shift Supervisor",
-                            "phone": "309-555-0823",
-                            "email": "r.cruz@gallagherasphalt.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Samantha White",
-                            "title": "Safety Director",
-                            "phone": "309-555-0824",
-                            "email": "s.white@gallagherasphalt.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Thomas Grant",
-                            "title": "Equipment Manager",
-                            "phone": "309-555-0825",
-                            "email": "t.grant@gallagherasphalt.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -406,20 +353,6 @@
                             "title": "Paving Crew Lead",
                             "phone": "630-555-0443",
                             "email": "j.palmer@currancontracting.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Kevin Rodriguez",
-                            "title": "Quality Assurance",
-                            "phone": "630-555-0444",
-                            "email": "k.rodriguez@currancontracting.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Linda Chang",
-                            "title": "Project Coordinator",
-                            "phone": "630-555-0445",
-                            "email": "l.chang@currancontracting.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -528,27 +461,37 @@
                             "title": "Project Manager",
                             "phone": "217-555-0222",
                             "email": "n.rivera@christywebber.com"
-                        },
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1019550",
+                    "companyName": "Granite Excavation & Demolition",
+                    "roleId": "SUB-EXC",
+                    "roleDescription": "Subcontractor - Excavation",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
                         {
                             "id": 3,
-                            "name": "Oscar Bennett",
-                            "title": "Crew Supervisor",
-                            "phone": "217-555-0223",
-                            "email": "o.bennett@christywebber.com"
+                            "name": "Carlos Mendez",
+                            "title": "Equipment Operator Lead",
+                            "phone": "312-555-0194",
+                            "email": "c.mendez@graniteexcavation.com"
                         },
                         {
                             "id": 4,
-                            "name": "Paula Simmons",
-                            "title": "Irrigation Specialist",
-                            "phone": "217-555-0224",
-                            "email": "p.simmons@christywebber.com"
+                            "name": "Tanya Brooks",
+                            "title": "Safety Coordinator",
+                            "phone": "312-555-0195",
+                            "email": "t.brooks@graniteexcavation.com"
                         },
                         {
                             "id": 5,
-                            "name": "Quincy Adams",
-                            "title": "Arborist",
-                            "phone": "217-555-0225",
-                            "email": "q.adams@christywebber.com"
+                            "name": "William Park",
+                            "title": "Project Estimator",
+                            "phone": "312-555-0196",
+                            "email": "w.park@graniteexcavation.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -635,27 +578,6 @@
                             "title": "Electrical Superintendent",
                             "phone": "630-555-0993",
                             "email": "a.mitchell@rosendin.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Barbara Hughes",
-                            "title": "Safety Coordinator",
-                            "phone": "630-555-0994",
-                            "email": "b.hughes@rosendin.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Charles Wright",
-                            "title": "Foreman",
-                            "phone": "630-555-0995",
-                            "email": "c.wright@rosendin.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Diana Lopez",
-                            "title": "Procurement Manager",
-                            "phone": "630-555-0996",
-                            "email": "d.lopez@rosendin.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -687,20 +609,30 @@
                             "title": "HVAC Specialist",
                             "phone": "217-555-0776",
                             "email": "f.campbell@southlandind.com"
-                        },
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1067200",
+                    "companyName": "Mortenson Construction",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
                         {
                             "id": 4,
-                            "name": "George Harris",
-                            "title": "Plumbing Lead",
-                            "phone": "217-555-0777",
-                            "email": "g.harris@southlandind.com"
+                            "name": "Derek Washington",
+                            "title": "Superintendent",
+                            "phone": "815-555-0335",
+                            "email": "d.washington@mortenson.com"
                         },
                         {
                             "id": 5,
-                            "name": "Helen Brown",
-                            "title": "Estimator",
-                            "phone": "217-555-0778",
-                            "email": "h.brown@southlandind.com"
+                            "name": "Elena Martinez",
+                            "title": "Quality Control Manager",
+                            "phone": "815-555-0336",
+                            "email": "e.martinez@mortenson.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -832,27 +764,37 @@
                             "title": "Drilling Supervisor",
                             "phone": "217-555-0992",
                             "email": "i.collins@laynechristensen.com"
-                        },
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1140350",
+                    "companyName": "Rosendin Electric",
+                    "roleId": "SUB-ELEC",
+                    "roleDescription": "Subcontractor - Power Systems",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
                         {
                             "id": 3,
-                            "name": "Jack Morrison",
-                            "title": "Hydrogeologist",
-                            "phone": "217-555-0993",
-                            "email": "j.morrison@laynechristensen.com"
+                            "name": "Barbara Hughes",
+                            "title": "Safety Coordinator",
+                            "phone": "630-555-0994",
+                            "email": "b.hughes@rosendin.com"
                         },
                         {
                             "id": 4,
-                            "name": "Karen Shaw",
-                            "title": "Project Coordinator",
-                            "phone": "217-555-0994",
-                            "email": "k.shaw@laynechristensen.com"
+                            "name": "Charles Wright",
+                            "title": "Foreman",
+                            "phone": "630-555-0995",
+                            "email": "c.wright@rosendin.com"
                         },
                         {
                             "id": 5,
-                            "name": "Larry Watson",
-                            "title": "Equipment Operator",
-                            "phone": "217-555-0995",
-                            "email": "l.watson@laynechristensen.com"
+                            "name": "Diana Lopez",
+                            "title": "Procurement Manager",
+                            "phone": "630-555-0996",
+                            "email": "d.lopez@rosendin.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -946,27 +888,30 @@
                             "title": "Project Manager",
                             "phone": "815-555-0113",
                             "email": "m.stevens@ryancompanies.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Nicole Foster",
-                            "title": "Site Engineer",
-                            "phone": "815-555-0114",
-                            "email": "n.foster@ryancompanies.com"
-                        },
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1035040",
+                    "companyName": "Southland Industries",
+                    "roleId": "SUB-MECH",
+                    "roleDescription": "Subcontractor - Mechanical",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
                         {
                             "id": 4,
-                            "name": "Oliver Green",
-                            "title": "Superintendent",
-                            "phone": "815-555-0115",
-                            "email": "o.green@ryancompanies.com"
+                            "name": "George Harris",
+                            "title": "Plumbing Lead",
+                            "phone": "217-555-0777",
+                            "email": "g.harris@southlandind.com"
                         },
                         {
                             "id": 5,
-                            "name": "Rachel Torres",
-                            "title": "Scheduling Coordinator",
-                            "phone": "815-555-0116",
-                            "email": "r.torres@ryancompanies.com"
+                            "name": "Helen Brown",
+                            "title": "Estimator",
+                            "phone": "217-555-0778",
+                            "email": "h.brown@southlandind.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -1075,20 +1020,37 @@
                             "title": "Structural Engineer",
                             "phone": "309-555-0665",
                             "email": "t.nelson@stuppbridge.com"
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "NON-DBS",
+                    "companyName": "Gallagher Asphalt Corporation",
+                    "roleId": "SUB-PAV",
+                    "roleDescription": "Subcontractor - Paving",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        {
+                            "id": 3,
+                            "name": "Raymond Cruz",
+                            "title": "Night Shift Supervisor",
+                            "phone": "309-555-0823",
+                            "email": "r.cruz@gallagherasphalt.com"
                         },
                         {
                             "id": 4,
-                            "name": "Victor Hayes",
-                            "title": "Welding Supervisor",
-                            "phone": "309-555-0666",
-                            "email": "v.hayes@stuppbridge.com"
+                            "name": "Samantha White",
+                            "title": "Safety Director",
+                            "phone": "309-555-0824",
+                            "email": "s.white@gallagherasphalt.com"
                         },
                         {
                             "id": 5,
-                            "name": "Wendy Cooper",
-                            "title": "Quality Inspector",
-                            "phone": "309-555-0667",
-                            "email": "w.cooper@stuppbridge.com"
+                            "name": "Thomas Grant",
+                            "title": "Equipment Manager",
+                            "phone": "309-555-0825",
+                            "email": "t.grant@gallagherasphalt.com"
                         }
                     ],
                     "primaryContactIndex": 0
@@ -1161,7 +1123,70 @@
                 "latitude": 40.096,
                 "longitude": -88.243
             },
-            "siteCompanies": [],
+            "siteCompanies": [
+                {
+                    "companyId": "1764465",
+                    "companyName": "Christy Webber Landscapes",
+                    "roleId": "SUB-LAND",
+                    "roleDescription": "Subcontractor - Landscaping",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        {
+                            "id": 3,
+                            "name": "Oscar Bennett",
+                            "title": "Crew Supervisor",
+                            "phone": "217-555-0223",
+                            "email": "o.bennett@christywebber.com"
+                        },
+                        {
+                            "id": 4,
+                            "name": "Paula Simmons",
+                            "title": "Irrigation Specialist",
+                            "phone": "217-555-0224",
+                            "email": "p.simmons@christywebber.com"
+                        },
+                        {
+                            "id": 5,
+                            "name": "Quincy Adams",
+                            "title": "Arborist",
+                            "phone": "217-555-0225",
+                            "email": "q.adams@christywebber.com"
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1174395",
+                    "companyName": "Ryan Companies US Inc",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        {
+                            "id": 3,
+                            "name": "Nicole Foster",
+                            "title": "Site Engineer",
+                            "phone": "815-555-0114",
+                            "email": "n.foster@ryancompanies.com"
+                        },
+                        {
+                            "id": 4,
+                            "name": "Oliver Green",
+                            "title": "Superintendent",
+                            "phone": "815-555-0115",
+                            "email": "o.green@ryancompanies.com"
+                        },
+                        {
+                            "id": 5,
+                            "name": "Rachel Torres",
+                            "title": "Scheduling Coordinator",
+                            "phone": "815-555-0116",
+                            "email": "r.torres@ryancompanies.com"
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
             "associatedOpportunities": [],
             "notes": [
                 {
@@ -1222,46 +1247,66 @@
                     "isPrimaryContact": true,
                     "companyContacts": [
                         {
-                            "id": 1,
-                            "name": "Aisha Bartlett",
-                            "title": "Procurement Manager",
-                            "phone": "815-555-0332",
-                            "email": "aisha.bartlett@mortenson.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Brian Sullivan",
-                            "title": "Project Executive",
-                            "phone": "815-555-0333",
-                            "email": "b.sullivan@mortenson.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Christine Ng",
-                            "title": "Field Engineer",
-                            "phone": "815-555-0334",
-                            "email": "c.ng@mortenson.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Derek Washington",
-                            "title": "Superintendent",
-                            "phone": "815-555-0335",
-                            "email": "d.washington@mortenson.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Elena Martinez",
-                            "title": "Quality Control Manager",
-                            "phone": "815-555-0336",
-                            "email": "e.martinez@mortenson.com"
-                        },
-                        {
                             "id": 6,
                             "name": "Frank Thompson",
                             "title": "Safety Manager",
                             "phone": "815-555-0337",
                             "email": "f.thompson@mortenson.com"
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1293500",
+                    "companyName": "Layne Christensen Company",
+                    "roleId": "SUB-SPEC",
+                    "roleDescription": "Subcontractor - Specialized Drilling",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        {
+                            "id": 3,
+                            "name": "Jack Morrison",
+                            "title": "Hydrogeologist",
+                            "phone": "217-555-0993",
+                            "email": "j.morrison@laynechristensen.com"
+                        },
+                        {
+                            "id": 4,
+                            "name": "Karen Shaw",
+                            "title": "Project Coordinator",
+                            "phone": "217-555-0994",
+                            "email": "k.shaw@laynechristensen.com"
+                        },
+                        {
+                            "id": 5,
+                            "name": "Larry Watson",
+                            "title": "Equipment Operator",
+                            "phone": "217-555-0995",
+                            "email": "l.watson@laynechristensen.com"
+                        }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "NON-DBS",
+                    "companyName": "Curran Contracting Company",
+                    "roleId": "SUB-PAV",
+                    "roleDescription": "Subcontractor - Finish Paving",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        {
+                            "id": 4,
+                            "name": "Kevin Rodriguez",
+                            "title": "Quality Assurance",
+                            "phone": "630-555-0444",
+                            "email": "k.rodriguez@currancontracting.com"
+                        },
+                        {
+                            "id": 5,
+                            "name": "Linda Chang",
+                            "title": "Project Coordinator",
+                            "phone": "630-555-0445",
+                            "email": "l.chang@currancontracting.com"
                         }
                     ],
                     "primaryContactIndex": 0

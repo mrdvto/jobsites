@@ -8,6 +8,31 @@ export interface Activity {
   description: string;
 }
 
+export interface Attachment {
+  id: number;
+  fileName: string;
+  fileUrl: string;
+  fileType: string;
+  fileSize: number;
+  uploadedAt: string;
+}
+
+export interface Note {
+  id: number;
+  content: string;
+  createdAt: string;
+  createdById: number;
+  tagIds: string[];
+  attachments: Attachment[];
+}
+
+export interface NoteTag {
+  id: string;
+  label: string;
+  displayOrder: number;
+  color: string;
+}
+
 export interface JobSite {
   id: number;
   name: string;
@@ -51,7 +76,7 @@ export interface JobSite {
     status: string;
     revenue: number;
   }>;
-  notes: string[];
+  notes: Note[];
   activities: Activity[];
 }
 

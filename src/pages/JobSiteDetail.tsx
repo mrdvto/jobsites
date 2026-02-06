@@ -423,27 +423,34 @@ const JobSiteDetail = () => {
                 <TableRow>
                   <TableHead>Opportunity Number</TableHead>
                   <TableHead>Description</TableHead>
+                  <TableHead>Division</TableHead>
                   <TableHead>Stage</TableHead>
                   <TableHead className="text-right">Est. Revenue</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {site.associatedOpportunities.map(opp => (
-                  <TableRow 
-                    key={opp.id}
-                    className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleOpportunityClick(opp.id)}
-                  >
-                    <TableCell className="font-mono text-sm">{opp.id}</TableCell>
-                    <TableCell>{opp.description}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{opp.status}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right font-medium">
-                      ${opp.revenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {site.associatedOpportunities.map(opp => {
+                  const fullOpp = opportunities.find(o => o.id === opp.id);
+                  return (
+                    <TableRow 
+                      key={opp.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => handleOpportunityClick(opp.id)}
+                    >
+                      <TableCell className="font-mono text-sm">{opp.id}</TableCell>
+                      <TableCell>{opp.description}</TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{fullOpp?.divisionId || '-'}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{opp.status}</Badge>
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        ${opp.revenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           )}

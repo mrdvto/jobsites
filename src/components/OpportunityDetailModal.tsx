@@ -1,5 +1,6 @@
 import { Opportunity } from '@/types';
 import { useData } from '@/contexts/DataContext';
+import { getDivisionName } from '@/contexts/DataContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -160,7 +161,7 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
               <span>Work Order:</span> {opportunity.workOrderId}
             </div>
             <div>
-              <span>Division:</span> {opportunity.divisionId}
+              <span>Division:</span> {opportunity.divisionId} - {getDivisionName(opportunity.divisionId)}
             </div>
             <div>
               <span>Classification:</span> {opportunity.classificationId}

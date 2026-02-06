@@ -52,11 +52,13 @@ export const FilterBar = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Divisions</SelectItem>
-              <SelectItem value="E">E</SelectItem>
-              <SelectItem value="A">A</SelectItem>
-              <SelectItem value="B">B</SelectItem>
-              <SelectItem value="C">C</SelectItem>
-              <SelectItem value="D">D</SelectItem>
+              <SelectItem value="G">G - General Line</SelectItem>
+              <SelectItem value="C">C - Compact</SelectItem>
+              <SelectItem value="P">P - Paving</SelectItem>
+              <SelectItem value="R">R - Heavy Rents</SelectItem>
+              <SelectItem value="S">S - Power Systems</SelectItem>
+              <SelectItem value="V">V - Rental Services</SelectItem>
+              <SelectItem value="X">X - Power Rental</SelectItem>
             </SelectContent>
           </Select>
         </div>

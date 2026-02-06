@@ -1,128 +1,141 @@
 
-# Restrict Contact Addition to Existing Company Contacts
+# Add Division Support for Opportunities
 
 ## Overview
-Modify the "Add Contact" workflow in the ManageCompanyContactsModal so users can only select from contacts that already exist for that company across other job sites, rather than creating new contacts freely.
+Update the prototype to properly reflect that opportunities are division-specific while job sites are not. This involves updating the division filter dropdown with realistic division codes, adding division display to opportunity views, updating sample data with proper divisions, and allowing division selection when creating opportunities.
 
-## Current Behavior
-- When clicking "Add Another Contact", a form appears with free-text inputs for Name, Title, Phone, and Email
-- Users can enter any values to create a new contact
-- No validation against existing company contacts
+## Division Codes
+The following divisions will be used throughout the application:
 
-## Proposed Behavior
-- When clicking "Add Another Contact", users see a list of available contacts from that company (collected from other job sites)
-- Users select which existing contacts to add to this site
-- If all company contacts are already at this site, show an appropriate message
-- Contacts that are already assigned to the current site are excluded from the selection list
+| Code | Name |
+|------|------|
+| G | General Line |
+| C | Compact |
+| P | Paving |
+| R | Heavy Rents |
+| S | Power Systems |
+| V | Rental Services |
+| X | Power Rental |
 
-## Implementation Details
+## Changes Required
 
-### 1. Data Gathering Logic
-Create a helper function to collect all unique contacts for a company across all job sites:
+### 1. Update FilterBar Division Dropdown
+**File**: `src/components/FilterBar.tsx`
+
+Replace the current placeholder divisions (E, A, B, C, D) with the correct division codes and include full names for clarity:
+
+| Current | New |
+|---------|-----|
+| E, A, B, C, D | G - General Line, C - Compact, P - Paving, R - Heavy Rents, S - Power Systems, V - Rental Services, X - Power Rental |
+
+### 2. Update Opportunity Sample Data
+**File**: `src/data/Opportunity.json`
+
+Update all opportunity records to use the new division codes with realistic distribution:
+- Change `divisionId` from "E" to one of: G, C, P, R, S, V, X
+- Distribute divisions logically based on equipment type in descriptions (e.g., Paving equipment = "P", Power generators = "S", Rental equipment = "V")
+
+### 3. Add Division to Opportunity Table on Job Site Detail
+**File**: `src/pages/JobSiteDetail.tsx`
+
+Add a "Division" column to the opportunities table within the job site detail page:
+
+| Current Columns | New Columns |
+|-----------------|-------------|
+| Opportunity Number, Description, Stage, Est. Revenue | Opportunity Number, Description, **Division**, Stage, Est. Revenue |
+
+This requires looking up the full opportunity data to get the divisionId.
+
+### 4. Add Division to Opportunity Detail Modal
+**File**: `src/components/OpportunityDetailModal.tsx`
+
+The division is already displayed in the footer section. Update it to show the full division name alongside the code for better readability:
+- Current: "Division: E"
+- New: "Division: G - General Line"
+
+### 5. Add Division Selection to Create Opportunity Modal
+**File**: `src/components/CreateOpportunityModal.tsx`
+
+Add a Division dropdown field so users can specify which division the new opportunity belongs to:
+- Required field
+- Dropdown with all 7 division options
+- Default: empty (user must select)
+
+### 6. Add Division to Associate Opportunity Modal
+**File**: `src/components/AssociateOpportunityModal.tsx`
+
+Add a Division column to the selection table so users can see which division an opportunity belongs to before associating it.
+
+### 7. Create Division Helper Function
+**File**: `src/contexts/DataContext.tsx`
+
+Add a helper function to get the full division name from a code:
 
 ```typescript
-const getAllCompanyContacts = (companyName: string): CompanyContact[] => {
-  const contactsMap = new Map<string, CompanyContact>();
-  
-  jobSites.forEach(site => {
-    site.siteCompanies.forEach(company => {
-      if (company.companyName === companyName) {
-        company.companyContacts.forEach(contact => {
-          // Use email as unique identifier
-          if (!contactsMap.has(contact.email)) {
-            contactsMap.set(contact.email, contact);
-          }
-        });
-      }
-    });
-  });
-  
-  return Array.from(contactsMap.values());
+const getDivisionName = (code: string): string => {
+  const divisions: Record<string, string> = {
+    'G': 'General Line',
+    'C': 'Compact',
+    'P': 'Paving',
+    'R': 'Heavy Rents',
+    'S': 'Power Systems',
+    'V': 'Rental Services',
+    'X': 'Power Rental',
+  };
+  return divisions[code] || code;
 };
 ```
 
-### 2. Update ManageCompanyContactsModal
+## Implementation Sequence
 
-**Props Changes**:
-- Add `allCompanyContacts: CompanyContact[]` prop passed from parent
-- Or pass `jobSites` and derive internally
+1. Add `getDivisionName` helper to DataContext
+2. Update FilterBar with correct division dropdown options
+3. Update sample Opportunity.json data with realistic divisions
+4. Add Division column to JobSiteDetail opportunities table
+5. Update OpportunityDetailModal to show full division name
+6. Add Division field to CreateOpportunityModal
+7. Add Division column to AssociateOpportunityModal table
 
-**UI Changes**:
-Replace the free-form "Add New Contact" form with a selection interface:
+## Technical Details
 
-| Current UI | New UI |
-|------------|--------|
-| Input fields for name, title, phone, email | Checkbox list of available contacts |
-| Manual data entry | Click to select, then "Add Selected" |
+### Division Constants
+Create a shared constant for divisions that can be reused:
 
-**New Add Contact Section Layout**:
-```text
-+------------------------------------------------+
-| Add Contacts from JDT CONTRACTOR               |
-+------------------------------------------------+
-| Select contacts to add to this site:           |
-|                                                |
-| [ ] Marcus Johnson                             |
-|     Site Foreman                               |
-|     312-555-0193 | m.johnson@jdtcontractor.com |
-|                                                |
-| [ ] Latisha Tyler                              |
-|     Fleet Manager                              |
-|     312-555-0192 | latisha.tyler@jdt...        |
-|                                                |
-|              [Cancel]  [Add Selected]          |
-+------------------------------------------------+
+```typescript
+export const DIVISIONS = [
+  { code: 'G', name: 'General Line' },
+  { code: 'C', name: 'Compact' },
+  { code: 'P', name: 'Paving' },
+  { code: 'R', name: 'Heavy Rents' },
+  { code: 'S', name: 'Power Systems' },
+  { code: 'V', name: 'Rental Services' },
+  { code: 'X', name: 'Power Rental' },
+] as const;
 ```
 
-**Empty State**:
-When no additional contacts are available:
-```text
-+------------------------------------------------+
-| All contacts from this company are already     |
-| assigned to this site.                         |
-+------------------------------------------------+
-```
+### Sample Data Distribution
+Opportunity data will be updated based on equipment/description context:
+- Loader, Excavator, Dozer equipment = G (General Line)
+- Mini excavators, skid steers = C (Compact)
+- Asphalt paver, compactor = P (Paving)
+- Long-term heavy equipment rentals = R (Heavy Rents)
+- Generators, power equipment = S (Power Systems)
+- Short-term rentals = V (Rental Services)
+- Power equipment rentals = X (Power Rental)
 
-### 3. Files to Modify
+### UI Display Format
+Divisions will be displayed consistently as:
+- In tables/compact views: Just the code (e.g., "G")
+- In detail views/dropdowns: Code with name (e.g., "G - General Line")
+
+### Files Modified
 
 | File | Changes |
 |------|---------|
-| `src/components/ManageCompanyContactsModal.tsx` | Replace free-form add with selection UI; add prop for available contacts |
-| `src/components/SiteCompaniesTable.tsx` | Compute and pass available contacts to modal |
-| `src/contexts/DataContext.tsx` | Add helper function to get all contacts for a company (optional, could be local) |
-
-### 4. Component Changes Detail
-
-**ManageCompanyContactsModal.tsx**:
-- Remove `addForm` state and free-text inputs
-- Add `selectedAvailableContacts: Set<string>` state (using email as key)
-- Compute `availableContacts` = all company contacts - current site contacts
-- Replace add form with checkbox list of available contacts
-- "Add Selected" button adds checked contacts to local `contacts` state
-
-**SiteCompaniesTable.tsx**:
-- Import `useData` to access `jobSites`
-- Create helper to gather all contacts for the company being edited
-- Pass `allCompanyContacts` prop to ManageCompanyContactsModal
-
-### 5. Edge Cases
-
-| Scenario | Handling |
-|----------|----------|
-| Company only exists at this site | Show message: "No other contacts available. This company only exists at this site." |
-| All contacts already at site | Show message: "All contacts from this company are already assigned to this site." |
-| Same contact exists with slightly different data | Use email as unique identifier; show most recent version |
-
-### 6. UX Considerations
-
-- Keep the ability to **edit** existing contacts inline (current behavior preserved)
-- Keep the ability to **remove** contacts from this site (current behavior preserved)
-- Keep the ability to **set primary contact** (current behavior preserved)
-- Only the "add new" workflow changes from free-form to selection-based
-
-### 7. Technical Notes
-
-- Contact uniqueness determined by email address
-- When the same contact appears on multiple sites with different data, use the version from the first site found (or could show the most recently updated)
-- The selection list shows contact details (name, title, phone, email) for easy identification
-- Multi-select with checkboxes allows adding multiple contacts at once
+| `src/contexts/DataContext.tsx` | Add `getDivisionName` helper and `DIVISIONS` constant |
+| `src/components/FilterBar.tsx` | Update division dropdown options |
+| `src/data/Opportunity.json` | Update all divisionId values |
+| `src/pages/JobSiteDetail.tsx` | Add Division column to opportunities table |
+| `src/components/OpportunityDetailModal.tsx` | Display full division name |
+| `src/components/CreateOpportunityModal.tsx` | Add division selection dropdown |
+| `src/components/AssociateOpportunityModal.tsx` | Add Division column |

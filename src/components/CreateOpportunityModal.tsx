@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useData } from '@/contexts/DataContext';
+import { useData, DIVISIONS } from '@/contexts/DataContext';
 import { Opportunity } from '@/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -19,9 +19,10 @@ export const CreateOpportunityModal = ({ siteId, open, onOpenChange }: CreateOpp
   const [description, setDescription] = useState('');
   const [revenue, setRevenue] = useState('');
   const [stageId, setStageId] = useState('');
+  const [divisionId, setDivisionId] = useState('');
 
   const handleCreate = () => {
-    if (!description || !revenue || !stageId) {
+    if (!description || !revenue || !stageId || !divisionId) {
       toast.error('Please fill in all fields');
       return;
     }
@@ -64,7 +65,7 @@ export const CreateOpportunityModal = ({ siteId, open, onOpenChange }: CreateOpp
       industryCodeId: '',
       workOrderId: `WO-${newId}`,
       customerCountry: 'USA',
-      divisionId: 'E',
+      divisionId: divisionId,
       PSETypeId: 1,
       additionalSourceIds: [],
     };
@@ -75,6 +76,7 @@ export const CreateOpportunityModal = ({ siteId, open, onOpenChange }: CreateOpp
     setDescription('');
     setRevenue('');
     setStageId('');
+    setDivisionId('');
     onOpenChange(false);
   };
 
@@ -105,6 +107,22 @@ export const CreateOpportunityModal = ({ siteId, open, onOpenChange }: CreateOpp
               value={revenue}
               onChange={(e) => setRevenue(e.target.value)}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="division">Division</Label>
+            <Select value={divisionId} onValueChange={setDivisionId}>
+              <SelectTrigger id="division">
+                <SelectValue placeholder="Select a division" />
+              </SelectTrigger>
+              <SelectContent>
+                {DIVISIONS.map(div => (
+                  <SelectItem key={div.code} value={div.code}>
+                    {div.code} - {div.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">

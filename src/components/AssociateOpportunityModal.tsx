@@ -52,6 +52,7 @@ export const AssociateOpportunityModal = ({
                   <TableHead className="w-12"></TableHead>
                   <TableHead>ID</TableHead>
                   <TableHead>Description</TableHead>
+                  <TableHead>Division</TableHead>
                   <TableHead>Customer</TableHead>
                   <TableHead>Stage</TableHead>
                   <TableHead className="text-right">Revenue</TableHead>
@@ -74,6 +75,9 @@ export const AssociateOpportunityModal = ({
                     </TableCell>
                     <TableCell className="font-mono text-sm">{opp.id}</TableCell>
                     <TableCell>{opp.description}</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">{opp.divisionId}</Badge>
+                    </TableCell>
                     <TableCell>{opp.customerName}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{getStageName(opp.stageId)}</Badge>

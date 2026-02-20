@@ -5,7 +5,7 @@
             "name": "St. Mary's Hospital - West Wing Expansion",
             "description": "Construction of a new 4-story wing for the cardiology department, including underground parking structure.",
             "statusId": "Active",
-            "salesRepIds": [313],
+            "salesRepIds": [313, 305],
             "plannedAnnualRate": 24,
             "parStartDate": "2025-01-15T00:00:00.000Z",
             "projectPrimaryContact": {
@@ -539,7 +539,7 @@
             "name": "Amazon Fulfillment Center #ORD5",
             "description": "Ground-up construction of 800,000 sq ft distribution warehouse.",
             "statusId": "Active",
-            "salesRepIds": [305],
+            "salesRepIds": [305, 313, 292],
             "plannedAnnualRate": 48,
             "parStartDate": "2024-11-01T00:00:00.000Z",
             "projectPrimaryContact": {
@@ -850,7 +850,7 @@
             "name": "Willow Creek Residential Subdivision",
             "description": "Phase 2 development: Grading and utility installation for 50 new single-family homes.",
             "statusId": "Planning",
-            "salesRepIds": [260],
+            "salesRepIds": [260, 304],
             "plannedAnnualRate": 18,
             "projectPrimaryContact": {
                 "name": "Tom Builders",
@@ -1221,7 +1221,7 @@
             "name": "Limestone Quarry - South Face Expansion",
             "description": "Stripping overburden to access new aggregate veins.",
             "statusId": "Active",
-            "salesRepIds": [305],
+            "salesRepIds": [305, 303],
             "plannedAnnualRate": 20,
             "projectPrimaryContact": {
                 "name": "Fred Flint",

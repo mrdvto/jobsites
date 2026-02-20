@@ -50,6 +50,7 @@ interface DataContextType {
   calculateSiteRevenue: (site: JobSite) => number;
   getFilteredSites: () => JobSite[];
   getTotalPipelineRevenue: () => number;
+  getRevenueByType: () => { typeId: number; typeName: string; revenue: number }[];
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -262,6 +263,34 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return filteredSites.reduce((total, site) => {
       return total + calculateSiteRevenue(site);
     }, 0);
+  };
+
+  const getRevenueByType = (): { typeId: number; typeName: string; revenue: number }[] => {
+    const filteredSites = getFilteredSites();
+    const revenueMap = new Map<number, number>();
+
+    filteredSites.forEach(site => {
+      site.associatedOpportunities.forEach(ao => {
+        const opp = opportunities.find(o => o.id === ao.id);
+        if (opp) {
+          revenueMap.set(opp.typeId, (revenueMap.get(opp.typeId) || 0) + ao.revenue);
+        }
+      });
+    });
+
+    return Array.from(revenueMap.entries())
+      .filter(([, revenue]) => revenue > 0)
+      .map(([typeId, revenue]) => {
+        const type = opportunityTypes.find(t => t.opptypeid === typeId);
+        return {
+          typeId,
+          typeName: type ? type.opptypedesc : 'Unknown',
+          revenue,
+          displayOrder: type ? type.displayorder : 999,
+        };
+      })
+      .sort((a, b) => a.displayOrder - b.displayOrder)
+      .map(({ typeId, typeName, revenue }) => ({ typeId, typeName, revenue }));
   };
 
   const addOpportunityToSite = (siteId: number, opportunityId: number) => {
@@ -513,6 +542,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         calculateSiteRevenue,
         getFilteredSites,
         getTotalPipelineRevenue,
+        getRevenueByType,
       }}
     >
       {children}

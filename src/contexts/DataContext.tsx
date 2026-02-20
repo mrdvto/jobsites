@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { JobSite, SalesRep, Opportunity, OpportunityStage, OpportunityType, Filters, Activity, Note, NoteTag, SiteCompany, CompanyContact } from '@/types';
+import { JobSite, SalesRep, Opportunity, OpportunityStage, OpportunityType, Filters, Activity, Note, NoteTag, SiteCompany, CompanyContact, CustomerEquipment } from '@/types';
 import jobSitesData from '@/data/JobSite.json';
 import salesRepsData from '@/data/SalesReps.json';
 import opportunitiesData from '@/data/Opportunity.json';
@@ -43,6 +43,9 @@ interface DataContextType {
   addNote: (siteId: number, noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>) => void;
   updateNote: (siteId: number, noteId: number, updates: Partial<Note>) => void;
   deleteNote: (siteId: number, noteId: number) => void;
+  addCustomerEquipment: (siteId: number, equipment: Omit<CustomerEquipment, 'id'>) => void;
+  updateCustomerEquipment: (siteId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => void;
+  deleteCustomerEquipment: (siteId: number, equipmentId: number) => void;
   setNoteTags: (tags: NoteTag[]) => void;
   getSalesRepName: (id: number) => string;
   getSalesRepNames: (ids: number[]) => string;
@@ -146,6 +149,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       activities: (site as any).activities || [],
       notes: migrateNotes((site as any).notes || []),
       siteCompanies: migrateSiteCompanies((site as any).siteCompanies || []),
+      customerEquipment: (site as any).customerEquipment || [],
     })) as JobSite[];
     
     setJobSites(sitesWithMigratedData);
@@ -517,6 +521,51 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
   };
 
+  const addCustomerEquipment = (siteId: number, equipment: Omit<CustomerEquipment, 'id'>) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          const maxId = Math.max(...(site.customerEquipment || []).map(e => e.id), 0);
+          return {
+            ...site,
+            customerEquipment: [...(site.customerEquipment || []), { ...equipment, id: maxId + 1 }]
+          };
+        }
+        return site;
+      })
+    );
+  };
+
+  const updateCustomerEquipment = (siteId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          return {
+            ...site,
+            customerEquipment: (site.customerEquipment || []).map(e =>
+              e.id === equipmentId ? { ...e, ...updates } : e
+            )
+          };
+        }
+        return site;
+      })
+    );
+  };
+
+  const deleteCustomerEquipment = (siteId: number, equipmentId: number) => {
+    setJobSites(prevSites =>
+      prevSites.map(site => {
+        if (site.id === siteId) {
+          return {
+            ...site,
+            customerEquipment: (site.customerEquipment || []).filter(e => e.id !== equipmentId)
+          };
+        }
+        return site;
+      })
+    );
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -540,6 +589,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         addNote,
         updateNote,
         deleteNote,
+        addCustomerEquipment,
+        updateCustomerEquipment,
+        deleteCustomerEquipment,
         setNoteTags,
         getSalesRepName,
         getSalesRepNames,

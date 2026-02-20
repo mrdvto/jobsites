@@ -145,6 +145,26 @@
                     "date": "2025-02-15T00:00:00.000Z",
                     "description": "Quarterly review meeting with Turner Construction"
                 }
+            ],
+            "customerEquipment": [
+                {
+                    "id": 1,
+                    "equipmentType": "Excavator",
+                    "make": "Caterpillar",
+                    "model": "320F",
+                    "year": 2019,
+                    "serialNumber": "CAT0320FHBN",
+                    "hours": 4250
+                },
+                {
+                    "id": 2,
+                    "equipmentType": "Boom Lift",
+                    "make": "JLG",
+                    "model": "600S",
+                    "year": 2021,
+                    "serialNumber": "JLG600S9827",
+                    "hours": 1120
+                }
             ]
         },
         {
@@ -718,6 +738,35 @@
                     "date": "2025-02-01T00:00:00.000Z",
                     "description": "Discussed additional equipment requirements"
                 }
+            ],
+            "customerEquipment": [
+                {
+                    "id": 1,
+                    "equipmentType": "Excavator",
+                    "make": "Komatsu",
+                    "model": "PC210",
+                    "year": 2020,
+                    "serialNumber": "KMTPC210LCK",
+                    "hours": 6800
+                },
+                {
+                    "id": 2,
+                    "equipmentType": "Dozer",
+                    "make": "Caterpillar",
+                    "model": "D6T",
+                    "year": 2018,
+                    "serialNumber": "CATD6TXLWP3",
+                    "hours": 9200
+                },
+                {
+                    "id": 3,
+                    "equipmentType": "Wheel Loader",
+                    "make": "John Deere",
+                    "model": "644K",
+                    "year": 2017,
+                    "serialNumber": "JD644KZBA42",
+                    "hours": 11500
+                }
             ]
         },
         {
@@ -966,6 +1015,26 @@
                     "activityType": "Site Visit",
                     "date": "2025-04-10T00:00:00.000Z",
                     "description": "Soil assessment and equipment evaluation"
+                }
+            ],
+            "customerEquipment": [
+                {
+                    "id": 1,
+                    "equipmentType": "Backhoe",
+                    "make": "Case",
+                    "model": "580N",
+                    "year": 2020,
+                    "serialNumber": "CASE580NJK7",
+                    "hours": 3100
+                },
+                {
+                    "id": 2,
+                    "equipmentType": "Excavator",
+                    "make": "Volvo",
+                    "model": "EC140E",
+                    "year": 2022,
+                    "serialNumber": "VLVEC140EAB",
+                    "hours": 1850
                 }
             ]
         },
@@ -1361,6 +1430,35 @@
                     "activityType": "Meeting",
                     "date": "2025-03-05T00:00:00.000Z",
                     "description": "Quarterly review with quarry operations team"
+                }
+            ],
+            "customerEquipment": [
+                {
+                    "id": 1,
+                    "equipmentType": "Haul Truck",
+                    "make": "Caterpillar",
+                    "model": "777G",
+                    "year": 2016,
+                    "serialNumber": "CAT777GFXR9",
+                    "hours": 18400
+                },
+                {
+                    "id": 2,
+                    "equipmentType": "Excavator",
+                    "make": "Komatsu",
+                    "model": "PC490",
+                    "year": 2019,
+                    "serialNumber": "KMTPC490MNT",
+                    "hours": 7600
+                },
+                {
+                    "id": 3,
+                    "equipmentType": "Jaw Crusher",
+                    "make": "Sandvik",
+                    "model": "QJ341",
+                    "year": 2020,
+                    "serialNumber": "SVK341QJ002",
+                    "hours": 5200
                 }
             ]
         }

@@ -29,7 +29,7 @@ type LocationViewType = 'address' | 'coordinates';
 const JobSiteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { jobSites, getSalesRepName, opportunities, getStageName, removeSiteCompany, updateJobSite, deleteActivity, noteTags, addNote, updateNote, deleteNote } = useData();
+  const { jobSites, getSalesRepName, getSalesRepNames, opportunities, getStageName, removeSiteCompany, updateJobSite, deleteActivity, noteTags, addNote, updateNote, deleteNote } = useData();
   const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
@@ -298,8 +298,8 @@ const JobSiteDetail = () => {
               <h3 className="font-semibold mb-3">Sales Information</h3>
               <div className="space-y-3 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Sales Rep</span>
-                  <p className="font-medium">{getSalesRepName(site.salesRepId)}</p>
+                <span className="text-muted-foreground">Sales Rep{site.salesRepIds.length > 1 ? 's' : ''}</span>
+                  <p className="font-medium">{getSalesRepNames(site.salesRepIds)}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Planned Annual Rate</span>

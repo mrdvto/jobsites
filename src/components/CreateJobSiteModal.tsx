@@ -10,7 +10,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Calendar } from '@/components/ui/calendar';
 import { useData } from '@/contexts/DataContext';
 import { useToast } from '@/hooks/use-toast';
-import { Check, ChevronsUpDown, CalendarIcon } from 'lucide-react';
+import { Check, ChevronsUpDown, CalendarIcon, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 
@@ -20,13 +20,13 @@ interface CreateJobSiteModalProps {
 }
 
 export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalProps) => {
-  const { createJobSite, salesReps, getSalesRepName } = useData();
+  const { createJobSite, salesReps, getSalesRepName, getSalesRepNames } = useData();
   const { toast } = useToast();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [statusId, setStatusId] = useState('Active');
-  const [salesRepId, setSalesRepId] = useState<number | null>(null);
+  const [salesRepIds, setSalesRepIds] = useState<number[]>([]);
   const [salesRepOpen, setSalesRepOpen] = useState(false);
   const [plannedAnnualRate, setPlannedAnnualRate] = useState('0');
   const [parStartDate, setParStartDate] = useState<Date | undefined>(undefined);
@@ -48,7 +48,7 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
     setName('');
     setDescription('');
     setStatusId('Active');
-    setSalesRepId(null);
+    setSalesRepIds([]);
     setPlannedAnnualRate('0');
     setParStartDate(undefined);
     setContactName('');
@@ -77,10 +77,10 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
       return;
     }
 
-    if (!salesRepId) {
+    if (salesRepIds.length === 0) {
       toast({
         title: "Error",
-        description: "Please select a sales rep.",
+        description: "Please select at least one sales rep.",
         variant: "destructive"
       });
       return;
@@ -131,7 +131,7 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
       name: name.trim(),
       description: description.trim(),
       statusId,
-      salesRepId,
+      salesRepIds,
       plannedAnnualRate: parsedRate,
       parStartDate: parStartDate ? parStartDate.toISOString() : undefined,
       projectPrimaryContact: {
@@ -218,16 +218,31 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="salesRep">Assigned Sales Rep *</Label>
+                <Label htmlFor="salesRep">Assigned Sales Rep(s) *</Label>
                 <Popover open={salesRepOpen} onOpenChange={setSalesRepOpen}>
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
                       role="combobox"
                       aria-expanded={salesRepOpen}
-                      className="w-full justify-between"
+                      className="w-full justify-between h-auto min-h-10"
                     >
-                      {salesRepId ? getSalesRepName(salesRepId) : "Select sales rep..."}
+                      <div className="flex flex-wrap gap-1">
+                        {salesRepIds.length > 0
+                          ? salesRepIds.map(id => (
+                              <span key={id} className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-xs font-medium">
+                                {getSalesRepName(id)}
+                                <X
+                                  className="h-3 w-3 cursor-pointer hover:text-destructive"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSalesRepIds(prev => prev.filter(r => r !== id));
+                                  }}
+                                />
+                              </span>
+                            ))
+                          : <span className="text-muted-foreground">Select sales reps...</span>}
+                      </div>
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
@@ -242,14 +257,17 @@ export const CreateJobSiteModal = ({ open, onOpenChange }: CreateJobSiteModalPro
                               key={rep.salesrepid}
                               value={`${rep.firstname} ${rep.lastname}`}
                               onSelect={() => {
-                                setSalesRepId(rep.salesrepid);
-                                setSalesRepOpen(false);
+                                setSalesRepIds(prev =>
+                                  prev.includes(rep.salesrepid)
+                                    ? prev.filter(id => id !== rep.salesrepid)
+                                    : [...prev, rep.salesrepid]
+                                );
                               }}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  salesRepId === rep.salesrepid ? "opacity-100" : "opacity-0"
+                                  salesRepIds.includes(rep.salesrepid) ? "opacity-100" : "opacity-0"
                                 )}
                               />
                               {rep.firstname} {rep.lastname}

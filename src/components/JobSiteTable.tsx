@@ -24,7 +24,7 @@ const getStatusOrder = (statusId: string): number => {
 
 export const JobSiteTable = () => {
   const navigate = useNavigate();
-  const { getFilteredSites, getSalesRepName, calculateSiteRevenue } = useData();
+  const { getFilteredSites, getSalesRepNames, calculateSiteRevenue } = useData();
   const { getStatusColorClasses } = useStatusColors();
   const [sortColumn, setSortColumn] = useState<SortColumn | null>('status');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
@@ -61,7 +61,7 @@ export const JobSiteTable = () => {
         );
         break;
       case 'salesRep':
-        comparison = getSalesRepName(a.salesRepId).localeCompare(getSalesRepName(b.salesRepId));
+        comparison = getSalesRepNames(a.salesRepIds).localeCompare(getSalesRepNames(b.salesRepIds));
         break;
       case 'contact':
         comparison = a.projectPrimaryContact.name.localeCompare(b.projectPrimaryContact.name);
@@ -164,7 +164,7 @@ export const JobSiteTable = () => {
               >
                 <TableCell className="font-medium">{site.name}</TableCell>
                 <TableCell>{site.address.city}, {site.address.state}</TableCell>
-                <TableCell>{getSalesRepName(site.salesRepId)}</TableCell>
+                <TableCell>{getSalesRepNames(site.salesRepIds)}</TableCell>
                 <TableCell>{site.projectPrimaryContact.name}</TableCell>
                 <TableCell>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColorClasses(site.statusId)}`}>

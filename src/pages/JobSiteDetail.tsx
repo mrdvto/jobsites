@@ -20,16 +20,17 @@ import { ActivityModal } from '@/components/ActivityModal';
 import { AssociateActivityModal } from '@/components/AssociateActivityModal';
 import { NotesSection } from '@/components/NotesSection';
 import { SiteCompaniesTable } from '@/components/SiteCompaniesTable';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar } from 'lucide-react';
+import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Activity, SiteCompany } from '@/types';
+import { Activity, SiteCompany, CustomerEquipment } from '@/types';
 
 type LocationViewType = 'address' | 'coordinates';
 
 const JobSiteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { jobSites, getSalesRepName, getSalesRepNames, opportunities, getStageName, removeSiteCompany, updateJobSite, deleteActivity, noteTags, addNote, updateNote, deleteNote } = useData();
+  const { jobSites, getSalesRepName, getSalesRepNames, opportunities, getStageName, removeSiteCompany, updateJobSite, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, updateCustomerEquipment, deleteCustomerEquipment } = useData();
   const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
@@ -50,6 +51,11 @@ const JobSiteDetail = () => {
   const [showDeleteActivityDialog, setShowDeleteActivityDialog] = useState(false);
   const [activityToDelete, setActivityToDelete] = useState<number | null>(null);
   const [showAssociateActivityModal, setShowAssociateActivityModal] = useState(false);
+  const [showEquipmentModal, setShowEquipmentModal] = useState(false);
+  const [selectedEquipment, setSelectedEquipment] = useState<CustomerEquipment | undefined>(undefined);
+  const [equipmentModalMode, setEquipmentModalMode] = useState<'create' | 'edit'>('create');
+  const [showDeleteEquipmentDialog, setShowDeleteEquipmentDialog] = useState(false);
+  const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -154,6 +160,37 @@ const JobSiteDetail = () => {
   const initiateDeleteActivity = (activityId: number) => {
     setActivityToDelete(activityId);
     setShowDeleteActivityDialog(true);
+  };
+
+  const handleCreateEquipment = () => {
+    setSelectedEquipment(undefined);
+    setEquipmentModalMode('create');
+    setShowEquipmentModal(true);
+  };
+
+  const handleEditEquipment = (eq: CustomerEquipment) => {
+    setSelectedEquipment(eq);
+    setEquipmentModalMode('edit');
+    setShowEquipmentModal(true);
+  };
+
+  const handleDeleteEquipment = () => {
+    if (equipmentToDelete !== null) {
+      deleteCustomerEquipment(site.id, equipmentToDelete);
+      toast({ title: "Success", description: "Equipment removed." });
+      setEquipmentToDelete(null);
+      setShowDeleteEquipmentDialog(false);
+    }
+  };
+
+  const handleSaveEquipment = (data: Omit<CustomerEquipment, 'id'>) => {
+    if (equipmentModalMode === 'edit' && selectedEquipment) {
+      updateCustomerEquipment(site.id, selectedEquipment.id, data);
+      toast({ title: "Success", description: "Equipment updated." });
+    } else {
+      addCustomerEquipment(site.id, data);
+      toast({ title: "Success", description: "Equipment added." });
+    }
   };
 
   return (
@@ -553,6 +590,60 @@ const JobSiteDetail = () => {
           )}
         </Card>
 
+        <Card className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Wrench className="h-5 w-5" />
+              <h2 className="text-lg font-semibold">Customer Equipment</h2>
+            </div>
+            <Button size="sm" onClick={handleCreateEquipment}>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Equipment
+            </Button>
+          </div>
+
+          {(!site.customerEquipment || site.customerEquipment.length === 0) ? (
+            <p className="text-center text-muted-foreground py-8">
+              No customer equipment recorded at this site.
+            </p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Make</TableHead>
+                  <TableHead>Model</TableHead>
+                  <TableHead>Year</TableHead>
+                  <TableHead>Serial #</TableHead>
+                  <TableHead className="text-right">Hours</TableHead>
+                  <TableHead className="w-[80px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {site.customerEquipment.map(eq => (
+                  <TableRow key={eq.id}>
+                    <TableCell className="font-medium">{eq.equipmentType}</TableCell>
+                    <TableCell>{eq.make}</TableCell>
+                    <TableCell>{eq.model}</TableCell>
+                    <TableCell>{eq.year || '—'}</TableCell>
+                    <TableCell className="font-mono text-sm">{eq.serialNumber || '—'}</TableCell>
+                    <TableCell className="text-right">{eq.hours?.toLocaleString() || '—'}</TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditEquipment(eq)}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEquipmentToDelete(eq.id); setShowDeleteEquipmentDialog(true); }}>
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </Card>
         <NotesSection
           notes={site.notes || []}
           noteTags={noteTags}
@@ -670,6 +761,29 @@ const JobSiteDetail = () => {
         open={showAssociateActivityModal}
         onOpenChange={setShowAssociateActivityModal}
       />
+
+      <AddCustomerEquipmentModal
+        open={showEquipmentModal}
+        onOpenChange={setShowEquipmentModal}
+        onSave={handleSaveEquipment}
+        equipment={selectedEquipment}
+        mode={equipmentModalMode}
+      />
+
+      <AlertDialog open={showDeleteEquipmentDialog} onOpenChange={setShowDeleteEquipmentDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Equipment?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will remove the equipment record from this job site. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteEquipment}>Remove</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

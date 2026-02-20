@@ -1,5 +1,15 @@
 // Type definitions for CRM data structures
 
+export interface CustomerEquipment {
+  id: number;
+  equipmentType: string;
+  make: string;
+  model: string;
+  year?: number;
+  serialNumber?: string;
+  hours?: number;
+}
+
 export interface Activity {
   id: number;
   assigneeId: number;
@@ -91,6 +101,7 @@ export interface JobSite {
   }>;
   notes: Note[];
   activities: Activity[];
+  customerEquipment: CustomerEquipment[];
 }
 
 export interface SalesRep {

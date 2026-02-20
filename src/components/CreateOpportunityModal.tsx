@@ -40,7 +40,7 @@ export const CreateOpportunityModal = ({ siteId, open, onOpenChange }: CreateOpp
       phaseId: 2,
       stageIdEnteredAt: parseInt(stageId),
       jobSiteId: siteId,
-      salesRepId: 0,
+      salesRepId: 0, // Will be set from site's first rep
       ownerUserId: 0,
       originatorUserId: 0,
       sourceId: 0,

@@ -63,7 +63,7 @@ export interface JobSite {
   name: string;
   description: string;
   statusId: string;
-  salesRepId: number;
+  salesRepIds: number[];
   plannedAnnualRate: number;
   parStartDate?: string;
   projectPrimaryContact: {

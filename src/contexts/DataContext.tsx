@@ -45,6 +45,7 @@ interface DataContextType {
   deleteNote: (siteId: number, noteId: number) => void;
   setNoteTags: (tags: NoteTag[]) => void;
   getSalesRepName: (id: number) => string;
+  getSalesRepNames: (ids: number[]) => string;
   getStageName: (id: number) => string;
   getTypeName: (typeId: number) => string;
   calculateSiteRevenue: (site: JobSite) => number;
@@ -191,6 +192,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return rep ? `${rep.lastname}, ${rep.firstname}` : 'Unknown';
   };
 
+  const getSalesRepNames = (ids: number[]): string => {
+    return ids.map(id => getSalesRepName(id)).join('; ');
+  };
+
   const getStageName = (id: number): string => {
     const stage = opportunityStages.find(s => s.stageid === id);
     return stage ? stage.stagename : 'Unknown';
@@ -213,7 +218,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       // Sales Rep filter
-      if (filters.salesRepId && site.salesRepId !== parseInt(filters.salesRepId)) {
+      if (filters.salesRepId && !site.salesRepIds.includes(parseInt(filters.salesRepId))) {
         return false;
       }
 
@@ -470,7 +475,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             ...noteData,
             id: maxNoteId + 1,
             createdAt: new Date().toISOString(),
-            createdById: site.salesRepId, // Use site's sales rep as default creator
+            createdById: site.salesRepIds[0] || 0, // Use first sales rep as default creator
           };
           return {
             ...site,
@@ -537,6 +542,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         deleteNote,
         setNoteTags,
         getSalesRepName,
+        getSalesRepNames,
         getStageName,
         getTypeName,
         calculateSiteRevenue,

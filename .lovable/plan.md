@@ -1,50 +1,43 @@
 
 
-# Show Opportunity Type in Detail Modal
+# Add Inline Revenue Breakdown by Type to KPI Card
 
 ## Overview
-Display the opportunity type (Sales, Rent, Parts, Service, Rental Service, Lease) prominently in the Opportunity Detail Modal. This requires creating the OpportunityTypes lookup data and wiring it into the DataContext, then adding the type to the modal UI.
+Fill the whitespace to the right of the total revenue number by adding per-type revenue subtotals. Only types with non-zero revenue are shown. If total revenue is zero, the breakdown is hidden entirely.
 
 ## Changes
 
-### 1. Create `src/data/OpportunityTypes.json`
-New file with the lookup data provided earlier (6 types: Sales, Rent, Parts, Service, Rental Service, Lease).
+### 1. `src/contexts/DataContext.tsx` -- Add `getRevenueByType()` helper
 
-### 2. Add `OpportunityType` interface to `src/types/index.ts`
+New function that:
+- Gets filtered sites (respects current filters)
+- For each site's `associatedOpportunities`, finds the full opportunity record to get `typeId`
+- Groups and sums revenue by type
+- Returns only types with revenue > 0, sorted by `displayorder`
 
-```typescript
-export interface OpportunityType {
-  opptypeid: number;
-  opptypecode: string;
-  opptypedesc: string;
-  displayorder: number;
-  multiproductitemind: number;
-  allprimaryproductitemind: number;
-  languageid: number;
-}
-```
+Returns: `{ typeId: number; typeName: string; revenue: number }[]`
 
-### 3. Update `src/contexts/DataContext.tsx`
-- Import `OpportunityTypes.json`
-- Add `opportunityTypes` to state
-- Add `getTypeName(typeId: number): string` helper that returns the `opptypedesc` for a given `opptypeid`
-- Expose both in the context
+Also add to context interface and provider value.
 
-### 4. Update `src/components/OpportunityDetailModal.tsx`
-- Pull `getTypeName` from `useData()`
-- Display the type as a Badge next to the Opportunity Number in the header area, e.g.:
+### 2. `src/components/KPICard.tsx` -- Display breakdown
 
-```
-Opportunity Number: 100003  [Service]  [Urgent]
-```
+- Change the card layout to `flex items-center justify-between` so the total stays left and the breakdown fills the right
+- Call `getRevenueByType()` from context
+- Render a flex row of small labeled amounts on the right side, each showing:
+  - Type name as a small muted label
+  - Revenue formatted compactly (e.g., `$125,000`)
+- Only render the breakdown section when total revenue > 0
+- Use small vertical dividers between type amounts for visual separation
 
-This keeps the type visible at a glance without cluttering the layout.
+### Edge Cases
+- **Total = $0**: No breakdown shown, just the $0.00 total
+- **One type only**: Still shows on the right for context
+- **Filters change**: Breakdown updates automatically since it uses `getFilteredSites()`
 
-## Files
+## Files Modified
 
-| File | Action |
-|------|--------|
-| `src/data/OpportunityTypes.json` | Create |
-| `src/types/index.ts` | Edit -- add `OpportunityType` interface |
-| `src/contexts/DataContext.tsx` | Edit -- load types, add `getTypeName`, expose in context |
-| `src/components/OpportunityDetailModal.tsx` | Edit -- show type badge in header |
+| File | Changes |
+|------|---------|
+| `src/contexts/DataContext.tsx` | Add `getRevenueByType()` to interface, implementation, and provider |
+| `src/components/KPICard.tsx` | Add per-type revenue subtotals to right side of card |
+

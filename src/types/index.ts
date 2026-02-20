@@ -179,6 +179,16 @@ export interface OpportunityStage {
   readonlyind: number;
 }
 
+export interface OpportunityType {
+  opptypeid: number;
+  opptypecode: string;
+  opptypedesc: string;
+  displayorder: number;
+  multiproductitemind: number;
+  allprimaryproductitemind: number;
+  languageid: number;
+}
+
 export interface Filters {
   salesRepId: string;
   division: string;

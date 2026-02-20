@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { JobSite, SalesRep, Opportunity, OpportunityStage, Filters, Activity, Note, NoteTag, SiteCompany, CompanyContact } from '@/types';
+import { JobSite, SalesRep, Opportunity, OpportunityStage, OpportunityType, Filters, Activity, Note, NoteTag, SiteCompany, CompanyContact } from '@/types';
 import jobSitesData from '@/data/JobSite.json';
 import salesRepsData from '@/data/SalesReps.json';
 import opportunitiesData from '@/data/Opportunity.json';
 import opportunityStagesData from '@/data/OpportunityStages.json';
+import opportunityTypesData from '@/data/OpportunityTypes.json';
 
 // Division constants
 export const DIVISIONS = [
@@ -45,6 +46,7 @@ interface DataContextType {
   setNoteTags: (tags: NoteTag[]) => void;
   getSalesRepName: (id: number) => string;
   getStageName: (id: number) => string;
+  getTypeName: (typeId: number) => string;
   calculateSiteRevenue: (site: JobSite) => number;
   getFilteredSites: () => JobSite[];
   getTotalPipelineRevenue: () => number;
@@ -123,6 +125,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [salesReps, setSalesReps] = useState<SalesRep[]>([]);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [opportunityStages, setOpportunityStages] = useState<OpportunityStage[]>([]);
+  const [opportunityTypes] = useState<OpportunityType[]>(opportunityTypesData.content as OpportunityType[]);
   const [noteTags, setNoteTagsState] = useState<NoteTag[]>([]);
   const [filters, setFilters] = useState<Filters>({
     salesRepId: '',
@@ -190,6 +193,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const getStageName = (id: number): string => {
     const stage = opportunityStages.find(s => s.stageid === id);
     return stage ? stage.stagename : 'Unknown';
+  };
+
+  const getTypeName = (typeId: number): string => {
+    const type = opportunityTypes.find(t => t.opptypeid === typeId);
+    return type ? type.opptypedesc : 'Unknown';
   };
 
   const calculateSiteRevenue = (site: JobSite): number => {
@@ -501,6 +509,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setNoteTags,
         getSalesRepName,
         getStageName,
+        getTypeName,
         calculateSiteRevenue,
         getFilteredSites,
         getTotalPipelineRevenue,

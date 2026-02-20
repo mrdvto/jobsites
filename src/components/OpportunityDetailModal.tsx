@@ -13,7 +13,7 @@ interface OpportunityDetailModalProps {
 }
 
 export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: OpportunityDetailModalProps) => {
-  const { getStageName } = useData();
+  const { getStageName, getTypeName } = useData();
 
   if (!opportunity) return null;
 
@@ -33,6 +33,7 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
             <DialogTitle className="text-2xl">{opportunity.description}</DialogTitle>
             <div className="flex items-center gap-2 mt-1">
               <p className="text-sm text-muted-foreground">Opportunity Number: {opportunity.id}</p>
+              <Badge variant="secondary">{getTypeName(opportunity.typeId)}</Badge>
               {opportunity.isUrgent && (
                 <Badge variant="destructive" className="flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />

@@ -63,13 +63,14 @@ const JobSiteDetail = () => {
   const [equipmentSearch, setEquipmentSearch] = useState('');
 
   // Sort state for Opportunities table
-  const [oppSortColumn, setOppSortColumn] = useState<'type' | 'description' | 'division' | 'stage' | 'revenue' | null>(null);
+  const [oppSortColumn, setOppSortColumn] = useState<'type' | 'description' | 'division' | 'stage' | 'salesRep' | 'revenue' | null>(null);
   const [oppSortDirection, setOppSortDirection] = useState<'asc' | 'desc' | null>(null);
 
   // Filter state for Opportunities table
   const [oppFilterStage, setOppFilterStage] = useState('all');
   const [oppFilterDivision, setOppFilterDivision] = useState('all');
   const [oppFilterType, setOppFilterType] = useState('all');
+  const [oppFilterSalesRep, setOppFilterSalesRep] = useState('all');
   const [oppShowOpenOnly, setOppShowOpenOnly] = useState(true);
 
   // Sort state for Activities table
@@ -244,9 +245,12 @@ const JobSiteDetail = () => {
     if (oppShowOpenOnly && closedStatuses.includes(opp.status)) return false;
     if (oppFilterStage !== 'all' && opp.status !== oppFilterStage) return false;
     if (oppFilterType !== 'all' && opp.type !== oppFilterType) return false;
+    const fullOpp = opportunities.find(o => o.id === opp.id);
     if (oppFilterDivision !== 'all') {
-      const fullOpp = opportunities.find(o => o.id === opp.id);
       if (fullOpp?.divisionId !== oppFilterDivision) return false;
+    }
+    if (oppFilterSalesRep !== 'all') {
+      if (!fullOpp || getSalesRepName(fullOpp.salesRepId) !== oppFilterSalesRep) return false;
     }
     return true;
   });
@@ -256,6 +260,10 @@ const JobSiteDetail = () => {
   const uniqueDivisions = [...new Set(site.associatedOpportunities.map(o => {
     const full = opportunities.find(f => f.id === o.id);
     return full?.divisionId || '';
+  }).filter(Boolean))].sort();
+  const uniqueOppSalesReps = [...new Set(site.associatedOpportunities.map(o => {
+    const full = opportunities.find(f => f.id === o.id);
+    return full ? getSalesRepName(full.salesRepId) : '';
   }).filter(Boolean))].sort();
 
   const sortedOpportunities = [...filteredOpportunities].sort((a, b) => {
@@ -268,6 +276,7 @@ const JobSiteDetail = () => {
       case 'description': cmp = (a.description || '').localeCompare(b.description || ''); break;
       case 'division': cmp = (fullA?.divisionId || '').localeCompare(fullB?.divisionId || ''); break;
       case 'stage': cmp = (a.status || '').localeCompare(b.status || ''); break;
+      case 'salesRep': cmp = getSalesRepName(fullA?.salesRepId || 0).localeCompare(getSalesRepName(fullB?.salesRepId || 0)); break;
       case 'revenue': cmp = (a.revenue || 0) - (b.revenue || 0); break;
     }
     return oppSortDirection === 'asc' ? cmp : -cmp;
@@ -600,6 +609,17 @@ const JobSiteDetail = () => {
                     ))}
                   </SelectContent>
               </Select>
+                <Select value={oppFilterSalesRep} onValueChange={setOppFilterSalesRep}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Sales Rep" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Sales Reps</SelectItem>
+                    {uniqueOppSalesReps.map(r => (
+                      <SelectItem key={r} value={r}>{r}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <div className="flex items-center space-x-2 ml-auto">
                   <Switch
                     id="oppShowOpenOnly"
@@ -626,6 +646,9 @@ const JobSiteDetail = () => {
                     <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('stage')}>
                       <div className="flex items-center">Stage<SortIcon active={oppSortColumn === 'stage'} direction={oppSortDirection} /></div>
                     </TableHead>
+                    <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('salesRep')}>
+                      <div className="flex items-center">Sales Rep<SortIcon active={oppSortColumn === 'salesRep'} direction={oppSortDirection} /></div>
+                    </TableHead>
                     <TableHead className="text-right cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('revenue')}>
                       <div className="flex items-center justify-end">Est. Revenue<SortIcon active={oppSortColumn === 'revenue'} direction={oppSortDirection} /></div>
                     </TableHead>
@@ -650,6 +673,7 @@ const JobSiteDetail = () => {
                         <TableCell>
                           <Badge variant="outline">{opp.status}</Badge>
                         </TableCell>
+                        <TableCell>{fullOpp ? getSalesRepName(fullOpp.salesRepId) : '-'}</TableCell>
                         <TableCell className="text-right font-medium">
                           ${opp.revenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </TableCell>

@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ManageCompanyContactsModal } from './ManageCompanyContactsModal';
-import { ChevronRight, ChevronDown, Star, Pencil, X, Phone, Mail, Users } from 'lucide-react';
+import { ChevronRight, ChevronDown, Star, Pencil, X, Phone, Mail, Users, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SiteCompaniesTableProps {
@@ -19,6 +19,8 @@ export const SiteCompaniesTable = ({ siteId, companies, onRemoveCompany }: SiteC
   const { updateSiteCompany, jobSites } = useData();
   const [expandedCompanies, setExpandedCompanies] = useState<Set<string>>(new Set());
   const [editingCompany, setEditingCompany] = useState<SiteCompany | null>(null);
+  const [sortColumn, setSortColumn] = useState<'company' | 'role' | 'contacts' | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
 
   // Gather all unique contacts for a company across all job sites
   const getAllCompanyContacts = (companyName: string) => {
@@ -56,6 +58,30 @@ export const SiteCompaniesTable = ({ siteId, companies, onRemoveCompany }: SiteC
     }
   };
 
+  const handleSort = (column: 'company' | 'role' | 'contacts') => {
+    if (sortColumn === column) {
+      if (sortDirection === 'asc') setSortDirection('desc');
+      else { setSortDirection(null); setSortColumn(null); }
+    } else { setSortColumn(column); setSortDirection('asc'); }
+  };
+
+  const SortIcon = ({ column }: { column: 'company' | 'role' | 'contacts' }) => {
+    if (sortColumn !== column) return <ArrowUpDown className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-50 transition-opacity" />;
+    if (sortDirection === 'asc') return <ArrowUp className="h-4 w-4 ml-1" />;
+    return <ArrowDown className="h-4 w-4 ml-1" />;
+  };
+
+  const sortedCompanies = [...companies].sort((a, b) => {
+    if (!sortColumn || !sortDirection) return 0;
+    let cmp = 0;
+    switch (sortColumn) {
+      case 'company': cmp = a.companyName.localeCompare(b.companyName); break;
+      case 'role': cmp = (a.roleDescription || '').localeCompare(b.roleDescription || ''); break;
+      case 'contacts': cmp = (a.companyContacts?.length || 0) - (b.companyContacts?.length || 0); break;
+    }
+    return sortDirection === 'asc' ? cmp : -cmp;
+  });
+
   if (companies.length === 0) {
     return (
       <p className="text-center text-muted-foreground py-8">
@@ -70,14 +96,20 @@ export const SiteCompaniesTable = ({ siteId, companies, onRemoveCompany }: SiteC
         <TableHeader>
           <TableRow>
             <TableHead className="w-[40px]"></TableHead>
-            <TableHead>Company</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Contacts</TableHead>
+            <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('company')}>
+              <div className="flex items-center">Company<SortIcon column="company" /></div>
+            </TableHead>
+            <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('role')}>
+              <div className="flex items-center">Role<SortIcon column="role" /></div>
+            </TableHead>
+            <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('contacts')}>
+              <div className="flex items-center">Contacts<SortIcon column="contacts" /></div>
+            </TableHead>
             <TableHead className="w-[120px]"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {companies.map((company, idx) => {
+          {sortedCompanies.map((company, idx) => {
             const isExpanded = expandedCompanies.has(company.companyName);
             const contacts = company.companyContacts || [];
             const primaryContact = contacts[company.primaryContactIndex || 0];

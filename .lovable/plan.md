@@ -1,26 +1,25 @@
 
 
-# Add "Show Open Only" Toggle to Opportunities Filter Area
+# Add "No Lead" to Closed Statuses List
 
 ## Overview
-Add a toggle switch to the opportunities filter row that hides closed/completed opportunities (Won, Lost, No Deal, Closed, No Leads). It defaults to enabled, matching the existing pattern used in the main FilterBar's "Hide Completed" toggle.
+Add "No Lead" (singular) to the list of statuses hidden by the "Show Open Only" toggle. Currently the list includes "No Leads" (plural) but the sample data uses "No Lead" (singular), so both variants should be covered.
 
 ## Changes
 
 ### File: `src/pages/JobSiteDetail.tsx`
 
-**1. Add state variable**
-- `oppShowOpenOnly` (boolean, default `true`)
+Update the `closedStatuses` array (currently around line 241) from:
 
-**2. Add Switch import**
-- Import `Switch` from `@/components/ui/switch`
+```typescript
+const closedStatuses = ['Won', 'Lost', 'No Deal', 'Closed', 'No Leads'];
+```
 
-**3. Update filter logic**
-- In the `filteredOpportunities` filter function, when `oppShowOpenOnly` is true, exclude opportunities whose `status` is one of: `Won`, `Lost`, `No Deal`, `Closed`, `No Leads`
+to:
 
-**4. Add toggle to filter row UI**
-- Append a Switch + Label pair to the existing `div` containing the Stage, Division, and Type dropdowns
-- Label text: "Show Open Only"
-- Follows the same visual pattern as FilterBar toggles (Switch + Label with `cursor-pointer`)
+```typescript
+const closedStatuses = ['Won', 'Lost', 'No Deal', 'Closed', 'No Leads', 'No Lead'];
+```
 
 No other files are changed.
+

@@ -65,8 +65,8 @@ const JobSiteDetail = () => {
   const [oppSortDirection, setOppSortDirection] = useState<'asc' | 'desc' | null>(null);
 
   // Sort state for Activities table
-  const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'description' | null>(null);
-  const [actSortDirection, setActSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'description' | null>('date');
+  const [actSortDirection, setActSortDirection] = useState<'asc' | 'desc' | null>('desc');
 
   // Sort state for Equipment table
   const [eqSortColumn, setEqSortColumn] = useState<'type' | 'make' | 'model' | 'year' | 'serial' | 'hours' | null>(null);

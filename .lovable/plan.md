@@ -1,87 +1,43 @@
 
 
-# Add Sorting to All Job Site Detail Tables
+# Replace Opportunity Number with Type & Add Filters to Opportunities Table
 
 ## Overview
-Add column-header sorting to each of the four tables on the job site detail page, following the same pattern already used in the `JobSiteTable` component (click to cycle asc / desc / none, with sort icons).
-
-## Shared Pattern
-Each table gets its own sort state (`sortColumn` + `sortDirection`) and a `handleSort` function. Clicking a column header cycles through ascending, descending, then unsorted. Sort icons (ArrowUpDown, ArrowUp, ArrowDown) are already imported via `lucide-react`.
-
-A reusable `SortIcon` helper will be extracted or inlined per table, matching the existing JobSiteTable pattern.
+Replace the "Opportunity Number" column with an "Opportunity Type" column in the opportunities table on the job site detail page, and add filter dropdowns above the table for Stage, Division, and Type.
 
 ## Changes
 
-### 1. Opportunities Table (in `src/pages/JobSiteDetail.tsx`)
+### 1. Replace Column (in `src/pages/JobSiteDetail.tsx`)
 
-**Sortable columns:** Opportunity Number (numeric), Description (string), Division (string), Stage (string), Est. Revenue (numeric)
+- Remove the "Opportunity Number" column header and its corresponding `TableCell` (which shows `opp.id`)
+- Add a new "Type" column header (sortable) that displays `opp.type` as a badge
+- Update the `oppSortColumn` state type to replace `'id'` with `'type'`
+- Update the sort logic: replace the numeric `id` comparison with a `localeCompare` on `opp.type`
 
-**State:**
-- `oppSortColumn` / `oppSortDirection`
+### 2. Add Filter Row Above Table
 
-**Sort logic:**
-- Number: numeric comparison on `opp.id`
-- Description: `localeCompare`
-- Division: `localeCompare` on `fullOpp?.divisionId`
-- Stage: `localeCompare` on `opp.status`
-- Revenue: numeric comparison on `opp.revenue`
+Add three filter dropdowns between the action buttons and the table, displayed inline:
 
-**UI:** Each `TableHead` gets `cursor-pointer`, `group`, `hover:bg-muted/50` classes and an `onClick` handler; sort icon appended.
+- **Stage filter**: populated from the site's associated opportunities' unique `status` values; filters to matching rows
+- **Division filter**: populated from the full opportunity data's unique `divisionId` values; filters to matching rows
+- **Type filter**: populated from the site's associated opportunities' unique `type` values; filters to matching rows
 
-### 2. Subcontractors & Companies Table (`src/components/SiteCompaniesTable.tsx`)
+Each defaults to "All" and can be independently selected.
 
-**Sortable columns:** Company (string), Role (string), Contacts (numeric count)
+### 3. New State
 
-**State:**
-- `sortColumn` / `sortDirection` added to the component
+- `oppFilterStage` (string, default `'all'`)
+- `oppFilterDivision` (string, default `'all'`)
+- `oppFilterType` (string, default `'all'`)
 
-**Sort logic:**
-- Company: `localeCompare` on `companyName`
-- Role: `localeCompare` on `roleDescription`
-- Contacts: numeric comparison on `companyContacts.length`
+### 4. Filtering Logic
 
-**UI:** Same header pattern. The expand/collapse chevron column and action column remain unsortable.
-
-### 3. Activities Table (in `src/pages/JobSiteDetail.tsx`)
-
-**Sortable columns:** Assignee (string), Activity Type (string), Date (date), Description (string)
-
-**State:**
-- `actSortColumn` / `actSortDirection`
-
-**Sort logic:**
-- Assignee: `localeCompare` on resolved `getSalesRepName(activity.assigneeId)`
-- Activity Type: `localeCompare` on `activityType`
-- Date: numeric comparison on `new Date(activity.date).getTime()`
-- Description: `localeCompare` on `description`
-
-**UI:** The action column (edit/delete buttons) remains unsortable.
-
-### 4. Equipment Table (in `src/pages/JobSiteDetail.tsx`, inside each collapsible group)
-
-**Sortable columns:** Type (string), Make (string), Model (string), Year (numeric), Serial # (string), Hours (numeric)
-
-**State:**
-- `eqSortColumn` / `eqSortDirection` (shared across all groups -- sorting applies uniformly within each group)
-
-**Sort logic:**
-- Type/Make/Model/Serial: `localeCompare`
-- Year/Hours: numeric comparison (treating undefined as 0)
-
-**UI:** Same header pattern. Action column remains unsortable.
+Applied before sorting: filter `site.associatedOpportunities` by matching `status`, `type`, and `divisionId` (looked up from the full `opportunities` array) against the selected filter values.
 
 ## Technical Details
 
 | File | Change |
 |------|--------|
-| `src/pages/JobSiteDetail.tsx` | Add 3 sets of sort state (opp, activities, equipment), sort handlers, sorted arrays, and sortable column headers with icons for the Opportunities, Activities, and Equipment tables |
-| `src/components/SiteCompaniesTable.tsx` | Add sort state, sort handler, sorted array, and sortable column headers with icons |
+| `src/pages/JobSiteDetail.tsx` | Replace `'id'` with `'type'` in sort column type and sort logic; swap the first column from Opportunity Number to Type; add 3 filter state variables; add filter UI row with Select dropdowns; apply filtering before sorting |
 
-### New imports needed
-- `ArrowUpDown`, `ArrowUp`, `ArrowDown` from `lucide-react` (already used in JobSiteTable, need to add to both files' imports)
-
-### No changes to
-- Data model / types
-- DataContext
-- Any other components
-
+No other files are changed. The `opp.type` field already exists on associated opportunities in the data model.

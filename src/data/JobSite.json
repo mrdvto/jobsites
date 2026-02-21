@@ -85,7 +85,7 @@
                     "id": 100002,
                     "type": "Rental",
                     "description": "12-month rental of 950M Heavy Duty Loader",
-                    "status": "Won",
+                    "stageId": 16,
                     "revenue": 2590
                 }
             ],
@@ -253,7 +253,7 @@
                     "id": 100015,
                     "type": "Sale",
                     "description": "Purchase of new CAT 320 Excavator",
-                    "status": "Proposal",
+                    "stageId": 8,
                     "revenue": 200000
                 }
             ],
@@ -385,14 +385,14 @@
                     "id": 100003,
                     "type": "Rental",
                     "description": "Short-term rental of asphalt paver",
-                    "status": "Active",
+                    "stageId": 2,
                     "revenue": 15000
                 },
                 {
                     "id": 100027,
                     "type": "Rental",
                     "description": "Rental of double drum rollers",
-                    "status": "Lead",
+                    "stageId": 1,
                     "revenue": 5500
                 }
             ],
@@ -524,7 +524,7 @@
                     "id": 100024,
                     "type": "Rental",
                     "description": "Monthly rental of 262D Skid Steer",
-                    "status": "Closed",
+                    "stageId": 16,
                     "revenue": 1433.84
                 }
             ],
@@ -665,14 +665,14 @@
                     "id": 100004,
                     "type": "Rental",
                     "description": "6-month rental of used 3508 Generator Set",
-                    "status": "Active",
+                    "stageId": 2,
                     "revenue": 5366
                 },
                 {
                     "id": 100005,
                     "type": "Lease",
                     "description": "24-month lease of new 3516 Diesel Engine",
-                    "status": "Active",
+                    "stageId": 2,
                     "revenue": 2894
                 }
             ],
@@ -859,49 +859,49 @@
                     "id": 100016,
                     "type": "Parts",
                     "description": "High-pressure air compressor rebuild kit",
-                    "status": "No Lead",
+                    "stageId": 128,
                     "revenue": 12500
                 },
                 {
                     "id": 200001,
                     "type": "Sales",
                     "description": "Purchase of CAT 3512B Generator Set for backup power",
-                    "status": "Proposal",
+                    "stageId": 8,
                     "revenue": 185000
                 },
                 {
                     "id": 200002,
                     "type": "Rent",
                     "description": "6-month rental of portable dewatering pump",
-                    "status": "Won",
+                    "stageId": 16,
                     "revenue": 18500
                 },
                 {
                     "id": 200003,
                     "type": "Service",
                     "description": "Preventive maintenance on existing pump station motors",
-                    "status": "Development",
+                    "stageId": 4,
                     "revenue": 9200
                 },
                 {
                     "id": 200004,
                     "type": "Lease",
                     "description": "24-month lease of XQ575 portable generator",
-                    "status": "Outstanding",
+                    "stageId": 2,
                     "revenue": 42000
                 },
                 {
                     "id": 200005,
                     "type": "Rental Service",
                     "description": "Temp power with operator for filtration building",
-                    "status": "Lost",
+                    "stageId": 32,
                     "revenue": 31000
                 },
                 {
                     "id": 200006,
                     "type": "Sales",
                     "description": "Purchase of replacement filtration valves and actuators",
-                    "status": "Lead",
+                    "stageId": 1,
                     "revenue": 67000
                 }
             ],
@@ -1018,7 +1018,7 @@
                     "id": 100018,
                     "type": "Service",
                     "description": "Undercarriage overhaul for fleet Dozer",
-                    "status": "Active",
+                    "stageId": 2,
                     "revenue": 8750
                 }
             ],
@@ -1179,7 +1179,7 @@
                     "id": 100026,
                     "type": "Parts",
                     "description": "Supply of C7 Industrial Engine parts",
-                    "status": "Won",
+                    "stageId": 16,
                     "revenue": 1300
                 }
             ],

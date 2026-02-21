@@ -97,7 +97,7 @@ export interface JobSite {
     id: number;
     type: string;
     description: string;
-    status: string;
+    stageId: number;
     revenue: number;
   }>;
   notes: Note[];

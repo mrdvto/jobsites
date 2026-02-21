@@ -2,6 +2,7 @@
 
 export interface CustomerEquipment {
   id: number;
+  companyId: string;
   equipmentType: string;
   make: string;
   model: string;

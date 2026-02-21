@@ -31,27 +31,9 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Michael Ross",
-                            "title": "Site Superintendent",
-                            "phone": "312-555-8821",
-                            "email": "mross@turnerconstruction.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Jennifer Walsh",
-                            "title": "Project Manager",
-                            "phone": "312-555-8822",
-                            "email": "jwalsh@turnerconstruction.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Robert Chen",
-                            "title": "Safety Director",
-                            "phone": "312-555-8823",
-                            "email": "rchen@turnerconstruction.com"
-                        }
+                        { "id": 1, "name": "Michael Ross", "title": "Site Superintendent", "phone": "312-555-8821", "email": "mross@turnerconstruction.com" },
+                        { "id": 2, "name": "Jennifer Walsh", "title": "Project Manager", "phone": "312-555-8822", "email": "jwalsh@turnerconstruction.com" },
+                        { "id": 3, "name": "Robert Chen", "title": "Safety Director", "phone": "312-555-8823", "email": "rchen@turnerconstruction.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -62,111 +44,35 @@
                     "roleDescription": "Subcontractor - Excavation",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Latisha Tyler",
-                            "title": "Fleet Manager",
-                            "phone": "312-555-0192",
-                            "email": "latisha.tyler@graniteexcavation.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Marcus Johnson",
-                            "title": "Site Foreman",
-                            "phone": "312-555-0193",
-                            "email": "m.johnson@graniteexcavation.com"
-                        }
+                        { "id": 1, "name": "Latisha Tyler", "title": "Fleet Manager", "phone": "312-555-0192", "email": "latisha.tyler@graniteexcavation.com" },
+                        { "id": 2, "name": "Marcus Johnson", "title": "Site Foreman", "phone": "312-555-0193", "email": "m.johnson@graniteexcavation.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [
-                {
-                    "id": 100002,
-                    "type": "Rental",
-                    "description": "12-month rental of 950M Heavy Duty Loader",
-                    "stageId": 16,
-                    "revenue": 2590
-                }
+                { "id": 100002, "type": "Rental", "description": "12-month rental of 950M Heavy Duty Loader", "stageId": 16, "revenue": 2590 },
+                { "id": 300001, "type": "Sales", "description": "CAT D8T Dozer for foundation excavation", "stageId": 4, "revenue": 125000 },
+                { "id": 300002, "type": "Parts", "description": "Hydraulic cylinder rebuild kit for 320F", "stageId": 2, "revenue": 8500 },
+                { "id": 300003, "type": "Rental Service", "description": "Crane service with operator for steel erection", "stageId": 8, "revenue": 22000 }
             ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Strict noise ordinances after 6 PM. All equipment must be shut down by 5:45 PM to allow for proper wind-down.",
-                    "createdAt": "2025-01-15T09:30:00.000Z",
-                    "createdById": 313,
-                    "tagIds": ["COMPLIANCE"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "Badging required for site access. All personnel must check in at the security trailer before entering the construction zone.",
-                    "createdAt": "2025-01-16T14:22:00.000Z",
-                    "createdById": 313,
-                    "tagIds": ["SECURITY"],
-                    "attachments": []
-                },
-                {
-                    "id": 3,
-                    "content": "Hard hats and steel-toed boots mandatory at all times. High-visibility vests required in active construction areas.",
-                    "createdAt": "2025-01-20T11:00:00.000Z",
-                    "createdById": 313,
-                    "tagIds": ["SAFETY"],
-                    "attachments": []
-                },
-                {
-                    "id": 4,
-                    "content": "Hospital loading dock available for equipment deliveries on Tuesdays and Thursdays only.",
-                    "createdAt": "2025-02-01T08:45:00.000Z",
-                    "createdById": 313,
-                    "tagIds": ["GENERAL"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Strict noise ordinances after 6 PM. All equipment must be shut down by 5:45 PM to allow for proper wind-down.", "createdAt": "2025-01-15T09:30:00.000Z", "createdById": 313, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 2, "content": "Badging required for site access. All personnel must check in at the security trailer before entering the construction zone.", "createdAt": "2025-01-16T14:22:00.000Z", "createdById": 313, "tagIds": ["SECURITY"], "attachments": [] },
+                { "id": 3, "content": "Hard hats and steel-toed boots mandatory at all times. High-visibility vests required in active construction areas.", "createdAt": "2025-01-20T11:00:00.000Z", "createdById": 313, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 4, "content": "Hospital loading dock available for equipment deliveries on Tuesdays and Thursdays only.", "createdAt": "2025-02-01T08:45:00.000Z", "createdById": 313, "tagIds": ["GENERAL"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1001,
-                    "assigneeId": 313,
-                    "activityType": "Site Visit",
-                    "date": "2025-01-20T00:00:00.000Z",
-                    "description": "Initial site walkthrough with project manager"
-                },
-                {
-                    "id": 1002,
-                    "assigneeId": 313,
-                    "activityType": "Phone Call",
-                    "date": "2025-02-05T00:00:00.000Z",
-                    "description": "Follow-up call regarding equipment needs"
-                },
-                {
-                    "id": 1003,
-                    "assigneeId": 305,
-                    "activityType": "Meeting",
-                    "date": "2025-02-15T00:00:00.000Z",
-                    "description": "Quarterly review meeting with Turner Construction"
-                }
+                { "id": 1001, "assigneeId": 313, "activityType": "Site Visit", "date": "2025-01-20T00:00:00.000Z", "description": "Initial site walkthrough with project manager" },
+                { "id": 1002, "assigneeId": 313, "activityType": "Phone Call", "date": "2025-02-05T00:00:00.000Z", "description": "Follow-up call regarding equipment needs" },
+                { "id": 1003, "assigneeId": 305, "activityType": "Meeting", "date": "2025-02-15T00:00:00.000Z", "description": "Quarterly review meeting with Turner Construction" }
             ],
             "customerEquipment": [
-                {
-                    "id": 1,
-                    "companyId": "1019550",
-                    "equipmentType": "Excavator",
-                    "make": "Caterpillar",
-                    "model": "320F",
-                    "year": 2019,
-                    "serialNumber": "CAT0320FHBN",
-                    "hours": 4250
-                },
-                {
-                    "id": 2,
-                    "companyId": "1019550",
-                    "equipmentType": "Boom Lift",
-                    "make": "JLG",
-                    "model": "600S",
-                    "year": 2021,
-                    "serialNumber": "JLG600S9827",
-                    "hours": 1120
-                }
+                { "id": 1, "companyId": "1019550", "equipmentType": "Excavator", "make": "Caterpillar", "model": "320F", "year": 2019, "serialNumber": "CAT0320FHBN", "hours": 4250 },
+                { "id": 2, "companyId": "1019550", "equipmentType": "Boom Lift", "make": "JLG", "model": "600S", "year": 2021, "serialNumber": "JLG600S9827", "hours": 1120 },
+                { "id": 3, "companyId": "998810", "equipmentType": "Wheel Loader", "make": "Volvo", "model": "L90H", "year": 2021, "serialNumber": "VLV90H8834A", "hours": 2800 },
+                { "id": 4, "companyId": "1019550", "equipmentType": "Skid Steer", "make": "Bobcat", "model": "T770", "year": 2022, "serialNumber": "BCT770KL921", "hours": 950 },
+                { "id": 5, "companyId": "998810", "equipmentType": "Compactor", "make": "Caterpillar", "model": "CS56B", "year": 2020, "serialNumber": "CATCS56BXMR", "hours": 3400 }
             ]
         },
         {
@@ -199,105 +105,44 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Aisha Bartlett",
-                            "title": "Procurement Manager",
-                            "phone": "815-555-0332",
-                            "email": "aisha.bartlett@mortenson.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Brian Sullivan",
-                            "title": "Project Executive",
-                            "phone": "815-555-0333",
-                            "email": "b.sullivan@mortenson.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Christine Ng",
-                            "title": "Field Engineer",
-                            "phone": "815-555-0334",
-                            "email": "c.ng@mortenson.com"
-                        }
+                        { "id": 1, "name": "Aisha Bartlett", "title": "Procurement Manager", "phone": "815-555-0332", "email": "aisha.bartlett@mortenson.com" },
+                        { "id": 2, "name": "Brian Sullivan", "title": "Project Executive", "phone": "815-555-0333", "email": "b.sullivan@mortenson.com" },
+                        { "id": 3, "name": "Christine Ng", "title": "Field Engineer", "phone": "815-555-0334", "email": "c.ng@mortenson.com" }
                     ],
                     "primaryContactIndex": 0
                 },
                 {
                     "companyId": "998810",
                     "companyName": "Turner Construction Company",
-                    "roleId": "SUB-STRUCT",
-                    "roleDescription": "Subcontractor - Structural",
+                    "roleId": "SUB-STEEL",
+                    "roleDescription": "Subcontractor - Steel",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 4,
-                            "name": "Amanda Foster",
-                            "title": "Procurement Specialist",
-                            "phone": "312-555-8824",
-                            "email": "afoster@turnerconstruction.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "David Kim",
-                            "title": "Assistant Project Manager",
-                            "phone": "312-555-8825",
-                            "email": "dkim@turnerconstruction.com"
-                        }
+                        { "id": 4, "name": "Amanda Foster", "title": "Procurement Specialist", "phone": "312-555-8824", "email": "afoster@turnerconstruction.com" },
+                        { "id": 5, "name": "David Kim", "title": "Assistant Project Manager", "phone": "312-555-8825", "email": "dkim@turnerconstruction.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [
-                {
-                    "id": 100015,
-                    "type": "Sale",
-                    "description": "Purchase of new CAT 320 Excavator",
-                    "stageId": 8,
-                    "revenue": 200000
-                }
+                { "id": 100015, "type": "Sale", "description": "Purchase of new CAT 320 Excavator", "stageId": 8, "revenue": 200000 },
+                { "id": 300004, "type": "Rent", "description": "6-month rental of vibratory roller", "stageId": 4, "revenue": 35000 },
+                { "id": 300005, "type": "Service", "description": "Annual preventive maintenance on fleet excavators", "stageId": 1, "revenue": 12000 },
+                { "id": 300006, "type": "Lease", "description": "24-month lease of CAT 950GC Wheel Loader", "stageId": 16, "revenue": 95000 }
             ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Stadium will remain operational during renovation. Work must be scheduled around game days and events.",
-                    "createdAt": "2025-02-15T10:30:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["GENERAL", "COMPLIANCE"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "All workers must complete crowd safety training before accessing field areas.",
-                    "createdAt": "2025-02-20T09:00:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["SAFETY"],
-                    "attachments": []
-                },
-                {
-                    "id": 3,
-                    "content": "Background checks required for all personnel due to public venue security protocols.",
-                    "createdAt": "2025-03-01T14:15:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["SECURITY"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Stadium will remain operational during renovation. Work must be scheduled around game days and events.", "createdAt": "2025-02-15T10:30:00.000Z", "createdById": 305, "tagIds": ["GENERAL", "COMPLIANCE"], "attachments": [] },
+                { "id": 2, "content": "All workers must complete crowd safety training before accessing field areas.", "createdAt": "2025-02-20T09:00:00.000Z", "createdById": 305, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 3, "content": "Background checks required for all personnel due to public venue security protocols.", "createdAt": "2025-03-01T14:15:00.000Z", "createdById": 305, "tagIds": ["SECURITY"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1004,
-                    "assigneeId": 305,
-                    "activityType": "Email",
-                    "date": "2025-03-01T00:00:00.000Z",
-                    "description": "Sent proposal for excavator purchase"
-                },
-                {
-                    "id": 1005,
-                    "assigneeId": 305,
-                    "activityType": "Site Visit",
-                    "date": "2025-03-10T00:00:00.000Z",
-                    "description": "Equipment demonstration scheduled"
-                }
+                { "id": 1004, "assigneeId": 305, "activityType": "Email", "date": "2025-03-01T00:00:00.000Z", "description": "Sent proposal for excavator purchase" },
+                { "id": 1005, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-03-10T00:00:00.000Z", "description": "Equipment demonstration scheduled" }
+            ],
+            "customerEquipment": [
+                { "id": 1, "companyId": "1067200", "equipmentType": "Dozer", "make": "John Deere", "model": "700K", "year": 2019, "serialNumber": "JD700KFRT52", "hours": 5200 },
+                { "id": 2, "companyId": "998810", "equipmentType": "Generator", "make": "Caterpillar", "model": "XQ575", "year": 2021, "serialNumber": "CATXQ575PP1", "hours": 1800 },
+                { "id": 3, "companyId": "1067200", "equipmentType": "Excavator", "make": "Komatsu", "model": "PC138", "year": 2020, "serialNumber": "KMTPC138AB2", "hours": 4100 }
             ]
         },
         {
@@ -331,20 +176,8 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Wesley Moss",
-                            "title": "Site Foreman",
-                            "phone": "309-555-0821",
-                            "email": "wesley.moss@gallagherasphalt.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Patricia Lane",
-                            "title": "Project Manager",
-                            "phone": "309-555-0822",
-                            "email": "p.lane@gallagherasphalt.com"
-                        }
+                        { "id": 1, "name": "Wesley Moss", "title": "Site Foreman", "phone": "309-555-0821", "email": "wesley.moss@gallagherasphalt.com" },
+                        { "id": 2, "name": "Patricia Lane", "title": "Project Manager", "phone": "309-555-0822", "email": "p.lane@gallagherasphalt.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -352,92 +185,36 @@
                     "companyId": "NON-DBS",
                     "companyName": "Curran Contracting Company",
                     "roleId": "SUB-PAV",
-                    "roleDescription": "Subcontractor - Finish Paving",
+                    "roleDescription": "Subcontractor - Paving",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Angelia Sexton",
-                            "title": "Owner",
-                            "phone": "630-555-0441",
-                            "email": "angelia.s@currancontracting.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Howard Klein",
-                            "title": "Operations Manager",
-                            "phone": "630-555-0442",
-                            "email": "h.klein@currancontracting.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Jessica Palmer",
-                            "title": "Paving Crew Lead",
-                            "phone": "630-555-0443",
-                            "email": "j.palmer@currancontracting.com"
-                        }
+                        { "id": 1, "name": "Angelia Sexton", "title": "Owner", "phone": "630-555-0441", "email": "angelia.s@currancontracting.com" },
+                        { "id": 2, "name": "Howard Klein", "title": "Operations Manager", "phone": "630-555-0442", "email": "h.klein@currancontracting.com" },
+                        { "id": 3, "name": "Jessica Palmer", "title": "Paving Crew Lead", "phone": "630-555-0443", "email": "j.palmer@currancontracting.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [
-                {
-                    "id": 100003,
-                    "type": "Rental",
-                    "description": "Short-term rental of asphalt paver",
-                    "stageId": 2,
-                    "revenue": 15000
-                },
-                {
-                    "id": 100027,
-                    "type": "Rental",
-                    "description": "Rental of double drum rollers",
-                    "stageId": 1,
-                    "revenue": 5500
-                }
+                { "id": 100003, "type": "Rental", "description": "Short-term rental of asphalt paver", "stageId": 2, "revenue": 15000 },
+                { "id": 100027, "type": "Rental", "description": "Rental of double drum rollers", "stageId": 1, "revenue": 5500 },
+                { "id": 300007, "type": "Sales", "description": "Purchase of new CAT AP655F Asphalt Paver", "stageId": 8, "revenue": 180000 },
+                { "id": 300008, "type": "Rental Service", "description": "Paving crew with roller equipment for ramp sections", "stageId": 32, "revenue": 15500 },
+                { "id": 300009, "type": "Parts", "description": "Drum assembly and wear plates for roller fleet", "stageId": 4, "revenue": 6200 }
             ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Safety vest required at all times. All personnel must wear high-visibility vests when on or near the roadway.",
-                    "createdAt": "2025-02-25T22:30:00.000Z",
-                    "createdById": 303,
-                    "tagIds": ["SAFETY"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "Deliveries must be scheduled between 10 PM and 4 AM due to lane closure restrictions.",
-                    "createdAt": "2025-02-26T10:15:00.000Z",
-                    "createdById": 303,
-                    "tagIds": ["COMPLIANCE", "GENERAL"],
-                    "attachments": []
-                },
-                {
-                    "id": 3,
-                    "content": "IDOT inspector will be on-site every night. All work must meet state highway standards.",
-                    "createdAt": "2025-03-01T23:00:00.000Z",
-                    "createdById": 303,
-                    "tagIds": ["COMPLIANCE"],
-                    "attachments": []
-                },
-                {
-                    "id": 4,
-                    "content": "Emergency vehicle access lane must be maintained at all times during night work operations.",
-                    "createdAt": "2025-03-05T21:45:00.000Z",
-                    "createdById": 303,
-                    "tagIds": ["SAFETY", "COMPLIANCE"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Safety vest required at all times. All personnel must wear high-visibility vests when on or near the roadway.", "createdAt": "2025-02-25T22:30:00.000Z", "createdById": 303, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 2, "content": "Deliveries must be scheduled between 10 PM and 4 AM due to lane closure restrictions.", "createdAt": "2025-02-26T10:15:00.000Z", "createdById": 303, "tagIds": ["COMPLIANCE", "GENERAL"], "attachments": [] },
+                { "id": 3, "content": "IDOT inspector will be on-site every night. All work must meet state highway standards.", "createdAt": "2025-03-01T23:00:00.000Z", "createdById": 303, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 4, "content": "Emergency vehicle access lane must be maintained at all times during night work operations.", "createdAt": "2025-03-05T21:45:00.000Z", "createdById": 303, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1006,
-                    "assigneeId": 303,
-                    "activityType": "Phone Call",
-                    "date": "2025-02-28T00:00:00.000Z",
-                    "description": "Confirmed delivery schedule for paving equipment"
-                }
+                { "id": 1006, "assigneeId": 303, "activityType": "Phone Call", "date": "2025-02-28T00:00:00.000Z", "description": "Confirmed delivery schedule for paving equipment" }
+            ],
+            "customerEquipment": [
+                { "id": 1, "companyId": "NON-DBS", "equipmentType": "Paver", "make": "Caterpillar", "model": "AP655F", "year": 2018, "serialNumber": "CATAP655FM1", "hours": 6200 },
+                { "id": 2, "companyId": "NON-DBS", "equipmentType": "Roller", "make": "Volvo", "model": "DD120C", "year": 2020, "serialNumber": "VLVDD120CX3", "hours": 3500 },
+                { "id": 3, "companyId": "NON-DBS", "equipmentType": "Skid Steer", "make": "Case", "model": "SV340B", "year": 2021, "serialNumber": "CASESV340B7", "hours": 2100 }
             ]
         },
         {
@@ -470,20 +247,8 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Michael Trent",
-                            "title": "Landscape Architect",
-                            "phone": "217-555-0221",
-                            "email": "michael.trent@christywebber.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Nancy Rivera",
-                            "title": "Project Manager",
-                            "phone": "217-555-0222",
-                            "email": "n.rivera@christywebber.com"
-                        }
+                        { "id": 1, "name": "Michael Trent", "title": "Landscape Architect", "phone": "217-555-0221", "email": "michael.trent@christywebber.com" },
+                        { "id": 2, "name": "Nancy Rivera", "title": "Project Manager", "phone": "217-555-0222", "email": "n.rivera@christywebber.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -494,66 +259,30 @@
                     "roleDescription": "Subcontractor - Excavation",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 3,
-                            "name": "Carlos Mendez",
-                            "title": "Equipment Operator Lead",
-                            "phone": "312-555-0194",
-                            "email": "c.mendez@graniteexcavation.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Tanya Brooks",
-                            "title": "Safety Coordinator",
-                            "phone": "312-555-0195",
-                            "email": "t.brooks@graniteexcavation.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "William Park",
-                            "title": "Project Estimator",
-                            "phone": "312-555-0196",
-                            "email": "w.park@graniteexcavation.com"
-                        }
+                        { "id": 3, "name": "Carlos Mendez", "title": "Equipment Operator Lead", "phone": "312-555-0194", "email": "c.mendez@graniteexcavation.com" },
+                        { "id": 4, "name": "Tanya Brooks", "title": "Safety Coordinator", "phone": "312-555-0195", "email": "t.brooks@graniteexcavation.com" },
+                        { "id": 5, "name": "William Park", "title": "Project Estimator", "phone": "312-555-0196", "email": "w.park@graniteexcavation.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [
-                {
-                    "id": 100024,
-                    "type": "Rental",
-                    "description": "Monthly rental of 262D Skid Steer",
-                    "stageId": 16,
-                    "revenue": 1433.84
-                }
+                { "id": 100024, "type": "Rental", "description": "Monthly rental of 262D Skid Steer", "stageId": 16, "revenue": 1433.84 },
+                { "id": 300010, "type": "Rent", "description": "3-month rental of mini excavator for utility work", "stageId": 16, "revenue": 4500 },
+                { "id": 300011, "type": "Service", "description": "Skid steer hydraulic system overhaul", "stageId": 2, "revenue": 7800 },
+                { "id": 300012, "type": "Sales", "description": "Purchase of Bobcat T770 Compact Track Loader", "stageId": 32, "revenue": 55000 }
             ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Project completed successfully. All equipment returned and inspected.",
-                    "createdAt": "2024-11-15T16:00:00.000Z",
-                    "createdById": 292,
-                    "tagIds": ["GENERAL"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "Final safety inspection passed with no incidents recorded during project.",
-                    "createdAt": "2024-11-15T17:30:00.000Z",
-                    "createdById": 292,
-                    "tagIds": ["SAFETY", "COMPLIANCE"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Project completed successfully. All equipment returned and inspected.", "createdAt": "2024-11-15T16:00:00.000Z", "createdById": 292, "tagIds": ["GENERAL"], "attachments": [] },
+                { "id": 2, "content": "Final safety inspection passed with no incidents recorded during project.", "createdAt": "2024-11-15T17:30:00.000Z", "createdById": 292, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1007,
-                    "assigneeId": 292,
-                    "activityType": "Site Visit",
-                    "date": "2024-11-15T00:00:00.000Z",
-                    "description": "Final walkthrough and project closeout"
-                }
+                { "id": 1007, "assigneeId": 292, "activityType": "Site Visit", "date": "2024-11-15T00:00:00.000Z", "description": "Final walkthrough and project closeout" }
+            ],
+            "customerEquipment": [
+                { "id": 1, "companyId": "1764465", "equipmentType": "Compact Track Loader", "make": "Bobcat", "model": "T595", "year": 2022, "serialNumber": "BCT595NR211", "hours": 1400 },
+                { "id": 2, "companyId": "1019550", "equipmentType": "Mini Excavator", "make": "Kubota", "model": "KX040", "year": 2021, "serialNumber": "KBTKX040ML2", "hours": 2200 },
+                { "id": 3, "companyId": "1764465", "equipmentType": "Stump Grinder", "make": "Vermeer", "model": "SC60TX", "year": 2020, "serialNumber": "VRMSC60TXA1", "hours": 800 }
             ]
         },
         {
@@ -584,23 +313,11 @@
                     "companyId": "1140350",
                     "companyName": "Rosendin Electric",
                     "roleId": "SUB-ELEC",
-                    "roleDescription": "Subcontractor - Power Systems",
+                    "roleDescription": "Subcontractor - Electrical",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Wendi Delacruz",
-                            "title": "Project Engineer",
-                            "phone": "630-555-0992",
-                            "email": "wendi.d@rosendin.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Aaron Mitchell",
-                            "title": "Electrical Superintendent",
-                            "phone": "630-555-0993",
-                            "email": "a.mitchell@rosendin.com"
-                        }
+                        { "id": 1, "name": "Wendi Delacruz", "title": "Project Engineer", "phone": "630-555-0992", "email": "wendi.d@rosendin.com" },
+                        { "id": 2, "name": "Aaron Mitchell", "title": "Electrical Superintendent", "phone": "630-555-0993", "email": "a.mitchell@rosendin.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -611,27 +328,9 @@
                     "roleDescription": "Subcontractor - Mechanical",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Victoria Flowers",
-                            "title": "Purchasing Agent",
-                            "phone": "217-555-0774",
-                            "email": "v.flowers@southlandind.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Edward Stone",
-                            "title": "Project Manager",
-                            "phone": "217-555-0775",
-                            "email": "e.stone@southlandind.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Fiona Campbell",
-                            "title": "HVAC Specialist",
-                            "phone": "217-555-0776",
-                            "email": "f.campbell@southlandind.com"
-                        }
+                        { "id": 1, "name": "Victoria Flowers", "title": "Purchasing Agent", "phone": "217-555-0774", "email": "v.flowers@southlandind.com" },
+                        { "id": 2, "name": "Edward Stone", "title": "Project Manager", "phone": "217-555-0775", "email": "e.stone@southlandind.com" },
+                        { "id": 3, "name": "Fiona Campbell", "title": "HVAC Specialist", "phone": "217-555-0776", "email": "f.campbell@southlandind.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -642,136 +341,38 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 4,
-                            "name": "Derek Washington",
-                            "title": "Superintendent",
-                            "phone": "815-555-0335",
-                            "email": "d.washington@mortenson.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Elena Martinez",
-                            "title": "Quality Control Manager",
-                            "phone": "815-555-0336",
-                            "email": "e.martinez@mortenson.com"
-                        }
+                        { "id": 4, "name": "Derek Washington", "title": "Superintendent", "phone": "815-555-0335", "email": "d.washington@mortenson.com" },
+                        { "id": 5, "name": "Elena Martinez", "title": "Quality Control Manager", "phone": "815-555-0336", "email": "e.martinez@mortenson.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [
-                {
-                    "id": 100004,
-                    "type": "Rental",
-                    "description": "6-month rental of used 3508 Generator Set",
-                    "stageId": 2,
-                    "revenue": 5366
-                },
-                {
-                    "id": 100005,
-                    "type": "Lease",
-                    "description": "24-month lease of new 3516 Diesel Engine",
-                    "stageId": 2,
-                    "revenue": 2894
-                }
+                { "id": 100004, "type": "Rental", "description": "6-month rental of used 3508 Generator Set", "stageId": 2, "revenue": 5366 },
+                { "id": 100005, "type": "Lease", "description": "24-month lease of new 3516 Diesel Engine", "stageId": 2, "revenue": 2894 },
+                { "id": 300013, "type": "Parts", "description": "Replacement filters and belts for generator fleet", "stageId": 8, "revenue": 14200 },
+                { "id": 300014, "type": "Rent", "description": "12-month rental of telescopic handler", "stageId": 1, "revenue": 28000 },
+                { "id": 300015, "type": "Service", "description": "Preventive maintenance on HVAC equipment", "stageId": 4, "revenue": 11500 }
             ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Security clearance required for all deliveries. Drivers must present valid ID and be on the approved vendor list.",
-                    "createdAt": "2024-11-01T08:00:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["SECURITY"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "All equipment must be delivered to Gate 3. No exceptions - Gate 1 and 2 are for personnel only.",
-                    "createdAt": "2024-11-05T10:30:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["GENERAL", "SECURITY"],
-                    "attachments": []
-                },
-                {
-                    "id": 3,
-                    "content": "Site requires OSHA 30 certification for all operators. Verify credentials before dispatching personnel.",
-                    "createdAt": "2024-11-10T14:15:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["SAFETY", "COMPLIANCE"],
-                    "attachments": []
-                },
-                {
-                    "id": 4,
-                    "content": "Amazon sustainability requirements: all diesel equipment must meet Tier 4 emissions standards.",
-                    "createdAt": "2024-12-01T09:00:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["COMPLIANCE"],
-                    "attachments": []
-                },
-                {
-                    "id": 5,
-                    "content": "Weekly safety meetings held every Monday at 7:00 AM in the main trailer. Attendance is mandatory.",
-                    "createdAt": "2025-01-06T07:30:00.000Z",
-                    "createdById": 313,
-                    "tagIds": ["SAFETY"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Security clearance required for all deliveries. Drivers must present valid ID and be on the approved vendor list.", "createdAt": "2024-11-01T08:00:00.000Z", "createdById": 305, "tagIds": ["SECURITY"], "attachments": [] },
+                { "id": 2, "content": "All equipment must be delivered to Gate 3. No exceptions - Gate 1 and 2 are for personnel only.", "createdAt": "2024-11-05T10:30:00.000Z", "createdById": 305, "tagIds": ["GENERAL", "SECURITY"], "attachments": [] },
+                { "id": 3, "content": "Site requires OSHA 30 certification for all operators. Verify credentials before dispatching personnel.", "createdAt": "2024-11-10T14:15:00.000Z", "createdById": 305, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] },
+                { "id": 4, "content": "Amazon sustainability requirements: all diesel equipment must meet Tier 4 emissions standards.", "createdAt": "2024-12-01T09:00:00.000Z", "createdById": 305, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 5, "content": "Weekly safety meetings held every Monday at 7:00 AM in the main trailer. Attendance is mandatory.", "createdAt": "2025-01-06T07:30:00.000Z", "createdById": 313, "tagIds": ["SAFETY"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1008,
-                    "assigneeId": 305,
-                    "activityType": "Meeting",
-                    "date": "2025-01-10T00:00:00.000Z",
-                    "description": "Weekly progress meeting with Amazon construction team"
-                },
-                {
-                    "id": 1009,
-                    "assigneeId": 305,
-                    "activityType": "Site Visit",
-                    "date": "2025-01-17T00:00:00.000Z",
-                    "description": "Generator installation inspection"
-                },
-                {
-                    "id": 1010,
-                    "assigneeId": 313,
-                    "activityType": "Phone Call",
-                    "date": "2025-02-01T00:00:00.000Z",
-                    "description": "Discussed additional equipment requirements"
-                }
+                { "id": 1008, "assigneeId": 305, "activityType": "Meeting", "date": "2025-01-10T00:00:00.000Z", "description": "Weekly progress meeting with Amazon construction team" },
+                { "id": 1009, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-01-17T00:00:00.000Z", "description": "Generator installation inspection" },
+                { "id": 1010, "assigneeId": 313, "activityType": "Phone Call", "date": "2025-02-01T00:00:00.000Z", "description": "Discussed additional equipment requirements" }
             ],
             "customerEquipment": [
-                {
-                    "id": 1,
-                    "companyId": "1067200",
-                    "equipmentType": "Excavator",
-                    "make": "Komatsu",
-                    "model": "PC210",
-                    "year": 2020,
-                    "serialNumber": "KMTPC210LCK",
-                    "hours": 6800
-                },
-                {
-                    "id": 2,
-                    "companyId": "1067200",
-                    "equipmentType": "Dozer",
-                    "make": "Caterpillar",
-                    "model": "D6T",
-                    "year": 2018,
-                    "serialNumber": "CATD6TXLWP3",
-                    "hours": 9200
-                },
-                {
-                    "id": 3,
-                    "companyId": "1035040",
-                    "equipmentType": "Wheel Loader",
-                    "make": "John Deere",
-                    "model": "644K",
-                    "year": 2017,
-                    "serialNumber": "JD644KZBA42",
-                    "hours": 11500
-                }
+                { "id": 1, "companyId": "1067200", "equipmentType": "Excavator", "make": "Komatsu", "model": "PC210", "year": 2020, "serialNumber": "KMTPC210LCK", "hours": 6800 },
+                { "id": 2, "companyId": "1067200", "equipmentType": "Dozer", "make": "Caterpillar", "model": "D6T", "year": 2018, "serialNumber": "CATD6TXLWP3", "hours": 9200 },
+                { "id": 3, "companyId": "1035040", "equipmentType": "Wheel Loader", "make": "John Deere", "model": "644K", "year": 2017, "serialNumber": "JD644KZBA42", "hours": 11500 },
+                { "id": 4, "companyId": "1140350", "equipmentType": "Boom Lift", "make": "JLG", "model": "860SJ", "year": 2019, "serialNumber": "JLG860SJWR1", "hours": 3800 },
+                { "id": 5, "companyId": "1035040", "equipmentType": "Forklift", "make": "Caterpillar", "model": "DP50", "year": 2020, "serialNumber": "CATDP50NWJ2", "hours": 5100 },
+                { "id": 6, "companyId": "1067200", "equipmentType": "Compactor", "make": "Bomag", "model": "BW211D", "year": 2021, "serialNumber": "BMGBW211DA1", "hours": 2900 }
             ]
         },
         {
@@ -802,23 +403,11 @@
                     "companyId": "1293500",
                     "companyName": "Layne Christensen Company",
                     "roleId": "SUB-SPEC",
-                    "roleDescription": "Subcontractor - Specialized Drilling",
+                    "roleDescription": "Subcontractor - Specialized",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Robert Vance",
-                            "title": "Owner",
-                            "phone": "217-555-0991",
-                            "email": "robert.vance@laynechristensen.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Irene Collins",
-                            "title": "Drilling Supervisor",
-                            "phone": "217-555-0992",
-                            "email": "i.collins@laynechristensen.com"
-                        }
+                        { "id": 1, "name": "Robert Vance", "title": "Owner", "phone": "217-555-0991", "email": "robert.vance@laynechristensen.com" },
+                        { "id": 2, "name": "Irene Collins", "title": "Drilling Supervisor", "phone": "217-555-0992", "email": "i.collins@laynechristensen.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -826,119 +415,40 @@
                     "companyId": "1140350",
                     "companyName": "Rosendin Electric",
                     "roleId": "SUB-ELEC",
-                    "roleDescription": "Subcontractor - Power Systems",
+                    "roleDescription": "Subcontractor - Electrical",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 3,
-                            "name": "Barbara Hughes",
-                            "title": "Safety Coordinator",
-                            "phone": "630-555-0994",
-                            "email": "b.hughes@rosendin.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Charles Wright",
-                            "title": "Foreman",
-                            "phone": "630-555-0995",
-                            "email": "c.wright@rosendin.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Diana Lopez",
-                            "title": "Procurement Manager",
-                            "phone": "630-555-0996",
-                            "email": "d.lopez@rosendin.com"
-                        }
+                        { "id": 3, "name": "Barbara Hughes", "title": "Safety Coordinator", "phone": "630-555-0994", "email": "b.hughes@rosendin.com" },
+                        { "id": 4, "name": "Charles Wright", "title": "Foreman", "phone": "630-555-0995", "email": "c.wright@rosendin.com" },
+                        { "id": 5, "name": "Diana Lopez", "title": "Procurement Manager", "phone": "630-555-0996", "email": "d.lopez@rosendin.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [
-                {
-                    "id": 100016,
-                    "type": "Parts",
-                    "description": "High-pressure air compressor rebuild kit",
-                    "stageId": 128,
-                    "revenue": 12500
-                },
-                {
-                    "id": 200001,
-                    "type": "Sales",
-                    "description": "Purchase of CAT 3512B Generator Set for backup power",
-                    "stageId": 8,
-                    "revenue": 185000
-                },
-                {
-                    "id": 200002,
-                    "type": "Rent",
-                    "description": "6-month rental of portable dewatering pump",
-                    "stageId": 16,
-                    "revenue": 18500
-                },
-                {
-                    "id": 200003,
-                    "type": "Service",
-                    "description": "Preventive maintenance on existing pump station motors",
-                    "stageId": 4,
-                    "revenue": 9200
-                },
-                {
-                    "id": 200004,
-                    "type": "Lease",
-                    "description": "24-month lease of XQ575 portable generator",
-                    "stageId": 2,
-                    "revenue": 42000
-                },
-                {
-                    "id": 200005,
-                    "type": "Rental Service",
-                    "description": "Temp power with operator for filtration building",
-                    "stageId": 32,
-                    "revenue": 31000
-                },
-                {
-                    "id": 200006,
-                    "type": "Sales",
-                    "description": "Purchase of replacement filtration valves and actuators",
-                    "stageId": 1,
-                    "revenue": 67000
-                }
+                { "id": 100016, "type": "Parts", "description": "High-pressure air compressor rebuild kit", "stageId": 128, "revenue": 12500 },
+                { "id": 200001, "type": "Sales", "description": "Purchase of CAT 3512B Generator Set for backup power", "stageId": 8, "revenue": 185000 },
+                { "id": 200002, "type": "Rent", "description": "6-month rental of portable dewatering pump", "stageId": 16, "revenue": 18500 },
+                { "id": 200003, "type": "Service", "description": "Preventive maintenance on existing pump station motors", "stageId": 4, "revenue": 9200 },
+                { "id": 200004, "type": "Lease", "description": "24-month lease of XQ575 portable generator", "stageId": 2, "revenue": 42000 },
+                { "id": 200005, "type": "Rental Service", "description": "Temp power with operator for filtration building", "stageId": 32, "revenue": 31000 },
+                { "id": 200006, "type": "Sales", "description": "Purchase of replacement filtration valves and actuators", "stageId": 1, "revenue": 67000 },
+                { "id": 300016, "type": "Rent", "description": "Portable pump rental for dewatering operations", "stageId": 8, "revenue": 24000 },
+                { "id": 300017, "type": "Parts", "description": "Drill bit and tooling replacement package", "stageId": 16, "revenue": 9800 },
+                { "id": 300018, "type": "Sales", "description": "Purchase of backup generator for pump station", "stageId": 4, "revenue": 145000 }
             ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Critical infrastructure site - 24/7 operations must be maintained. No scheduled outages without 72-hour advance notice.",
-                    "createdAt": "2025-05-20T08:00:00.000Z",
-                    "createdById": 304,
-                    "tagIds": ["COMPLIANCE", "GENERAL"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "Confined space entry permits required for all tank and pump room work. Contact site safety officer before entry.",
-                    "createdAt": "2025-05-22T10:30:00.000Z",
-                    "createdById": 304,
-                    "tagIds": ["SAFETY"],
-                    "attachments": []
-                },
-                {
-                    "id": 3,
-                    "content": "Municipal security protocols in effect. All visitors must sign in at guard station and display visitor badges.",
-                    "createdAt": "2025-05-25T14:00:00.000Z",
-                    "createdById": 304,
-                    "tagIds": ["SECURITY"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Critical infrastructure site - 24/7 operations must be maintained. No scheduled outages without 72-hour advance notice.", "createdAt": "2025-05-20T08:00:00.000Z", "createdById": 304, "tagIds": ["COMPLIANCE", "GENERAL"], "attachments": [] },
+                { "id": 2, "content": "Confined space entry permits required for all tank and pump room work. Contact site safety officer before entry.", "createdAt": "2025-05-22T10:30:00.000Z", "createdById": 304, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 3, "content": "Municipal security protocols in effect. All visitors must sign in at guard station and display visitor badges.", "createdAt": "2025-05-25T14:00:00.000Z", "createdById": 304, "tagIds": ["SECURITY"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1011,
-                    "assigneeId": 304,
-                    "activityType": "Email",
-                    "date": "2025-05-15T00:00:00.000Z",
-                    "description": "Sent service contract renewal proposal"
-                }
+                { "id": 1011, "assigneeId": 304, "activityType": "Email", "date": "2025-05-15T00:00:00.000Z", "description": "Sent service contract renewal proposal" }
+            ],
+            "customerEquipment": [
+                { "id": 1, "companyId": "1293500", "equipmentType": "Drill Rig", "make": "Schramm", "model": "T130XD", "year": 2018, "serialNumber": "SCHRT130XD1", "hours": 7800 },
+                { "id": 2, "companyId": "1140350", "equipmentType": "Generator", "make": "Caterpillar", "model": "C15", "year": 2020, "serialNumber": "CATC15PWRX1", "hours": 4200 },
+                { "id": 3, "companyId": "1293500", "equipmentType": "Excavator", "make": "Caterpillar", "model": "330F", "year": 2019, "serialNumber": "CAT330FLCR1", "hours": 6100 }
             ]
         },
         {
@@ -971,20 +481,8 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Angelina Cline",
-                            "title": "Equipment Manager",
-                            "phone": "815-555-0112",
-                            "email": "angelina.cline@ryancompanies.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Mark Stevens",
-                            "title": "Project Manager",
-                            "phone": "815-555-0113",
-                            "email": "m.stevens@ryancompanies.com"
-                        }
+                        { "id": 1, "name": "Angelina Cline", "title": "Equipment Manager", "phone": "815-555-0112", "email": "angelina.cline@ryancompanies.com" },
+                        { "id": 2, "name": "Mark Stevens", "title": "Project Manager", "phone": "815-555-0113", "email": "m.stevens@ryancompanies.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -995,96 +493,33 @@
                     "roleDescription": "Subcontractor - Mechanical",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 4,
-                            "name": "George Harris",
-                            "title": "Plumbing Lead",
-                            "phone": "217-555-0777",
-                            "email": "g.harris@southlandind.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Helen Brown",
-                            "title": "Estimator",
-                            "phone": "217-555-0778",
-                            "email": "h.brown@southlandind.com"
-                        }
+                        { "id": 4, "name": "George Harris", "title": "Plumbing Lead", "phone": "217-555-0777", "email": "g.harris@southlandind.com" },
+                        { "id": 5, "name": "Helen Brown", "title": "Estimator", "phone": "217-555-0778", "email": "h.brown@southlandind.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [
-                {
-                    "id": 100018,
-                    "type": "Service",
-                    "description": "Undercarriage overhaul for fleet Dozer",
-                    "stageId": 2,
-                    "revenue": 8750
-                }
+                { "id": 100018, "type": "Service", "description": "Undercarriage overhaul for fleet Dozer", "stageId": 2, "revenue": 8750 },
+                { "id": 300019, "type": "Sales", "description": "CAT 320 Excavator for utility installation", "stageId": 2, "revenue": 92000 },
+                { "id": 300020, "type": "Rent", "description": "6-month rental of backhoe loader", "stageId": 8, "revenue": 18500 },
+                { "id": 300021, "type": "Lease", "description": "36-month lease of compact dozer", "stageId": 1, "revenue": 48000 }
             ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Heavy clay soil conditions reported. Recommend track-type equipment over wheeled machines for better flotation.",
-                    "createdAt": "2025-04-10T15:30:00.000Z",
-                    "createdById": 260,
-                    "tagIds": ["GENERAL"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "Residential area - strict noise ordinances. No heavy equipment operation before 7 AM or after 7 PM.",
-                    "createdAt": "2025-04-12T09:00:00.000Z",
-                    "createdById": 260,
-                    "tagIds": ["COMPLIANCE"],
-                    "attachments": []
-                },
-                {
-                    "id": 3,
-                    "content": "School bus route runs through site entrance. Extra caution required during morning and afternoon school hours.",
-                    "createdAt": "2025-04-15T08:30:00.000Z",
-                    "createdById": 260,
-                    "tagIds": ["SAFETY"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Heavy clay soil conditions reported. Recommend track-type equipment over wheeled machines for better flotation.", "createdAt": "2025-04-10T15:30:00.000Z", "createdById": 260, "tagIds": ["GENERAL"], "attachments": [] },
+                { "id": 2, "content": "Residential area - strict noise ordinances. No heavy equipment operation before 7 AM or after 7 PM.", "createdAt": "2025-04-12T09:00:00.000Z", "createdById": 260, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 3, "content": "School bus route runs through site entrance. Extra caution required during morning and afternoon school hours.", "createdAt": "2025-04-15T08:30:00.000Z", "createdById": 260, "tagIds": ["SAFETY"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1012,
-                    "assigneeId": 260,
-                    "activityType": "Meeting",
-                    "date": "2025-04-01T00:00:00.000Z",
-                    "description": "Initial planning meeting with developer"
-                },
-                {
-                    "id": 1013,
-                    "assigneeId": 260,
-                    "activityType": "Site Visit",
-                    "date": "2025-04-10T00:00:00.000Z",
-                    "description": "Soil assessment and equipment evaluation"
-                }
+                { "id": 1012, "assigneeId": 260, "activityType": "Meeting", "date": "2025-04-01T00:00:00.000Z", "description": "Initial planning meeting with developer" },
+                { "id": 1013, "assigneeId": 260, "activityType": "Site Visit", "date": "2025-04-10T00:00:00.000Z", "description": "Soil assessment and equipment evaluation" }
             ],
             "customerEquipment": [
-                {
-                    "id": 1,
-                    "companyId": "1174395",
-                    "equipmentType": "Backhoe",
-                    "make": "Case",
-                    "model": "580N",
-                    "year": 2020,
-                    "serialNumber": "CASE580NJK7",
-                    "hours": 3100
-                },
-                {
-                    "id": 2,
-                    "companyId": "1174395",
-                    "equipmentType": "Excavator",
-                    "make": "Volvo",
-                    "model": "EC140E",
-                    "year": 2022,
-                    "serialNumber": "VLVEC140EAB",
-                    "hours": 1850
-                }
+                { "id": 1, "companyId": "1174395", "equipmentType": "Backhoe", "make": "Case", "model": "580N", "year": 2020, "serialNumber": "CASE580NJK7", "hours": 3100 },
+                { "id": 2, "companyId": "1174395", "equipmentType": "Excavator", "make": "Volvo", "model": "EC140E", "year": 2022, "serialNumber": "VLVEC140EAB", "hours": 1850 },
+                { "id": 3, "companyId": "1174395", "equipmentType": "Wheel Loader", "make": "Caterpillar", "model": "950GC", "year": 2021, "serialNumber": "CAT950GCWL1", "hours": 2400 },
+                { "id": 4, "companyId": "1035040", "equipmentType": "Boom Lift", "make": "Genie", "model": "S-65", "year": 2022, "serialNumber": "GENS65XC141", "hours": 1200 },
+                { "id": 5, "companyId": "1174395", "equipmentType": "Dozer", "make": "Komatsu", "model": "D39PX", "year": 2020, "serialNumber": "KMTD39PXRR1", "hours": 3600 }
             ]
         },
         {
@@ -1115,30 +550,12 @@
                     "companyId": "$000313",
                     "companyName": "Stupp Bridge Company",
                     "roleId": "SUB-STEEL",
-                    "roleDescription": "Subcontractor - Steel Fabrication",
+                    "roleDescription": "Subcontractor - Steel",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 1,
-                            "name": "Betsy Owens",
-                            "title": "Parts Coordinator",
-                            "phone": "309-555-0663",
-                            "email": "betsy.owens@stuppbridge.com"
-                        },
-                        {
-                            "id": 2,
-                            "name": "Steven Price",
-                            "title": "Project Manager",
-                            "phone": "309-555-0664",
-                            "email": "s.price@stuppbridge.com"
-                        },
-                        {
-                            "id": 3,
-                            "name": "Tracy Nelson",
-                            "title": "Structural Engineer",
-                            "phone": "309-555-0665",
-                            "email": "t.nelson@stuppbridge.com"
-                        }
+                        { "id": 1, "name": "Betsy Owens", "title": "Parts Coordinator", "phone": "309-555-0663", "email": "betsy.owens@stuppbridge.com" },
+                        { "id": 2, "name": "Steven Price", "title": "Project Manager", "phone": "309-555-0664", "email": "s.price@stuppbridge.com" },
+                        { "id": 3, "name": "Tracy Nelson", "title": "Structural Engineer", "phone": "309-555-0665", "email": "t.nelson@stuppbridge.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -1149,74 +566,31 @@
                     "roleDescription": "Subcontractor - Paving",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 3,
-                            "name": "Raymond Cruz",
-                            "title": "Night Shift Supervisor",
-                            "phone": "309-555-0823",
-                            "email": "r.cruz@gallagherasphalt.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Samantha White",
-                            "title": "Safety Director",
-                            "phone": "309-555-0824",
-                            "email": "s.white@gallagherasphalt.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Thomas Grant",
-                            "title": "Equipment Manager",
-                            "phone": "309-555-0825",
-                            "email": "t.grant@gallagherasphalt.com"
-                        }
+                        { "id": 3, "name": "Raymond Cruz", "title": "Night Shift Supervisor", "phone": "309-555-0823", "email": "r.cruz@gallagherasphalt.com" },
+                        { "id": 4, "name": "Samantha White", "title": "Safety Director", "phone": "309-555-0824", "email": "s.white@gallagherasphalt.com" },
+                        { "id": 5, "name": "Thomas Grant", "title": "Equipment Manager", "phone": "309-555-0825", "email": "t.grant@gallagherasphalt.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [
-                {
-                    "id": 100026,
-                    "type": "Parts",
-                    "description": "Supply of C7 Industrial Engine parts",
-                    "stageId": 16,
-                    "revenue": 1300
-                }
+                { "id": 100026, "type": "Parts", "description": "Supply of C7 Industrial Engine parts", "stageId": 16, "revenue": 1300 },
+                { "id": 300022, "type": "Service", "description": "Structural steel inspection and weld repair", "stageId": 4, "revenue": 16500 },
+                { "id": 300023, "type": "Rent", "description": "3-month crane rental for bridge rehabilitation", "stageId": 16, "revenue": 32000 },
+                { "id": 300024, "type": "Sales", "description": "Purchase of CAT 745 Articulated Truck", "stageId": 32, "revenue": 210000 }
             ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Work barge required for under-bridge access. Barge must be secured at night to prevent drift.",
-                    "createdAt": "2025-08-20T11:00:00.000Z",
-                    "createdById": 292,
-                    "tagIds": ["GENERAL", "SAFETY"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "Fall protection required for all work over water. Personal flotation devices must be worn at all times.",
-                    "createdAt": "2025-08-22T09:30:00.000Z",
-                    "createdById": 292,
-                    "tagIds": ["SAFETY"],
-                    "attachments": []
-                },
-                {
-                    "id": 3,
-                    "content": "Bridge remains open to traffic during construction. Work zones must be clearly marked with proper signage.",
-                    "createdAt": "2025-09-01T14:00:00.000Z",
-                    "createdById": 292,
-                    "tagIds": ["SAFETY", "COMPLIANCE"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Work barge required for under-bridge access. Barge must be secured at night to prevent drift.", "createdAt": "2025-08-20T11:00:00.000Z", "createdById": 292, "tagIds": ["GENERAL", "SAFETY"], "attachments": [] },
+                { "id": 2, "content": "Fall protection required for all work over water. Personal flotation devices must be worn at all times.", "createdAt": "2025-08-22T09:30:00.000Z", "createdById": 292, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 3, "content": "Bridge remains open to traffic during construction. Work zones must be clearly marked with proper signage.", "createdAt": "2025-09-01T14:00:00.000Z", "createdById": 292, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1014,
-                    "assigneeId": 292,
-                    "activityType": "Phone Call",
-                    "date": "2025-08-20T00:00:00.000Z",
-                    "description": "Coordinated parts delivery schedule"
-                }
+                { "id": 1014, "assigneeId": 292, "activityType": "Phone Call", "date": "2025-08-20T00:00:00.000Z", "description": "Coordinated parts delivery schedule" }
+            ],
+            "customerEquipment": [
+                { "id": 1, "companyId": "$000313", "equipmentType": "Crane", "make": "Liebherr", "model": "LTM1100", "year": 2017, "serialNumber": "LBHLTM11001", "hours": 8500 },
+                { "id": 2, "companyId": "NON-DBS", "equipmentType": "Milling Machine", "make": "Wirtgen", "model": "W210Fi", "year": 2019, "serialNumber": "WRTW210FiX1", "hours": 4800 },
+                { "id": 3, "companyId": "$000313", "equipmentType": "Boom Lift", "make": "JLG", "model": "1350SJP", "year": 2021, "serialNumber": "JLG1350SJP1", "hours": 1900 }
             ]
         },
         {
@@ -1245,31 +619,13 @@
                 {
                     "companyId": "1764465",
                     "companyName": "Christy Webber Landscapes",
-                    "roleId": "SUB-LAND",
-                    "roleDescription": "Subcontractor - Landscaping",
+                    "roleId": "SUB-SPEC",
+                    "roleDescription": "Subcontractor - Specialized",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 3,
-                            "name": "Oscar Bennett",
-                            "title": "Crew Supervisor",
-                            "phone": "217-555-0223",
-                            "email": "o.bennett@christywebber.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Paula Simmons",
-                            "title": "Irrigation Specialist",
-                            "phone": "217-555-0224",
-                            "email": "p.simmons@christywebber.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Quincy Adams",
-                            "title": "Arborist",
-                            "phone": "217-555-0225",
-                            "email": "q.adams@christywebber.com"
-                        }
+                        { "id": 3, "name": "Oscar Bennett", "title": "Crew Supervisor", "phone": "217-555-0223", "email": "o.bennett@christywebber.com" },
+                        { "id": 4, "name": "Paula Simmons", "title": "Irrigation Specialist", "phone": "217-555-0224", "email": "p.simmons@christywebber.com" },
+                        { "id": 5, "name": "Quincy Adams", "title": "Arborist", "phone": "217-555-0225", "email": "q.adams@christywebber.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -1280,58 +636,29 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 3,
-                            "name": "Nicole Foster",
-                            "title": "Site Engineer",
-                            "phone": "815-555-0114",
-                            "email": "n.foster@ryancompanies.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Oliver Green",
-                            "title": "Superintendent",
-                            "phone": "815-555-0115",
-                            "email": "o.green@ryancompanies.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Rachel Torres",
-                            "title": "Scheduling Coordinator",
-                            "phone": "815-555-0116",
-                            "email": "r.torres@ryancompanies.com"
-                        }
+                        { "id": 3, "name": "Nicole Foster", "title": "Site Engineer", "phone": "815-555-0114", "email": "n.foster@ryancompanies.com" },
+                        { "id": 4, "name": "Oliver Green", "title": "Superintendent", "phone": "815-555-0115", "email": "o.green@ryancompanies.com" },
+                        { "id": 5, "name": "Rachel Torres", "title": "Scheduling Coordinator", "phone": "815-555-0116", "email": "r.torres@ryancompanies.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
-            "associatedOpportunities": [],
+            "associatedOpportunities": [
+                { "id": 300025, "type": "Rent", "description": "6-month excavator rental for site preparation", "stageId": 2, "revenue": 19500 },
+                { "id": 300026, "type": "Rental Service", "description": "Boom lift with operator for facade work", "stageId": 8, "revenue": 35000 },
+                { "id": 300027, "type": "Parts", "description": "Concrete forms and accessories for foundation", "stageId": 1, "revenue": 7200 }
+            ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Awaiting final funding approval. Project timeline contingent on state grant disbursement expected Q3 2025.",
-                    "createdAt": "2025-03-15T10:00:00.000Z",
-                    "createdById": 313,
-                    "tagIds": ["GENERAL"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "University lab safety protocols will apply. All contractors must complete online safety orientation before site access.",
-                    "createdAt": "2025-03-20T14:30:00.000Z",
-                    "createdById": 313,
-                    "tagIds": ["SAFETY", "COMPLIANCE"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Awaiting final funding approval. Project timeline contingent on state grant disbursement expected Q3 2025.", "createdAt": "2025-03-15T10:00:00.000Z", "createdById": 313, "tagIds": ["GENERAL"], "attachments": [] },
+                { "id": 2, "content": "University lab safety protocols will apply. All contractors must complete online safety orientation before site access.", "createdAt": "2025-03-20T14:30:00.000Z", "createdById": 313, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1015,
-                    "assigneeId": 313,
-                    "activityType": "Email",
-                    "date": "2025-03-15T00:00:00.000Z",
-                    "description": "Sent equipment catalog and pricing"
-                }
+                { "id": 1015, "assigneeId": 313, "activityType": "Email", "date": "2025-03-15T00:00:00.000Z", "description": "Sent equipment catalog and pricing" }
+            ],
+            "customerEquipment": [
+                { "id": 1, "companyId": "1174395", "equipmentType": "Excavator", "make": "Volvo", "model": "EC220E", "year": 2021, "serialNumber": "VLVEC220EA1", "hours": 2600 },
+                { "id": 2, "companyId": "1764465", "equipmentType": "Skid Steer", "make": "Bobcat", "model": "S650", "year": 2022, "serialNumber": "BCS650MN431", "hours": 1100 },
+                { "id": 3, "companyId": "1174395", "equipmentType": "Backhoe", "make": "Case", "model": "590SN", "year": 2020, "serialNumber": "CASE590SNA1", "hours": 3200 }
             ]
         },
         {
@@ -1364,13 +691,7 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        {
-                            "id": 6,
-                            "name": "Frank Thompson",
-                            "title": "Safety Manager",
-                            "phone": "815-555-0337",
-                            "email": "f.thompson@mortenson.com"
-                        }
+                        { "id": 6, "name": "Frank Thompson", "title": "Safety Manager", "phone": "815-555-0337", "email": "f.thompson@mortenson.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -1378,30 +699,12 @@
                     "companyId": "1293500",
                     "companyName": "Layne Christensen Company",
                     "roleId": "SUB-SPEC",
-                    "roleDescription": "Subcontractor - Specialized Drilling",
+                    "roleDescription": "Subcontractor - Specialized",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 3,
-                            "name": "Jack Morrison",
-                            "title": "Hydrogeologist",
-                            "phone": "217-555-0993",
-                            "email": "j.morrison@laynechristensen.com"
-                        },
-                        {
-                            "id": 4,
-                            "name": "Karen Shaw",
-                            "title": "Project Coordinator",
-                            "phone": "217-555-0994",
-                            "email": "k.shaw@laynechristensen.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Larry Watson",
-                            "title": "Equipment Operator",
-                            "phone": "217-555-0995",
-                            "email": "l.watson@laynechristensen.com"
-                        }
+                        { "id": 3, "name": "Jack Morrison", "title": "Hydrogeologist", "phone": "217-555-0993", "email": "j.morrison@laynechristensen.com" },
+                        { "id": 4, "name": "Karen Shaw", "title": "Project Coordinator", "phone": "217-555-0994", "email": "k.shaw@laynechristensen.com" },
+                        { "id": 5, "name": "Larry Watson", "title": "Equipment Operator", "phone": "217-555-0995", "email": "l.watson@laynechristensen.com" }
                     ],
                     "primaryContactIndex": 0
                 },
@@ -1409,109 +712,37 @@
                     "companyId": "NON-DBS",
                     "companyName": "Curran Contracting Company",
                     "roleId": "SUB-PAV",
-                    "roleDescription": "Subcontractor - Finish Paving",
+                    "roleDescription": "Subcontractor - Paving",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        {
-                            "id": 4,
-                            "name": "Kevin Rodriguez",
-                            "title": "Quality Assurance",
-                            "phone": "630-555-0444",
-                            "email": "k.rodriguez@currancontracting.com"
-                        },
-                        {
-                            "id": 5,
-                            "name": "Linda Chang",
-                            "title": "Project Coordinator",
-                            "phone": "630-555-0445",
-                            "email": "l.chang@currancontracting.com"
-                        }
+                        { "id": 4, "name": "Kevin Rodriguez", "title": "Quality Assurance", "phone": "630-555-0444", "email": "k.rodriguez@currancontracting.com" },
+                        { "id": 5, "name": "Linda Chang", "title": "Project Coordinator", "phone": "630-555-0445", "email": "l.chang@currancontracting.com" }
                     ],
                     "primaryContactIndex": 0
                 }
             ],
-            "associatedOpportunities": [],
+            "associatedOpportunities": [
+                { "id": 300028, "type": "Sales", "description": "Purchase of CAT 390F Excavator", "stageId": 8, "revenue": 165000 },
+                { "id": 300029, "type": "Service", "description": "Haul truck undercarriage rebuild", "stageId": 4, "revenue": 13500 },
+                { "id": 300030, "type": "Lease", "description": "24-month lease of Komatsu WA380 wheel loader", "stageId": 2, "revenue": 52000 }
+            ],
             "notes": [
-                {
-                    "id": 1,
-                    "content": "Mandatory MSHA training for all site visitors. Part 46 or Part 48 certification required depending on role.",
-                    "createdAt": "2025-02-20T08:00:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["SAFETY", "COMPLIANCE"],
-                    "attachments": []
-                },
-                {
-                    "id": 2,
-                    "content": "Blasting operations occur daily at 2:00 PM. All personnel must clear blast zone 30 minutes prior.",
-                    "createdAt": "2025-02-22T13:30:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["SAFETY"],
-                    "attachments": []
-                },
-                {
-                    "id": 3,
-                    "content": "Dust suppression required per EPA permit conditions. Water trucks must operate during all crushing activities.",
-                    "createdAt": "2025-03-01T09:00:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["COMPLIANCE"],
-                    "attachments": []
-                },
-                {
-                    "id": 4,
-                    "content": "Quarry security is active 24/7. After-hours access requires advance coordination with quarry manager.",
-                    "createdAt": "2025-03-05T16:00:00.000Z",
-                    "createdById": 305,
-                    "tagIds": ["SECURITY"],
-                    "attachments": []
-                }
+                { "id": 1, "content": "Mandatory MSHA training for all site visitors. Part 46 or Part 48 certification required depending on role.", "createdAt": "2025-02-20T08:00:00.000Z", "createdById": 305, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] },
+                { "id": 2, "content": "Blasting operations occur daily at 2:00 PM. All personnel must clear blast zone 30 minutes prior.", "createdAt": "2025-02-22T13:30:00.000Z", "createdById": 305, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 3, "content": "Dust suppression required per EPA permit conditions. Water trucks must operate during all crushing activities.", "createdAt": "2025-03-01T09:00:00.000Z", "createdById": 305, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 4, "content": "Quarry security is active 24/7. After-hours access requires advance coordination with quarry manager.", "createdAt": "2025-03-05T16:00:00.000Z", "createdById": 305, "tagIds": ["SECURITY"], "attachments": [] }
             ],
             "activities": [
-                {
-                    "id": 1016,
-                    "assigneeId": 305,
-                    "activityType": "Site Visit",
-                    "date": "2025-02-20T00:00:00.000Z",
-                    "description": "Equipment assessment for overburden removal"
-                },
-                {
-                    "id": 1017,
-                    "assigneeId": 305,
-                    "activityType": "Meeting",
-                    "date": "2025-03-05T00:00:00.000Z",
-                    "description": "Quarterly review with quarry operations team"
-                }
+                { "id": 1016, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-02-20T00:00:00.000Z", "description": "Equipment assessment for overburden removal" },
+                { "id": 1017, "assigneeId": 305, "activityType": "Meeting", "date": "2025-03-05T00:00:00.000Z", "description": "Quarterly review with quarry operations team" }
             ],
             "customerEquipment": [
-                {
-                    "id": 1,
-                    "companyId": "1067200",
-                    "equipmentType": "Haul Truck",
-                    "make": "Caterpillar",
-                    "model": "777G",
-                    "year": 2016,
-                    "serialNumber": "CAT777GFXR9",
-                    "hours": 18400
-                },
-                {
-                    "id": 2,
-                    "companyId": "1067200",
-                    "equipmentType": "Excavator",
-                    "make": "Komatsu",
-                    "model": "PC490",
-                    "year": 2019,
-                    "serialNumber": "KMTPC490MNT",
-                    "hours": 7600
-                },
-                {
-                    "id": 3,
-                    "companyId": "1293500",
-                    "equipmentType": "Jaw Crusher",
-                    "make": "Sandvik",
-                    "model": "QJ341",
-                    "year": 2020,
-                    "serialNumber": "SVK341QJ002",
-                    "hours": 5200
-                }
+                { "id": 1, "companyId": "1067200", "equipmentType": "Haul Truck", "make": "Caterpillar", "model": "777G", "year": 2016, "serialNumber": "CAT777GFXR9", "hours": 18400 },
+                { "id": 2, "companyId": "1067200", "equipmentType": "Excavator", "make": "Komatsu", "model": "PC490", "year": 2019, "serialNumber": "KMTPC490MNT", "hours": 7600 },
+                { "id": 3, "companyId": "1293500", "equipmentType": "Jaw Crusher", "make": "Sandvik", "model": "QJ341", "year": 2020, "serialNumber": "SVK341QJ002", "hours": 5200 },
+                { "id": 4, "companyId": "1293500", "equipmentType": "Drill Rig", "make": "Epiroc", "model": "D65", "year": 2020, "serialNumber": "EPRD65KM121", "hours": 4500 },
+                { "id": 5, "companyId": "NON-DBS", "equipmentType": "Roller", "make": "Caterpillar", "model": "CB54B", "year": 2021, "serialNumber": "CATCB54BXX1", "hours": 2300 },
+                { "id": 6, "companyId": "1067200", "equipmentType": "Wheel Loader", "make": "Komatsu", "model": "WA380", "year": 2018, "serialNumber": "KMTWA380ZT1", "hours": 9800 }
             ]
         }
     ],

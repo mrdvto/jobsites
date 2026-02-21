@@ -1,42 +1,63 @@
 
-
-# Associate Customer Equipment with Companies by ID
+# Collapsible & Searchable Customer Equipment List
 
 ## Overview
-Add a `companyId` field to customer equipment records, linking each piece of equipment to the contractor that owns it. The UI will display company names by resolving the ID against the site's company list.
+Redesign the equipment table so entries are grouped by company and collapsed by default. Add a search bar to filter equipment across all fields. This handles the case where many companies each have multiple machines on a large site.
 
 ## Changes
 
-### 1. Data Model (`src/types/index.ts`)
-- Add `companyId: string` to the `CustomerEquipment` interface
+### 1. Equipment Section in `src/pages/JobSiteDetail.tsx`
 
-### 2. Sample Data (`src/data/JobSite.json`)
-Add `companyId` to all existing equipment entries, referencing actual site companies:
+**Search bar**
+- Add a text input with a search icon below the section header / "Add Equipment" button
+- Filter equipment entries by matching the search query (case-insensitive) against: company name, equipment type, make, model, year, serial number
 
-- **St. Mary's Hospital (500101)**: Both machines get `"1019550"` (Granite Excavation and Demolition -- the excavation sub)
-- **Amazon Fulfillment Center (500105)**: Komatsu PC210 and Cat D6T get `"1067200"` (Mortenson Construction -- GC), JD 644K gets `"1035040"` (Southland Industries)
-- **Willow Creek Subdivision (500107)**: Both machines get `"1174395"` (Ryan Companies US Inc -- GC)
-- **Limestone Quarry (500110)**: Cat 777G and Komatsu PC490 get `"1067200"` (Mortenson Construction), Sandvik QJ341 gets `"1293500"` (Layne Christensen Company)
+**Group by company**
+- Group the equipment array by `companyId`
+- Each group becomes a collapsible section using the existing `Collapsible` / `CollapsibleTrigger` / `CollapsibleContent` components from `@/components/ui/collapsible`
+- The trigger row shows: company name, a count badge (e.g., "3 machines"), and a chevron icon
+- The content contains the equipment table rows for that company (same columns as today minus the "Company" column, since it is now the group header)
+- Groups default to collapsed; clicking the trigger toggles open/closed
+- If a search is active, auto-expand all groups that have matching results
 
-### 3. Add/Edit Equipment Modal (`src/components/AddCustomerEquipmentModal.tsx`)
-- Accept a new prop: `siteCompanies: SiteCompany[]`
-- Add a required "Company" select dropdown at the top of the form, populated from the site companies list (showing company name, storing company ID)
-- Include `companyId` in the submitted data
-- Pre-populate the dropdown when editing existing equipment
+**State additions**
+- `equipmentSearch: string` -- the search query
+- No additional state needed for collapsible -- each `Collapsible` manages its own open/closed state, but we will use controlled `open` prop to force-open when search is active
 
-### 4. Equipment Table (`src/pages/JobSiteDetail.tsx`)
-- Add a "Company" column as the first column in the table
-- Resolve `companyId` to display name via `site.siteCompanies.find(c => c.companyId === eq.companyId)?.companyName`
-- Pass `site.siteCompanies` to the `AddCustomerEquipmentModal`
+**New imports**
+- `Input` from `@/components/ui/input`
+- `Collapsible`, `CollapsibleTrigger`, `CollapsibleContent` from `@/components/ui/collapsible`
+- `Search`, `ChevronRight` from `lucide-react`
+
+### 2. Layout per company group
+
+```text
++------------------------------------------------------+
+| [v] Granite Excavation and Demolition    (2 machines) |
+|   Type       Make        Model   Year  Serial#  Hours |
+|   Excavator  Caterpillar 320F    2019  CAT320.. 3,450 |
+|   Boom Lift  JLG         600S    2020  JLG600.. 1,200 |
++------------------------------------------------------+
+| [>] Mortenson Construction               (1 machine) |
++------------------------------------------------------+
+```
+
+### 3. No changes to other files
+- No data model changes
+- No modal changes
+- No context changes
 
 ## Technical Details
 
 | File | Change |
 |------|--------|
-| `src/types/index.ts` | Add `companyId: string` to `CustomerEquipment` |
-| `src/data/JobSite.json` | Add `companyId` to all 10 sample equipment entries |
-| `src/components/AddCustomerEquipmentModal.tsx` | Add `siteCompanies` prop, company select field, include `companyId` in output |
-| `src/pages/JobSiteDetail.tsx` | Add "Company" column to table, resolve ID to name, pass `siteCompanies` to modal |
+| `src/pages/JobSiteDetail.tsx` | Add search input, group equipment by `companyId`, render each group as a `Collapsible` with an equipment sub-table, remove "Company" column from rows (now in group header) |
 
-No changes needed to `DataContext.tsx` -- the existing CRUD methods already pass through all fields via the `Omit<CustomerEquipment, 'id'>` type, so `companyId` will flow through automatically.
-
+### Grouping logic (pseudocode)
+```
+filtered = equipment.filter(eq => matches search across all fields)
+grouped = Map<companyId, { companyName, items: CustomerEquipment[] }>
+for each filtered eq:
+  grouped[eq.companyId].items.push(eq)
+render each group as Collapsible
+```

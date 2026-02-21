@@ -61,8 +61,13 @@ const JobSiteDetail = () => {
   const [equipmentSearch, setEquipmentSearch] = useState('');
 
   // Sort state for Opportunities table
-  const [oppSortColumn, setOppSortColumn] = useState<'id' | 'description' | 'division' | 'stage' | 'revenue' | null>(null);
+  const [oppSortColumn, setOppSortColumn] = useState<'type' | 'description' | 'division' | 'stage' | 'revenue' | null>(null);
   const [oppSortDirection, setOppSortDirection] = useState<'asc' | 'desc' | null>(null);
+
+  // Filter state for Opportunities table
+  const [oppFilterStage, setOppFilterStage] = useState('all');
+  const [oppFilterDivision, setOppFilterDivision] = useState('all');
+  const [oppFilterType, setOppFilterType] = useState('all');
 
   // Sort state for Activities table
   const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'description' | null>('date');
@@ -230,14 +235,31 @@ const JobSiteDetail = () => {
     return <ArrowDown className="h-4 w-4 ml-1" />;
   };
 
-  // Sorted opportunities
-  const sortedOpportunities = [...site.associatedOpportunities].sort((a, b) => {
+  // Filtered & sorted opportunities
+  const filteredOpportunities = site.associatedOpportunities.filter(opp => {
+    if (oppFilterStage !== 'all' && opp.status !== oppFilterStage) return false;
+    if (oppFilterType !== 'all' && opp.type !== oppFilterType) return false;
+    if (oppFilterDivision !== 'all') {
+      const fullOpp = opportunities.find(o => o.id === opp.id);
+      if (fullOpp?.divisionId !== oppFilterDivision) return false;
+    }
+    return true;
+  });
+
+  const uniqueStages = [...new Set(site.associatedOpportunities.map(o => o.status))].sort();
+  const uniqueTypes = [...new Set(site.associatedOpportunities.map(o => o.type))].sort();
+  const uniqueDivisions = [...new Set(site.associatedOpportunities.map(o => {
+    const full = opportunities.find(f => f.id === o.id);
+    return full?.divisionId || '';
+  }).filter(Boolean))].sort();
+
+  const sortedOpportunities = [...filteredOpportunities].sort((a, b) => {
     if (!oppSortColumn || !oppSortDirection) return 0;
     let cmp = 0;
     const fullA = opportunities.find(o => o.id === a.id);
     const fullB = opportunities.find(o => o.id === b.id);
     switch (oppSortColumn) {
-      case 'id': cmp = a.id - b.id; break;
+      case 'type': cmp = (a.type || '').localeCompare(b.type || ''); break;
       case 'description': cmp = (a.description || '').localeCompare(b.description || ''); break;
       case 'division': cmp = (fullA?.divisionId || '').localeCompare(fullB?.divisionId || ''); break;
       case 'stage': cmp = (a.status || '').localeCompare(b.status || ''); break;
@@ -538,51 +560,90 @@ const JobSiteDetail = () => {
               No opportunities associated with this site yet.
             </p>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('id')}>
-                    <div className="flex items-center">Opportunity Number<SortIcon active={oppSortColumn === 'id'} direction={oppSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('description')}>
-                    <div className="flex items-center">Description<SortIcon active={oppSortColumn === 'description'} direction={oppSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('division')}>
-                    <div className="flex items-center">Division<SortIcon active={oppSortColumn === 'division'} direction={oppSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('stage')}>
-                    <div className="flex items-center">Stage<SortIcon active={oppSortColumn === 'stage'} direction={oppSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="text-right cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('revenue')}>
-                    <div className="flex items-center justify-end">Est. Revenue<SortIcon active={oppSortColumn === 'revenue'} direction={oppSortDirection} /></div>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sortedOpportunities.map(opp => {
-                  const fullOpp = opportunities.find(o => o.id === opp.id);
-                  return (
-                    <TableRow 
-                      key={opp.id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => handleOpportunityClick(opp.id)}
-                    >
-                      <TableCell className="font-mono text-sm">{opp.id}</TableCell>
-                      <TableCell>{opp.description}</TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{fullOpp?.divisionId || '-'}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{opp.status}</Badge>
-                      </TableCell>
-                      <TableCell className="text-right font-medium">
-                        ${opp.revenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+            <>
+              <div className="flex gap-3 mb-4 flex-wrap">
+                <Select value={oppFilterStage} onValueChange={setOppFilterStage}>
+                  <SelectTrigger className="w-[160px]">
+                    <SelectValue placeholder="Stage" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Stages</SelectItem>
+                    {uniqueStages.map(s => (
+                      <SelectItem key={s} value={s}>{s}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select value={oppFilterDivision} onValueChange={setOppFilterDivision}>
+                  <SelectTrigger className="w-[160px]">
+                    <SelectValue placeholder="Division" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Divisions</SelectItem>
+                    {uniqueDivisions.map(d => (
+                      <SelectItem key={d} value={d}>{d}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select value={oppFilterType} onValueChange={setOppFilterType}>
+                  <SelectTrigger className="w-[160px]">
+                    <SelectValue placeholder="Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Types</SelectItem>
+                    {uniqueTypes.map(t => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('type')}>
+                      <div className="flex items-center">Type<SortIcon active={oppSortColumn === 'type'} direction={oppSortDirection} /></div>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('description')}>
+                      <div className="flex items-center">Description<SortIcon active={oppSortColumn === 'description'} direction={oppSortDirection} /></div>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('division')}>
+                      <div className="flex items-center">Division<SortIcon active={oppSortColumn === 'division'} direction={oppSortDirection} /></div>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('stage')}>
+                      <div className="flex items-center">Stage<SortIcon active={oppSortColumn === 'stage'} direction={oppSortDirection} /></div>
+                    </TableHead>
+                    <TableHead className="text-right cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('revenue')}>
+                      <div className="flex items-center justify-end">Est. Revenue<SortIcon active={oppSortColumn === 'revenue'} direction={oppSortDirection} /></div>
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sortedOpportunities.map(opp => {
+                    const fullOpp = opportunities.find(o => o.id === opp.id);
+                    return (
+                      <TableRow 
+                        key={opp.id}
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() => handleOpportunityClick(opp.id)}
+                      >
+                        <TableCell>
+                          <Badge variant="secondary">{opp.type}</Badge>
+                        </TableCell>
+                        <TableCell>{opp.description}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">{fullOpp?.divisionId || '-'}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{opp.status}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right font-medium">
+                          ${opp.revenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </>
           )}
         </Card>
 

@@ -23,7 +23,7 @@ import { SiteCompaniesTable } from '@/components/SiteCompaniesTable';
 import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';
 import { Input } from '@/components/ui/input';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight } from 'lucide-react';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity, SiteCompany, CustomerEquipment } from '@/types';
 
@@ -59,6 +59,18 @@ const JobSiteDetail = () => {
   const [showDeleteEquipmentDialog, setShowDeleteEquipmentDialog] = useState(false);
   const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
   const [equipmentSearch, setEquipmentSearch] = useState('');
+
+  // Sort state for Opportunities table
+  const [oppSortColumn, setOppSortColumn] = useState<'id' | 'description' | 'division' | 'stage' | 'revenue' | null>(null);
+  const [oppSortDirection, setOppSortDirection] = useState<'asc' | 'desc' | null>(null);
+
+  // Sort state for Activities table
+  const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'description' | null>(null);
+  const [actSortDirection, setActSortDirection] = useState<'asc' | 'desc' | null>(null);
+
+  // Sort state for Equipment table
+  const [eqSortColumn, setEqSortColumn] = useState<'type' | 'make' | 'model' | 'year' | 'serial' | 'hours' | null>(null);
+  const [eqSortDirection, setEqSortDirection] = useState<'asc' | 'desc' | null>(null);
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -194,6 +206,74 @@ const JobSiteDetail = () => {
       addCustomerEquipment(site.id, data);
       toast({ title: "Success", description: "Equipment added." });
     }
+  };
+
+  // Generic sort handler factory
+  const makeSortHandler = <T,>(
+    currentCol: T | null, setCol: (c: T | null) => void,
+    currentDir: 'asc' | 'desc' | null, setDir: (d: 'asc' | 'desc' | null) => void
+  ) => (column: T) => {
+    if (currentCol === column) {
+      if (currentDir === 'asc') setDir('desc');
+      else { setDir(null); setCol(null); }
+    } else { setCol(column); setDir('asc'); }
+  };
+
+  const handleOppSort = makeSortHandler(oppSortColumn, setOppSortColumn as (c: typeof oppSortColumn) => void, oppSortDirection, setOppSortDirection);
+  const handleActSort = makeSortHandler(actSortColumn, setActSortColumn as (c: typeof actSortColumn) => void, actSortDirection, setActSortDirection);
+  const handleEqSort = makeSortHandler(eqSortColumn, setEqSortColumn as (c: typeof eqSortColumn) => void, eqSortDirection, setEqSortDirection);
+
+  // Sort icon component
+  const SortIcon = ({ active, direction }: { active: boolean; direction: 'asc' | 'desc' | null }) => {
+    if (!active) return <ArrowUpDown className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-50 transition-opacity" />;
+    if (direction === 'asc') return <ArrowUp className="h-4 w-4 ml-1" />;
+    return <ArrowDown className="h-4 w-4 ml-1" />;
+  };
+
+  // Sorted opportunities
+  const sortedOpportunities = [...site.associatedOpportunities].sort((a, b) => {
+    if (!oppSortColumn || !oppSortDirection) return 0;
+    let cmp = 0;
+    const fullA = opportunities.find(o => o.id === a.id);
+    const fullB = opportunities.find(o => o.id === b.id);
+    switch (oppSortColumn) {
+      case 'id': cmp = a.id - b.id; break;
+      case 'description': cmp = (a.description || '').localeCompare(b.description || ''); break;
+      case 'division': cmp = (fullA?.divisionId || '').localeCompare(fullB?.divisionId || ''); break;
+      case 'stage': cmp = (a.status || '').localeCompare(b.status || ''); break;
+      case 'revenue': cmp = (a.revenue || 0) - (b.revenue || 0); break;
+    }
+    return oppSortDirection === 'asc' ? cmp : -cmp;
+  });
+
+  // Sorted activities
+  const sortedActivities = [...(site.activities || [])].sort((a, b) => {
+    if (!actSortColumn || !actSortDirection) return 0;
+    let cmp = 0;
+    switch (actSortColumn) {
+      case 'assignee': cmp = getSalesRepName(a.assigneeId).localeCompare(getSalesRepName(b.assigneeId)); break;
+      case 'activityType': cmp = (a.activityType || '').localeCompare(b.activityType || ''); break;
+      case 'date': cmp = new Date(a.date).getTime() - new Date(b.date).getTime(); break;
+      case 'description': cmp = (a.description || '').localeCompare(b.description || ''); break;
+    }
+    return actSortDirection === 'asc' ? cmp : -cmp;
+  });
+
+  // Sort equipment items within a group
+  const sortEquipment = (items: CustomerEquipment[]) => {
+    if (!eqSortColumn || !eqSortDirection) return items;
+    return [...items].sort((a, b) => {
+      let cmp = 0;
+      switch (eqSortColumn) {
+        case 'type': cmp = (a.equipmentType || '').localeCompare(b.equipmentType || ''); break;
+        case 'make': cmp = (a.make || '').localeCompare(b.make || ''); break;
+        case 'model': cmp = (a.model || '').localeCompare(b.model || ''); break;
+        case 'year': cmp = (a.year || 0) - (b.year || 0); break;
+        case 'serial': cmp = (a.serialNumber || '').localeCompare(b.serialNumber || ''); break;
+        case 'hours': cmp = (a.hours || 0) - (b.hours || 0); break;
+      }
+      return eqSortDirection === 'asc' ? cmp : -cmp;
+    });
   };
 
   return (
@@ -461,15 +541,25 @@ const JobSiteDetail = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Opportunity Number</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Division</TableHead>
-                  <TableHead>Stage</TableHead>
-                  <TableHead className="text-right">Est. Revenue</TableHead>
+                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('id')}>
+                    <div className="flex items-center">Opportunity Number<SortIcon active={oppSortColumn === 'id'} direction={oppSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('description')}>
+                    <div className="flex items-center">Description<SortIcon active={oppSortColumn === 'description'} direction={oppSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('division')}>
+                    <div className="flex items-center">Division<SortIcon active={oppSortColumn === 'division'} direction={oppSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('stage')}>
+                    <div className="flex items-center">Stage<SortIcon active={oppSortColumn === 'stage'} direction={oppSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="text-right cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('revenue')}>
+                    <div className="flex items-center justify-end">Est. Revenue<SortIcon active={oppSortColumn === 'revenue'} direction={oppSortDirection} /></div>
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {site.associatedOpportunities.map(opp => {
+                {sortedOpportunities.map(opp => {
                   const fullOpp = opportunities.find(o => o.id === opp.id);
                   return (
                     <TableRow 
@@ -548,15 +638,23 @@ const JobSiteDetail = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Assignee</TableHead>
-                  <TableHead>Activity Type</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('assignee')}>
+                    <div className="flex items-center">Assignee<SortIcon active={actSortColumn === 'assignee'} direction={actSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('activityType')}>
+                    <div className="flex items-center">Activity Type<SortIcon active={actSortColumn === 'activityType'} direction={actSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('date')}>
+                    <div className="flex items-center">Date<SortIcon active={actSortColumn === 'date'} direction={actSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('description')}>
+                    <div className="flex items-center">Description<SortIcon active={actSortColumn === 'description'} direction={actSortDirection} /></div>
+                  </TableHead>
                   <TableHead className="w-[80px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {site.activities.map(activity => (
+                {sortedActivities.map(activity => (
                   <TableRow key={activity.id}>
                     <TableCell className="font-medium">{getSalesRepName(activity.assigneeId)}</TableCell>
                     <TableCell>
@@ -664,17 +762,29 @@ const JobSiteDetail = () => {
                           <Table>
                             <TableHeader>
                               <TableRow>
-                                <TableHead>Type</TableHead>
-                                <TableHead>Make</TableHead>
-                                <TableHead>Model</TableHead>
-                                <TableHead>Year</TableHead>
-                                <TableHead>Serial #</TableHead>
-                                <TableHead className="text-right">Hours</TableHead>
+                                <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('type')}>
+                                  <div className="flex items-center">Type<SortIcon active={eqSortColumn === 'type'} direction={eqSortDirection} /></div>
+                                </TableHead>
+                                <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('make')}>
+                                  <div className="flex items-center">Make<SortIcon active={eqSortColumn === 'make'} direction={eqSortDirection} /></div>
+                                </TableHead>
+                                <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('model')}>
+                                  <div className="flex items-center">Model<SortIcon active={eqSortColumn === 'model'} direction={eqSortDirection} /></div>
+                                </TableHead>
+                                <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('year')}>
+                                  <div className="flex items-center">Year<SortIcon active={eqSortColumn === 'year'} direction={eqSortDirection} /></div>
+                                </TableHead>
+                                <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('serial')}>
+                                  <div className="flex items-center">Serial #<SortIcon active={eqSortColumn === 'serial'} direction={eqSortDirection} /></div>
+                                </TableHead>
+                                <TableHead className="text-right cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('hours')}>
+                                  <div className="flex items-center justify-end">Hours<SortIcon active={eqSortColumn === 'hours'} direction={eqSortDirection} /></div>
+                                </TableHead>
                                 <TableHead className="w-[80px]"></TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {group.items.map(eq => (
+                              {sortEquipment(group.items).map(eq => (
                                 <TableRow key={eq.id}>
                                   <TableCell>{eq.equipmentType}</TableCell>
                                   <TableCell>{eq.make}</TableCell>

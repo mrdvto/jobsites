@@ -27,8 +27,8 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
 
   useEffect(() => {
     if (opportunity) {
-      setEstMonth(opportunity.estimateDeliveryMonth ? String(opportunity.estimateDeliveryMonth) : '');
-      setEstYear(opportunity.estimateDeliveryYear ? String(opportunity.estimateDeliveryYear) : '');
+      setEstMonth(opportunity.estimateDeliveryMonth ? String(opportunity.estimateDeliveryMonth) : 'none');
+      setEstYear(opportunity.estimateDeliveryYear ? String(opportunity.estimateDeliveryYear) : 'none');
     }
   }, [opportunity]);
 
@@ -44,8 +44,8 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
 
   const handleEstCloseChange = (month: string, year: string) => {
     const updates: Partial<Opportunity> = {
-      estimateDeliveryMonth: month ? Number(month) : undefined,
-      estimateDeliveryYear: year ? Number(year) : undefined,
+      estimateDeliveryMonth: month && month !== 'none' ? Number(month) : undefined,
+      estimateDeliveryYear: year && year !== 'none' ? Number(year) : undefined,
     };
     updateOpportunity(opportunity.id, updates);
     toast({ title: "Updated", description: "Est. close date updated." });
@@ -113,7 +113,7 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
                         <SelectValue placeholder="Month" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {MONTH_NAMES.map((m, i) => (
                           <SelectItem key={i + 1} value={String(i + 1)}>{m}</SelectItem>
                         ))}
@@ -130,7 +130,7 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
                         <SelectValue placeholder="Year" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {yearOptions.map(y => (
                           <SelectItem key={y} value={String(y)}>{y}</SelectItem>
                         ))}

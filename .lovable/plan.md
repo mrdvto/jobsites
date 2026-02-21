@@ -1,63 +1,36 @@
 
-# Collapsible & Searchable Customer Equipment List
 
-## Overview
-Redesign the equipment table so entries are grouped by company and collapsed by default. Add a search bar to filter equipment across all fields. This handles the case where many companies each have multiple machines on a large site.
+# Fix: Auto-expand equipment groups during search
 
-## Changes
+## Problem
+The collapsible groups use `defaultOpen={hasSearch}`, which only takes effect when the component first mounts. When the user types into the search box, already-mounted groups remain collapsed, hiding the filtered results.
 
-### 1. Equipment Section in `src/pages/JobSiteDetail.tsx`
+## Solution
+Switch from the uncontrolled `defaultOpen` to the controlled `open` prop so that groups expand automatically whenever a search query is active.
 
-**Search bar**
-- Add a text input with a search icon below the section header / "Add Equipment" button
-- Filter equipment entries by matching the search query (case-insensitive) against: company name, equipment type, make, model, year, serial number
+- When `hasSearch` is true (search box has text), force all groups open via `open={true}`
+- When `hasSearch` is false, leave `open` unset (omit the prop) so groups behave as normal toggle-able collapsibles
 
-**Group by company**
-- Group the equipment array by `companyId`
-- Each group becomes a collapsible section using the existing `Collapsible` / `CollapsibleTrigger` / `CollapsibleContent` components from `@/components/ui/collapsible`
-- The trigger row shows: company name, a count badge (e.g., "3 machines"), and a chevron icon
-- The content contains the equipment table rows for that company (same columns as today minus the "Company" column, since it is now the group header)
-- Groups default to collapsed; clicking the trigger toggles open/closed
-- If a search is active, auto-expand all groups that have matching results
+Since Radix's `Collapsible` does not support switching between controlled and uncontrolled cleanly with a single prop, the simplest approach is:
+- Use `open={hasSearch ? true : undefined}` -- but Radix requires `open` to be boolean, not undefined, once set
+- Better approach: use controlled state. Pass `open={hasSearch || undefined}` and `onOpenChange` only when not searching
 
-**State additions**
-- `equipmentSearch: string` -- the search query
-- No additional state needed for collapsible -- each `Collapsible` manages its own open/closed state, but we will use controlled `open` prop to force-open when search is active
-
-**New imports**
-- `Input` from `@/components/ui/input`
-- `Collapsible`, `CollapsibleTrigger`, `CollapsibleContent` from `@/components/ui/collapsible`
-- `Search`, `ChevronRight` from `lucide-react`
-
-### 2. Layout per company group
-
-```text
-+------------------------------------------------------+
-| [v] Granite Excavation and Demolition    (2 machines) |
-|   Type       Make        Model   Year  Serial#  Hours |
-|   Excavator  Caterpillar 320F    2019  CAT320.. 3,450 |
-|   Boom Lift  JLG         600S    2020  JLG600.. 1,200 |
-+------------------------------------------------------+
-| [>] Mortenson Construction               (1 machine) |
-+------------------------------------------------------+
+The cleanest fix: always pass `open` and `onOpenChange` but override when searching:
+```
+<Collapsible open={hasSearch ? true : undefined}>
 ```
 
-### 3. No changes to other files
-- No data model changes
-- No modal changes
-- No context changes
+Actually the simplest working approach: just pass `open={true}` when searching and `defaultOpen={false}` when not. Since the `key` already includes `companyId`, we can add `hasSearch` to the key to force a remount when search state changes. This is the least code:
+
+```
+<Collapsible key={`${companyId}-${hasSearch}`} defaultOpen={hasSearch}>
+```
 
 ## Technical Details
 
 | File | Change |
 |------|--------|
-| `src/pages/JobSiteDetail.tsx` | Add search input, group equipment by `companyId`, render each group as a `Collapsible` with an equipment sub-table, remove "Company" column from rows (now in group header) |
+| `src/pages/JobSiteDetail.tsx` | Line 653: change `key={companyId}` to `key={\`${companyId}-${hasSearch}\`}` so the collapsible remounts when search toggles, making `defaultOpen={hasSearch}` re-evaluate |
 
-### Grouping logic (pseudocode)
-```
-filtered = equipment.filter(eq => matches search across all fields)
-grouped = Map<companyId, { companyName, items: CustomerEquipment[] }>
-for each filtered eq:
-  grouped[eq.companyId].items.push(eq)
-render each group as Collapsible
-```
+This is a one-line change.
+

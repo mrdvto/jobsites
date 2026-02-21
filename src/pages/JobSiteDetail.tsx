@@ -8,6 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { OpportunityDetailModal } from '@/components/OpportunityDetailModal';
 import { AssociateOpportunityModal } from '@/components/AssociateOpportunityModal';
@@ -68,6 +70,7 @@ const JobSiteDetail = () => {
   const [oppFilterStage, setOppFilterStage] = useState('all');
   const [oppFilterDivision, setOppFilterDivision] = useState('all');
   const [oppFilterType, setOppFilterType] = useState('all');
+  const [oppShowOpenOnly, setOppShowOpenOnly] = useState(true);
 
   // Sort state for Activities table
   const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'description' | null>('date');
@@ -236,7 +239,9 @@ const JobSiteDetail = () => {
   };
 
   // Filtered & sorted opportunities
+  const closedStatuses = ['Won', 'Lost', 'No Deal', 'Closed', 'No Leads'];
   const filteredOpportunities = site.associatedOpportunities.filter(opp => {
+    if (oppShowOpenOnly && closedStatuses.includes(opp.status)) return false;
     if (oppFilterStage !== 'all' && opp.status !== oppFilterStage) return false;
     if (oppFilterType !== 'all' && opp.type !== oppFilterType) return false;
     if (oppFilterDivision !== 'all') {
@@ -594,7 +599,17 @@ const JobSiteDetail = () => {
                       <SelectItem key={t} value={t}>{t}</SelectItem>
                     ))}
                   </SelectContent>
-                </Select>
+              </Select>
+                <div className="flex items-center space-x-2 ml-auto">
+                  <Switch
+                    id="oppShowOpenOnly"
+                    checked={oppShowOpenOnly}
+                    onCheckedChange={setOppShowOpenOnly}
+                  />
+                  <Label htmlFor="oppShowOpenOnly" className="text-sm font-normal cursor-pointer">
+                    Show Open Only
+                  </Label>
+                </div>
               </div>
               <Table>
                 <TableHeader>

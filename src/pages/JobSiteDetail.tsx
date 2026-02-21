@@ -610,6 +610,7 @@ const JobSiteDetail = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Company</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Make</TableHead>
                   <TableHead>Model</TableHead>
@@ -622,7 +623,8 @@ const JobSiteDetail = () => {
               <TableBody>
                 {site.customerEquipment.map(eq => (
                   <TableRow key={eq.id}>
-                    <TableCell className="font-medium">{eq.equipmentType}</TableCell>
+                    <TableCell className="font-medium">{site.siteCompanies.find(c => c.companyId === eq.companyId)?.companyName || '—'}</TableCell>
+                    <TableCell>{eq.equipmentType}</TableCell>
                     <TableCell>{eq.make}</TableCell>
                     <TableCell>{eq.model}</TableCell>
                     <TableCell>{eq.year || '—'}</TableCell>
@@ -768,6 +770,7 @@ const JobSiteDetail = () => {
         onSave={handleSaveEquipment}
         equipment={selectedEquipment}
         mode={equipmentModalMode}
+        siteCompanies={site.siteCompanies}
       />
 
       <AlertDialog open={showDeleteEquipmentDialog} onOpenChange={setShowDeleteEquipmentDialog}>

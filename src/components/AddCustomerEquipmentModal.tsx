@@ -3,7 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CustomerEquipment } from '@/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CustomerEquipment, SiteCompany } from '@/types';
 
 interface AddCustomerEquipmentModalProps {
   open: boolean;
@@ -11,9 +12,11 @@ interface AddCustomerEquipmentModalProps {
   onSave: (equipment: Omit<CustomerEquipment, 'id'>) => void;
   equipment?: CustomerEquipment;
   mode: 'create' | 'edit';
+  siteCompanies: SiteCompany[];
 }
 
-export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, equipment, mode }: AddCustomerEquipmentModalProps) => {
+export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, equipment, mode, siteCompanies }: AddCustomerEquipmentModalProps) => {
+  const [companyId, setCompanyId] = useState('');
   const [equipmentType, setEquipmentType] = useState('');
   const [make, setMake] = useState('');
   const [model, setModel] = useState('');
@@ -23,6 +26,7 @@ export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, equipmen
 
   useEffect(() => {
     if (mode === 'edit' && equipment) {
+      setCompanyId(equipment.companyId || '');
       setEquipmentType(equipment.equipmentType);
       setMake(equipment.make);
       setModel(equipment.model);
@@ -30,6 +34,7 @@ export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, equipmen
       setSerialNumber(equipment.serialNumber || '');
       setHours(equipment.hours?.toString() || '');
     } else {
+      setCompanyId('');
       setEquipmentType('');
       setMake('');
       setModel('');
@@ -41,9 +46,10 @@ export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, equipmen
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!equipmentType.trim() || !make.trim() || !model.trim()) return;
+    if (!companyId || !equipmentType.trim() || !make.trim() || !model.trim()) return;
 
     onSave({
+      companyId,
       equipmentType: equipmentType.trim(),
       make: make.trim(),
       model: model.trim(),
@@ -61,6 +67,21 @@ export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, equipmen
           <DialogTitle>{mode === 'create' ? 'Add Customer Equipment' : 'Edit Customer Equipment'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="company">Company *</Label>
+            <Select value={companyId} onValueChange={setCompanyId} required>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a company" />
+              </SelectTrigger>
+              <SelectContent>
+                {siteCompanies.map(c => (
+                  <SelectItem key={c.companyId} value={c.companyId}>
+                    {c.companyName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="equipmentType">Equipment Type *</Label>
             <Input id="equipmentType" value={equipmentType} onChange={e => setEquipmentType(e.target.value)} placeholder="e.g. Excavator, Dozer, Loader" required />

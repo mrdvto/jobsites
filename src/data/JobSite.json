@@ -149,6 +149,7 @@
             "customerEquipment": [
                 {
                     "id": 1,
+                    "companyId": "1019550",
                     "equipmentType": "Excavator",
                     "make": "Caterpillar",
                     "model": "320F",
@@ -158,6 +159,7 @@
                 },
                 {
                     "id": 2,
+                    "companyId": "1019550",
                     "equipmentType": "Boom Lift",
                     "make": "JLG",
                     "model": "600S",
@@ -742,6 +744,7 @@
             "customerEquipment": [
                 {
                     "id": 1,
+                    "companyId": "1067200",
                     "equipmentType": "Excavator",
                     "make": "Komatsu",
                     "model": "PC210",
@@ -751,6 +754,7 @@
                 },
                 {
                     "id": 2,
+                    "companyId": "1067200",
                     "equipmentType": "Dozer",
                     "make": "Caterpillar",
                     "model": "D6T",
@@ -760,6 +764,7 @@
                 },
                 {
                     "id": 3,
+                    "companyId": "1035040",
                     "equipmentType": "Wheel Loader",
                     "make": "John Deere",
                     "model": "644K",
@@ -1020,6 +1025,7 @@
             "customerEquipment": [
                 {
                     "id": 1,
+                    "companyId": "1174395",
                     "equipmentType": "Backhoe",
                     "make": "Case",
                     "model": "580N",
@@ -1029,6 +1035,7 @@
                 },
                 {
                     "id": 2,
+                    "companyId": "1174395",
                     "equipmentType": "Excavator",
                     "make": "Volvo",
                     "model": "EC140E",
@@ -1435,6 +1442,7 @@
             "customerEquipment": [
                 {
                     "id": 1,
+                    "companyId": "1067200",
                     "equipmentType": "Haul Truck",
                     "make": "Caterpillar",
                     "model": "777G",
@@ -1444,6 +1452,7 @@
                 },
                 {
                     "id": 2,
+                    "companyId": "1067200",
                     "equipmentType": "Excavator",
                     "make": "Komatsu",
                     "model": "PC490",
@@ -1453,6 +1462,7 @@
                 },
                 {
                     "id": 3,
+                    "companyId": "1293500",
                     "equipmentType": "Jaw Crusher",
                     "make": "Sandvik",
                     "model": "QJ341",

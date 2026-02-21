@@ -19,7 +19,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Plus, Pencil, X, FileText, Download } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Plus, Pencil, X, FileText, Download, Search } from 'lucide-react';
 import { Note, NoteTag } from '@/types';
 import { NoteModal } from '@/components/NoteModal';
 import { STATUS_COLORS } from '@/hooks/useStatusColors';
@@ -47,6 +48,8 @@ export const NotesSection = ({
   const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined);
   const [noteModalMode, setNoteModalMode] = useState<'create' | 'edit'>('create');
   const [filterTagId, setFilterTagId] = useState<string>('all');
+  const [filterAuthorId, setFilterAuthorId] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [noteToDelete, setNoteToDelete] = useState<number | null>(null);
 
@@ -94,10 +97,21 @@ export const NotesSection = ({
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  // Filter notes by tag
-  const filteredNotes = filterTagId === 'all'
-    ? notes
-    : notes.filter(note => note.tagIds?.includes(filterTagId));
+  // Unique authors from notes
+  const uniqueAuthors = Array.from(new Set(notes.map(n => n.createdById)))
+    .map(id => ({ id, name: getSalesRepName(id) }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  // Filter notes by tag, author, and search
+  const filteredNotes = notes.filter(note => {
+    if (filterTagId !== 'all' && !note.tagIds?.includes(filterTagId)) return false;
+    if (filterAuthorId !== 'all' && note.createdById !== parseInt(filterAuthorId)) return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      if (!note.content.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
 
   // Sort notes newest first
   const sortedNotes = [...filteredNotes].sort(
@@ -115,21 +129,47 @@ export const NotesSection = ({
           </Button>
         </div>
 
-        {noteTags.length > 0 && notes.length > 0 && (
-          <div className="mb-4">
-            <Select value={filterTagId} onValueChange={setFilterTagId}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Filter by tag" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Tags</SelectItem>
-                {noteTags.map(tag => (
-                  <SelectItem key={tag.id} value={tag.id}>
-                    {tag.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        {notes.length > 0 && (
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search notes..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            {noteTags.length > 0 && (
+              <Select value={filterTagId} onValueChange={setFilterTagId}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="Filter by tag" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Tags</SelectItem>
+                  {noteTags.map(tag => (
+                    <SelectItem key={tag.id} value={tag.id}>
+                      {tag.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            {uniqueAuthors.length > 1 && (
+              <Select value={filterAuthorId} onValueChange={setFilterAuthorId}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by author" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Authors</SelectItem>
+                  {uniqueAuthors.map(author => (
+                    <SelectItem key={author.id} value={String(author.id)}>
+                      {author.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         )}
 

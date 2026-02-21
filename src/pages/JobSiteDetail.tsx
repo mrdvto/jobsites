@@ -21,7 +21,9 @@ import { AssociateActivityModal } from '@/components/AssociateActivityModal';
 import { NotesSection } from '@/components/NotesSection';
 import { SiteCompaniesTable } from '@/components/SiteCompaniesTable';
 import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity, SiteCompany, CustomerEquipment } from '@/types';
 
@@ -56,6 +58,7 @@ const JobSiteDetail = () => {
   const [equipmentModalMode, setEquipmentModalMode] = useState<'create' | 'edit'>('create');
   const [showDeleteEquipmentDialog, setShowDeleteEquipmentDialog] = useState(false);
   const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
+  const [equipmentSearch, setEquipmentSearch] = useState('');
 
   const site = jobSites.find(s => s.id === parseInt(id || '0'));
 
@@ -606,45 +609,101 @@ const JobSiteDetail = () => {
             <p className="text-center text-muted-foreground py-8">
               No customer equipment recorded at this site.
             </p>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Company</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Make</TableHead>
-                  <TableHead>Model</TableHead>
-                  <TableHead>Year</TableHead>
-                  <TableHead>Serial #</TableHead>
-                  <TableHead className="text-right">Hours</TableHead>
-                  <TableHead className="w-[80px]"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {site.customerEquipment.map(eq => (
-                  <TableRow key={eq.id}>
-                    <TableCell className="font-medium">{site.siteCompanies.find(c => c.companyId === eq.companyId)?.companyName || '—'}</TableCell>
-                    <TableCell>{eq.equipmentType}</TableCell>
-                    <TableCell>{eq.make}</TableCell>
-                    <TableCell>{eq.model}</TableCell>
-                    <TableCell>{eq.year || '—'}</TableCell>
-                    <TableCell className="font-mono text-sm">{eq.serialNumber || '—'}</TableCell>
-                    <TableCell className="text-right">{eq.hours?.toLocaleString() || '—'}</TableCell>
-                    <TableCell>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditEquipment(eq)}>
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEquipmentToDelete(eq.id); setShowDeleteEquipmentDialog(true); }}>
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
+          ) : (() => {
+            const searchLower = equipmentSearch.toLowerCase();
+            const hasSearch = searchLower.length > 0;
+
+            const filteredEquipment = site.customerEquipment.filter(eq => {
+              if (!hasSearch) return true;
+              const companyName = site.siteCompanies.find(c => c.companyId === eq.companyId)?.companyName || '';
+              const searchStr = `${companyName} ${eq.equipmentType} ${eq.make} ${eq.model} ${eq.year || ''} ${eq.serialNumber || ''}`.toLowerCase();
+              return searchStr.includes(searchLower);
+            });
+
+            const grouped = filteredEquipment.reduce<Record<string, { companyName: string; items: CustomerEquipment[] }>>((acc, eq) => {
+              if (!acc[eq.companyId]) {
+                acc[eq.companyId] = {
+                  companyName: site.siteCompanies.find(c => c.companyId === eq.companyId)?.companyName || 'Unknown',
+                  items: [],
+                };
+              }
+              acc[eq.companyId].items.push(eq);
+              return acc;
+            }, {});
+
+            const groupEntries = Object.entries(grouped);
+
+            return (
+              <>
+                <div className="relative mb-4">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search equipment..."
+                    value={equipmentSearch}
+                    onChange={e => setEquipmentSearch(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+
+                {groupEntries.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">No equipment matches your search.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {groupEntries.map(([companyId, group]) => (
+                      <Collapsible key={companyId} defaultOpen={hasSearch}>
+                        <CollapsibleTrigger className="flex items-center justify-between w-full rounded-md border px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors [&[data-state=open]>svg.chevron]:rotate-90">
+                          <div className="flex items-center gap-2">
+                            <ChevronRight className="chevron h-4 w-4 shrink-0 transition-transform duration-200" />
+                            <span>{group.companyName}</span>
+                            <Badge variant="secondary" className="ml-1">
+                              {group.items.length} {group.items.length === 1 ? 'machine' : 'machines'}
+                            </Badge>
+                          </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Type</TableHead>
+                                <TableHead>Make</TableHead>
+                                <TableHead>Model</TableHead>
+                                <TableHead>Year</TableHead>
+                                <TableHead>Serial #</TableHead>
+                                <TableHead className="text-right">Hours</TableHead>
+                                <TableHead className="w-[80px]"></TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {group.items.map(eq => (
+                                <TableRow key={eq.id}>
+                                  <TableCell>{eq.equipmentType}</TableCell>
+                                  <TableCell>{eq.make}</TableCell>
+                                  <TableCell>{eq.model}</TableCell>
+                                  <TableCell>{eq.year || '—'}</TableCell>
+                                  <TableCell className="font-mono text-sm">{eq.serialNumber || '—'}</TableCell>
+                                  <TableCell className="text-right">{eq.hours?.toLocaleString() || '—'}</TableCell>
+                                  <TableCell>
+                                    <div className="flex gap-1">
+                                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditEquipment(eq)}>
+                                        <Pencil className="h-4 w-4" />
+                                      </Button>
+                                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEquipmentToDelete(eq.id); setShowDeleteEquipmentDialog(true); }}>
+                                        <X className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    ))}
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </Card>
         <NotesSection
           notes={site.notes || []}

@@ -857,10 +857,52 @@
             "associatedOpportunities": [
                 {
                     "id": 100016,
-                    "type": "Service",
-                    "description": "Emergency service for high-pressure air compressor",
-                    "status": "Completed",
+                    "type": "Parts",
+                    "description": "High-pressure air compressor rebuild kit",
+                    "status": "No Lead",
                     "revenue": 12500
+                },
+                {
+                    "id": 200001,
+                    "type": "Sales",
+                    "description": "Purchase of CAT 3512B Generator Set for backup power",
+                    "status": "Proposal",
+                    "revenue": 185000
+                },
+                {
+                    "id": 200002,
+                    "type": "Rent",
+                    "description": "6-month rental of portable dewatering pump",
+                    "status": "Won",
+                    "revenue": 18500
+                },
+                {
+                    "id": 200003,
+                    "type": "Service",
+                    "description": "Preventive maintenance on existing pump station motors",
+                    "status": "Development",
+                    "revenue": 9200
+                },
+                {
+                    "id": 200004,
+                    "type": "Lease",
+                    "description": "24-month lease of XQ575 portable generator",
+                    "status": "Outstanding",
+                    "revenue": 42000
+                },
+                {
+                    "id": 200005,
+                    "type": "Rental Service",
+                    "description": "Temp power with operator for filtration building",
+                    "status": "Lost",
+                    "revenue": 31000
+                },
+                {
+                    "id": 200006,
+                    "type": "Sales",
+                    "description": "Purchase of replacement filtration valves and actuators",
+                    "status": "Lead",
+                    "revenue": 67000
                 }
             ],
             "notes": [

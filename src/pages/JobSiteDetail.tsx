@@ -34,7 +34,7 @@ type LocationViewType = 'address' | 'coordinates';
 const JobSiteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { jobSites, getSalesRepName, getSalesRepNames, opportunities, getStageName, removeSiteCompany, updateJobSite, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, updateCustomerEquipment, deleteCustomerEquipment } = useData();
+  const { jobSites, getSalesRepName, getSalesRepNames, opportunities, getStageName, getStage, removeSiteCompany, updateJobSite, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, updateCustomerEquipment, deleteCustomerEquipment } = useData();
   const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
@@ -240,10 +240,10 @@ const JobSiteDetail = () => {
   };
 
   // Filtered & sorted opportunities
-  const closedStatuses = ['Won', 'Lost', 'No Deal', 'Closed', 'No Leads', 'No Lead'];
   const filteredOpportunities = site.associatedOpportunities.filter(opp => {
-    if (oppShowOpenOnly && closedStatuses.includes(opp.status)) return false;
-    if (oppFilterStage !== 'all' && opp.status !== oppFilterStage) return false;
+    const stage = getStage(opp.stageId);
+    if (oppShowOpenOnly && stage && (stage.phaseid === 3 || stage.phaseid === 4)) return false;
+    if (oppFilterStage !== 'all' && opp.stageId !== Number(oppFilterStage)) return false;
     if (oppFilterType !== 'all' && opp.type !== oppFilterType) return false;
     const fullOpp = opportunities.find(o => o.id === opp.id);
     if (oppFilterDivision !== 'all') {
@@ -255,7 +255,7 @@ const JobSiteDetail = () => {
     return true;
   });
 
-  const uniqueStages = [...new Set(site.associatedOpportunities.map(o => o.status))].sort();
+  const uniqueStages = [...new Map(site.associatedOpportunities.map(o => [o.stageId, getStageName(o.stageId)] as [number, string])).entries()].sort((a, b) => a[1].localeCompare(b[1]));
   const uniqueTypes = [...new Set(site.associatedOpportunities.map(o => o.type))].sort();
   const uniqueDivisions = [...new Set(site.associatedOpportunities.map(o => {
     const full = opportunities.find(f => f.id === o.id);
@@ -275,7 +275,7 @@ const JobSiteDetail = () => {
       case 'type': cmp = (a.type || '').localeCompare(b.type || ''); break;
       case 'description': cmp = (a.description || '').localeCompare(b.description || ''); break;
       case 'division': cmp = (fullA?.divisionId || '').localeCompare(fullB?.divisionId || ''); break;
-      case 'stage': cmp = (a.status || '').localeCompare(b.status || ''); break;
+      case 'stage': cmp = getStageName(a.stageId).localeCompare(getStageName(b.stageId)); break;
       case 'salesRep': cmp = getSalesRepName(fullA?.salesRepId || 0).localeCompare(getSalesRepName(fullB?.salesRepId || 0)); break;
       case 'revenue': cmp = (a.revenue || 0) - (b.revenue || 0); break;
     }
@@ -582,8 +582,8 @@ const JobSiteDetail = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Stages</SelectItem>
-                    {uniqueStages.map(s => (
-                      <SelectItem key={s} value={s}>{s}</SelectItem>
+                    {uniqueStages.map(([stageId, stageName]) => (
+                      <SelectItem key={stageId} value={String(stageId)}>{stageName}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -671,7 +671,7 @@ const JobSiteDetail = () => {
                           <Badge variant="secondary">{fullOpp?.divisionId || '-'}</Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline">{opp.status}</Badge>
+                          <Badge variant="outline">{getStageName(opp.stageId)}</Badge>
                         </TableCell>
                         <TableCell>{fullOpp ? getSalesRepName(fullOpp.salesRepId) : '-'}</TableCell>
                         <TableCell className="text-right font-medium">

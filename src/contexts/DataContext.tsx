@@ -50,6 +50,7 @@ interface DataContextType {
   getSalesRepName: (id: number) => string;
   getSalesRepNames: (ids: number[]) => string;
   getStageName: (id: number) => string;
+  getStage: (id: number) => OpportunityStage | undefined;
   getTypeName: (typeId: number) => string;
   calculateSiteRevenue: (site: JobSite) => number;
   getFilteredSites: () => JobSite[];
@@ -205,6 +206,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return stage ? stage.stagename : 'Unknown';
   };
 
+  const getStage = (id: number): OpportunityStage | undefined => {
+    return opportunityStages.find(s => s.stageid === id);
+  };
+
   const getTypeName = (typeId: number): string => {
     const type = opportunityTypes.find(t => t.opptypeid === typeId);
     return type ? type.opptypedesc : 'Unknown';
@@ -316,7 +321,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                   id: opp.id,
                   type: opp.typeId === 1 ? 'Sale' : 'Rental',
                   description: opp.description,
-                  status: getStageName(opp.stageId),
+                  stageId: opp.stageId,
                   revenue: opp.estimateRevenue,
                 }
               ]
@@ -343,7 +348,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 id: opportunity.id,
                 type: opportunity.typeId === 1 ? 'Sale' : 'Rental',
                 description: opportunity.description,
-                status: getStageName(opportunity.stageId),
+                stageId: opportunity.stageId,
                 revenue: opportunity.estimateRevenue,
               }
             ]
@@ -596,6 +601,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         getSalesRepName,
         getSalesRepNames,
         getStageName,
+        getStage,
         getTypeName,
         calculateSiteRevenue,
         getFilteredSites,

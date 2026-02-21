@@ -239,7 +239,7 @@ const JobSiteDetail = () => {
   };
 
   // Filtered & sorted opportunities
-  const closedStatuses = ['Won', 'Lost', 'No Deal', 'Closed', 'No Leads'];
+  const closedStatuses = ['Won', 'Lost', 'No Deal', 'Closed', 'No Leads', 'No Lead'];
   const filteredOpportunities = site.associatedOpportunities.filter(opp => {
     if (oppShowOpenOnly && closedStatuses.includes(opp.status)) return false;
     if (oppFilterStage !== 'all' && opp.status !== oppFilterStage) return false;

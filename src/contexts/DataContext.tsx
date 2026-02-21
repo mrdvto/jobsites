@@ -32,6 +32,7 @@ interface DataContextType {
   setFilters: (filters: Filters) => void;
   addOpportunityToSite: (siteId: number, opportunityId: number) => void;
   createNewOpportunity: (opportunity: Opportunity) => void;
+  updateOpportunity: (opportunityId: number, updates: Partial<Opportunity>) => void;
   createJobSite: (site: Omit<JobSite, 'id'>) => void;
   addSiteCompany: (siteId: number, company: Omit<SiteCompany, 'companyContacts' | 'primaryContactIndex'> & { companyContacts?: CompanyContact[], companyContact?: { name: string; title: string; phone: string; email: string } }) => void;
   removeSiteCompany: (siteId: number, companyName: string) => void;
@@ -359,6 +360,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
   };
 
+  const updateOpportunity = (opportunityId: number, updates: Partial<Opportunity>) => {
+    setOpportunities(prev => prev.map(opp => opp.id === opportunityId ? { ...opp, ...updates } : opp));
+  };
+
   const addSiteCompany = (siteId: number, company: any) => {
     setJobSites(prevSites =>
       prevSites.map(site => {
@@ -583,6 +588,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setFilters,
         addOpportunityToSite,
         createNewOpportunity,
+        updateOpportunity,
         createJobSite,
         addSiteCompany,
         removeSiteCompany,

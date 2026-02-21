@@ -1,10 +1,14 @@
+import { useState, useEffect } from 'react';
 import { Opportunity } from '@/types';
 import { useData } from '@/contexts/DataContext';
 import { getDivisionName } from '@/contexts/DataContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
 import { Calendar, DollarSign, Package, AlertCircle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface OpportunityDetailModalProps {
   opportunity: Opportunity | null;
@@ -12,8 +16,21 @@ interface OpportunityDetailModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
 export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: OpportunityDetailModalProps) => {
-  const { getStageName, getTypeName } = useData();
+  const { getStageName, getTypeName, updateOpportunity } = useData();
+  const { toast } = useToast();
+
+  const [estMonth, setEstMonth] = useState<string>('');
+  const [estYear, setEstYear] = useState<string>('');
+
+  useEffect(() => {
+    if (opportunity) {
+      setEstMonth(opportunity.estimateDeliveryMonth ? String(opportunity.estimateDeliveryMonth) : '');
+      setEstYear(opportunity.estimateDeliveryYear ? String(opportunity.estimateDeliveryYear) : '');
+    }
+  }, [opportunity]);
 
   if (!opportunity) return null;
 
@@ -24,6 +41,18 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
       day: 'numeric'
     });
   };
+
+  const handleEstCloseChange = (month: string, year: string) => {
+    const updates: Partial<Opportunity> = {
+      estimateDeliveryMonth: month ? Number(month) : undefined,
+      estimateDeliveryYear: year ? Number(year) : undefined,
+    };
+    updateOpportunity(opportunity.id, updates);
+    toast({ title: "Updated", description: "Est. close date updated." });
+  };
+
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from({ length: 7 }, (_, i) => currentYear + i);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -70,11 +99,45 @@ export const OpportunityDetailModal = ({ opportunity, open, onOpenChange }: Oppo
                 <p className="text-sm">
                   <span className="font-medium">Entered:</span> {formatDate(opportunity.enterDate)}
                 </p>
-                {opportunity.estimateDeliveryMonth && opportunity.estimateDeliveryYear && (
-                  <p className="text-sm">
-                    <span className="font-medium">Delivery:</span> {opportunity.estimateDeliveryMonth}/{opportunity.estimateDeliveryYear}
-                  </p>
-                )}
+                <div className="space-y-1">
+                  <Label className="text-sm font-medium">Est. Close</Label>
+                  <div className="flex gap-2">
+                    <Select
+                      value={estMonth}
+                      onValueChange={(v) => {
+                        setEstMonth(v);
+                        handleEstCloseChange(v, estYear);
+                      }}
+                    >
+                      <SelectTrigger className="w-[100px] h-8 text-sm">
+                        <SelectValue placeholder="Month" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">None</SelectItem>
+                        {MONTH_NAMES.map((m, i) => (
+                          <SelectItem key={i + 1} value={String(i + 1)}>{m}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Select
+                      value={estYear}
+                      onValueChange={(v) => {
+                        setEstYear(v);
+                        handleEstCloseChange(estMonth, v);
+                      }}
+                    >
+                      <SelectTrigger className="w-[90px] h-8 text-sm">
+                        <SelectValue placeholder="Year" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">None</SelectItem>
+                        {yearOptions.map(y => (
+                          <SelectItem key={y} value={String(y)}>{y}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

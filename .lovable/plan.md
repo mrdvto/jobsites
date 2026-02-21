@@ -1,45 +1,42 @@
 
 
-# Add Customer Equipment with Sample Data
+# Associate Customer Equipment with Companies by ID
 
 ## Overview
-Implement the customer equipment feature (from the previously approved plan) and populate several job sites with realistic sample machine data.
+Add a `companyId` field to customer equipment records, linking each piece of equipment to the contractor that owns it. The UI will display company names by resolving the ID against the site's company list.
 
 ## Changes
 
 ### 1. Data Model (`src/types/index.ts`)
-Add a `CustomerEquipment` interface with fields: `id`, `equipmentType`, `make`, `model`, `year` (optional), `serialNumber` (optional), `hours` (optional). Add `customerEquipment: CustomerEquipment[]` to the `JobSite` interface.
+- Add `companyId: string` to the `CustomerEquipment` interface
 
 ### 2. Sample Data (`src/data/JobSite.json`)
-Add `customerEquipment` arrays to several job sites. Examples:
+Add `companyId` to all existing equipment entries, referencing actual site companies:
 
-- **St. Mary's Hospital**: 2 machines (Caterpillar 320F Excavator, JLG 600S Boom Lift)
-- **Amazon Fulfillment Center**: 3 machines (Komatsu PC210 Excavator, Caterpillar D6T Dozer, John Deere 644K Wheel Loader)
-- **Willow Creek Subdivision**: 2 machines (Case 580N Backhoe, Volvo EC140E Excavator)
-- **Limestone Quarry**: 3 machines (Caterpillar 777G Haul Truck, Komatsu PC490 Excavator, Sandvik QJ341 Jaw Crusher)
-- Remaining sites get empty arrays `[]`
+- **St. Mary's Hospital (500101)**: Both machines get `"1019550"` (Granite Excavation and Demolition -- the excavation sub)
+- **Amazon Fulfillment Center (500105)**: Komatsu PC210 and Cat D6T get `"1067200"` (Mortenson Construction -- GC), JD 644K gets `"1035040"` (Southland Industries)
+- **Willow Creek Subdivision (500107)**: Both machines get `"1174395"` (Ryan Companies US Inc -- GC)
+- **Limestone Quarry (500110)**: Cat 777G and Komatsu PC490 get `"1067200"` (Mortenson Construction), Sandvik QJ341 gets `"1293500"` (Layne Christensen Company)
 
-### 3. Data Context (`src/contexts/DataContext.tsx`)
-- Add `addCustomerEquipment(siteId, equipment)`, `updateCustomerEquipment(siteId, equipmentId, updates)`, and `deleteCustomerEquipment(siteId, equipmentId)` methods
-- Initialize `customerEquipment: []` for any sites missing the field during data load
-- Expose all three methods in the context interface and provider
+### 3. Add/Edit Equipment Modal (`src/components/AddCustomerEquipmentModal.tsx`)
+- Accept a new prop: `siteCompanies: SiteCompany[]`
+- Add a required "Company" select dropdown at the top of the form, populated from the site companies list (showing company name, storing company ID)
+- Include `companyId` in the submitted data
+- Pre-populate the dropdown when editing existing equipment
 
-### 4. Add/Edit Equipment Modal (`src/components/AddCustomerEquipmentModal.tsx`)
-New modal with form fields: Equipment Type, Make, Model, Year, Serial Number, Hours. Supports create and edit modes.
+### 4. Equipment Table (`src/pages/JobSiteDetail.tsx`)
+- Add a "Company" column as the first column in the table
+- Resolve `companyId` to display name via `site.siteCompanies.find(c => c.companyId === eq.companyId)?.companyName`
+- Pass `site.siteCompanies` to the `AddCustomerEquipmentModal`
 
-### 5. Job Site Detail Page (`src/pages/JobSiteDetail.tsx`)
-Add a "Customer Equipment" card section with:
-- Table columns: Type, Make, Model, Year, Serial #, Hours, Actions
-- Add Equipment button in the card header
-- Edit and Delete actions per row (delete with confirmation)
-- Empty state when no equipment exists
+## Technical Details
 
-## Files Modified
-
-| File | Action |
+| File | Change |
 |------|--------|
-| `src/types/index.ts` | Add `CustomerEquipment` interface, add field to `JobSite` |
-| `src/data/JobSite.json` | Add sample equipment to 4 sites, empty arrays for the rest |
-| `src/contexts/DataContext.tsx` | Add CRUD methods, migration, expose in context |
-| `src/components/AddCustomerEquipmentModal.tsx` | New modal component |
-| `src/pages/JobSiteDetail.tsx` | New equipment table section |
+| `src/types/index.ts` | Add `companyId: string` to `CustomerEquipment` |
+| `src/data/JobSite.json` | Add `companyId` to all 10 sample equipment entries |
+| `src/components/AddCustomerEquipmentModal.tsx` | Add `siteCompanies` prop, company select field, include `companyId` in output |
+| `src/pages/JobSiteDetail.tsx` | Add "Company" column to table, resolve ID to name, pass `siteCompanies` to modal |
+
+No changes needed to `DataContext.tsx` -- the existing CRUD methods already pass through all fields via the `Omit<CustomerEquipment, 'id'>` type, so `companyId` will flow through automatically.
+

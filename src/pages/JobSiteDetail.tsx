@@ -63,8 +63,8 @@ const JobSiteDetail = () => {
   const [equipmentSearch, setEquipmentSearch] = useState('');
 
   // Sort state for Opportunities table
-  const [oppSortColumn, setOppSortColumn] = useState<'type' | 'description' | 'division' | 'stage' | 'salesRep' | 'revenue' | null>(null);
-  const [oppSortDirection, setOppSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [oppSortColumn, setOppSortColumn] = useState<'type' | 'description' | 'division' | 'stage' | 'salesRep' | 'estClose' | 'revenue' | null>('stage');
+  const [oppSortDirection, setOppSortDirection] = useState<'asc' | 'desc' | null>('asc');
 
   // Filter state for Opportunities table
   const [oppFilterStage, setOppFilterStage] = useState('all');
@@ -275,9 +275,21 @@ const JobSiteDetail = () => {
       case 'type': cmp = (a.type || '').localeCompare(b.type || ''); break;
       case 'description': cmp = (a.description || '').localeCompare(b.description || ''); break;
       case 'division': cmp = (fullA?.divisionId || '').localeCompare(fullB?.divisionId || ''); break;
-      case 'stage': cmp = getStageName(a.stageId).localeCompare(getStageName(b.stageId)); break;
+      case 'stage': cmp = (getStage(a.stageId)?.displayorder ?? 999) - (getStage(b.stageId)?.displayorder ?? 999); break;
       case 'salesRep': cmp = getSalesRepName(fullA?.salesRepId || 0).localeCompare(getSalesRepName(fullB?.salesRepId || 0)); break;
+      case 'estClose': {
+        const dateA = (fullA?.estimateDeliveryYear || 0) * 100 + (fullA?.estimateDeliveryMonth || 0);
+        const dateB = (fullB?.estimateDeliveryYear || 0) * 100 + (fullB?.estimateDeliveryMonth || 0);
+        cmp = dateA - dateB;
+        break;
+      }
       case 'revenue': cmp = (a.revenue || 0) - (b.revenue || 0); break;
+    }
+    // Secondary sort: break ties by estimated close date ascending
+    if (cmp === 0) {
+      const dateA = (fullA?.estimateDeliveryYear || 0) * 100 + (fullA?.estimateDeliveryMonth || 0);
+      const dateB = (fullB?.estimateDeliveryYear || 0) * 100 + (fullB?.estimateDeliveryMonth || 0);
+      cmp = dateA - dateB;
     }
     return oppSortDirection === 'asc' ? cmp : -cmp;
   });
@@ -649,6 +661,9 @@ const JobSiteDetail = () => {
                     <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('salesRep')}>
                       <div className="flex items-center">Sales Rep<SortIcon active={oppSortColumn === 'salesRep'} direction={oppSortDirection} /></div>
                     </TableHead>
+                    <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('estClose')}>
+                      <div className="flex items-center">Est. Close<SortIcon active={oppSortColumn === 'estClose'} direction={oppSortDirection} /></div>
+                    </TableHead>
                     <TableHead className="text-right cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleOppSort('revenue')}>
                       <div className="flex items-center justify-end">Est. Revenue<SortIcon active={oppSortColumn === 'revenue'} direction={oppSortDirection} /></div>
                     </TableHead>
@@ -674,6 +689,11 @@ const JobSiteDetail = () => {
                           <Badge variant="outline">{getStageName(opp.stageId)}</Badge>
                         </TableCell>
                         <TableCell>{fullOpp ? getSalesRepName(fullOpp.salesRepId) : '-'}</TableCell>
+                        <TableCell>
+                          {fullOpp?.estimateDeliveryMonth && fullOpp?.estimateDeliveryYear
+                            ? `${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][fullOpp.estimateDeliveryMonth - 1]} ${fullOpp.estimateDeliveryYear}`
+                            : '-'}
+                        </TableCell>
                         <TableCell className="text-right font-medium">
                           ${opp.revenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                         </TableCell>

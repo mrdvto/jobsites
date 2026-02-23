@@ -19,8 +19,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
-import { Plus, Pencil, X, FileText, Download, Search } from 'lucide-react';
+import { Plus, Pencil, X, FileText, Download, Search, History, ChevronDown } from 'lucide-react';
 import { Note, NoteTag } from '@/types';
 import { NoteModal } from '@/components/NoteModal';
 import { STATUS_COLORS } from '@/hooks/useStatusColors';
@@ -224,40 +229,62 @@ export const NotesSection = ({
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex flex-col gap-0.5">
-                      <span>
-                        Created: {new Date(note.createdAt).toLocaleDateString()} by{' '}
-                        {getSalesRepName(note.createdById)}
-                      </span>
-                      {note.lastModifiedAt && (
-                        <span>
-                          Modified: {new Date(note.lastModifiedAt).toLocaleDateString()} by{' '}
-                          {getSalesRepName(note.lastModifiedById!)}
-                        </span>
+                    <div className="text-xs text-muted-foreground">
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-col gap-0.5">
+                          <span>
+                            Created: {new Date(note.createdAt).toLocaleDateString()} by{' '}
+                            {getSalesRepName(note.createdById)}
+                          </span>
+                          {note.lastModifiedAt && (
+                            <span>
+                              Modified: {new Date(note.lastModifiedAt).toLocaleDateString()} by{' '}
+                              {getSalesRepName(note.lastModifiedById!)}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2"
+                            onClick={() => handleEditNote(note)}
+                          >
+                            <Pencil className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-destructive hover:text-destructive"
+                            onClick={() => handleDeleteClick(note.id)}
+                          >
+                            <X className="h-3 w-3 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+
+                      {note.modificationHistory && note.modificationHistory.length > 0 && (
+                        <Collapsible className="mt-2">
+                          <CollapsibleTrigger className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+                            <History className="h-3 w-3" />
+                            <span>View history ({note.modificationHistory.length} edit{note.modificationHistory.length !== 1 ? 's' : ''})</span>
+                            <ChevronDown className="h-3 w-3" />
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="mt-1 pl-4 border-l-2 border-muted space-y-1">
+                            {[...note.modificationHistory].reverse().map((mod, idx) => (
+                              <div key={idx} className="text-xs">
+                                <span className="text-muted-foreground">
+                                  {new Date(mod.modifiedAt).toLocaleString()} — {getSalesRepName(mod.modifiedById)}
+                                </span>
+                                <span className="ml-1">{mod.summary}</span>
+                              </div>
+                            ))}
+                          </CollapsibleContent>
+                        </Collapsible>
                       )}
                     </div>
-                    <div className="flex gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 px-2"
-                        onClick={() => handleEditNote(note)}
-                      >
-                        <Pencil className="h-3 w-3 mr-1" />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 px-2 text-destructive hover:text-destructive"
-                        onClick={() => handleDeleteClick(note.id)}
-                      >
-                        <X className="h-3 w-3 mr-1" />
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
                 </div>
               );
             })}

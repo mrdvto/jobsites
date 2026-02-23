@@ -181,6 +181,19 @@ export const NoteModal = ({
                   {getSalesRepName(note.lastModifiedById!)}
                 </div>
               )}
+              {note.modificationHistory && note.modificationHistory.length > 0 && (
+                <div className="mt-2">
+                  <div className="text-xs font-medium mb-1">Edit History</div>
+                  <div className="max-h-32 overflow-y-auto space-y-1 pl-2 border-l-2 border-muted">
+                    {[...note.modificationHistory].reverse().map((mod, idx) => (
+                      <div key={idx} className="text-xs">
+                        <span>{new Date(mod.modifiedAt).toLocaleString()} — {getSalesRepName(mod.modifiedById)}</span>
+                        <span className="ml-1 text-foreground">{mod.summary}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

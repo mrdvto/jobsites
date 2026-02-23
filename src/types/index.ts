@@ -32,6 +32,8 @@ export interface NoteModification {
   modifiedAt: string;
   modifiedById: number;
   summary: string;
+  previousContent?: string;
+  previousTagIds?: string[];
 }
 
 export interface Note {

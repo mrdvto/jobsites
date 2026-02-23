@@ -7,7 +7,8 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-import { ArrowLeft, ChevronDown, ChevronRight, FileText } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight, FileText } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { format } from 'date-fns';
 import { ChangeLogEntry } from '@/types';
 
@@ -69,6 +70,8 @@ const JobSiteChangeLog = () => {
   const navigate = useNavigate();
   const { jobSites, getChangeLog, getSalesRepName } = useData();
   const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(15);
 
   const siteId = parseInt(id || '0');
   const site = jobSites.find(s => s.id === siteId);
@@ -82,6 +85,15 @@ const JobSiteChangeLog = () => {
   const sorted = [...filtered].sort((a, b) =>
     new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   );
+
+  const totalPages = Math.ceil(sorted.length / pageSize);
+  const paginated = sorted.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  // Reset to page 1 when filter changes
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    setCurrentPage(1);
+  };
 
   if (!site) {
     return (
@@ -109,7 +121,7 @@ const JobSiteChangeLog = () => {
 
       <main className="container mx-auto px-6 py-8">
         <Card className="p-6">
-          <Tabs value={activeCategory} onValueChange={setActiveCategory}>
+          <Tabs value={activeCategory} onValueChange={handleCategoryChange}>
             <TabsList className="mb-4 flex-wrap h-auto gap-1">
               {CATEGORIES.map(cat => (
                 <TabsTrigger key={cat} value={cat} className="text-xs">
@@ -126,6 +138,7 @@ const JobSiteChangeLog = () => {
               <p className="text-sm">Changes to this job site and its associated records will appear here.</p>
             </div>
           ) : (
+            <>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -136,7 +149,7 @@ const JobSiteChangeLog = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sorted.map(entry => (
+                {paginated.map(entry => (
                   <ExpandableRow
                     key={entry.id}
                     entry={entry}
@@ -145,7 +158,36 @@ const JobSiteChangeLog = () => {
                 ))}
               </TableBody>
             </Table>
-          )}
+
+            {/* Pagination controls */}
+            <div className="flex items-center justify-between pt-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Rows per page</span>
+                <Select value={String(pageSize)} onValueChange={(v) => { setPageSize(Number(v)); setCurrentPage(1); }}>
+                  <SelectTrigger className="h-8 w-[70px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[10, 15, 25, 50].map(size => (
+                      <SelectItem key={size} value={String(size)}>{size}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <span className="ml-2">
+                  {(currentPage - 1) * pageSize + 1}–{Math.min(currentPage * pageSize, sorted.length)} of {sorted.length}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Button variant="outline" size="icon" className="h-8 w-8" disabled={currentPage <= 1} onClick={() => setCurrentPage(p => p - 1)}>
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" className="h-8 w-8" disabled={currentPage >= totalPages} onClick={() => setCurrentPage(p => p + 1)}>
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
         </Card>
       </main>
     </div>

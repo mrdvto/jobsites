@@ -1,16 +1,33 @@
 
-# Fix Changelog Table Misalignment
+
+# Fix Chevron Rotation for Equipment Group Expansion State
 
 ## Problem
-The `Collapsible` component from Radix wraps each table row with a `<div>`, breaking the valid HTML table structure (`<tbody> > <div> > <tr>` instead of `<tbody> > <tr>`). This causes columns to lose their alignment.
+The chevron icon in the equipment group headers doesn't visually indicate whether the group is expanded or collapsed.
 
 ## Solution
-Remove the `Collapsible`/`CollapsibleTrigger`/`CollapsibleContent` wrappers and use plain React state (`open` boolean) to conditionally render the details row. This keeps the table DOM valid.
+The CSS class `[&[data-state=open]>svg.chevron]:rotate-90` on the `CollapsibleTrigger` already handles rotation based on the Radix `data-state` attribute. This should already work -- but let me verify the current markup is correct.
 
-### File: `src/pages/JobSiteChangeLog.tsx`
+### File: `src/pages/JobSiteDetail.tsx` (line ~870)
 
-- Remove `Collapsible`, `CollapsibleTrigger`, `CollapsibleContent` imports
-- In `ExpandableRow`, replace the `Collapsible` wrapper with a React Fragment (`<>`)
-- Replace `CollapsibleTrigger` with a plain `Button` that calls `setOpen(!open)`
-- Replace `CollapsibleContent` with a conditional render: `{open && hasDetails && <tr>...</tr>}`
-- Change the Summary `TableCell` from `className="flex items-center gap-1"` to use `inline-flex` or a wrapper `<div>` inside the cell to avoid breaking cell layout
+The trigger currently has:
+```
+className="... [&[data-state=open]>svg.chevron]:rotate-90"
+```
+
+And the chevron:
+```
+<ChevronRight className="chevron h-4 w-4 shrink-0 transition-transform duration-200" />
+```
+
+This CSS selector targets a direct child (`>`) SVG with class `chevron` of the trigger element. However, the `ChevronRight` is nested inside a `<div>` wrapper, not a direct child of `CollapsibleTrigger`. The selector `>svg.chevron` won't match because the SVG is inside `<div className="flex items-center gap-2">`.
+
+### Fix
+Move the CSS rotation selector to target the nested SVG properly. Change the selector from:
+- `[&[data-state=open]>svg.chevron]:rotate-90`
+
+to:
+- `[&[data-state=open]_svg.chevron]:rotate-90`
+
+(Replace `>` with `_` which maps to a descendant selector in Tailwind, matching the SVG regardless of nesting depth.)
+

@@ -25,7 +25,7 @@ import { SiteCompaniesTable } from '@/components/SiteCompaniesTable';
 import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';
 import { Input } from '@/components/ui/input';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity, SiteCompany, CustomerEquipment } from '@/types';
 
@@ -354,6 +354,10 @@ const JobSiteDetail = () => {
               </SelectContent>
             </Select>
             <span className="text-sm text-muted-foreground">ID: {site.id}</span>
+            <Button variant="outline" size="sm" onClick={() => navigate(`/site/${site.id}/changelog`)} className="ml-2">
+              <History className="h-4 w-4 mr-1" />
+              Change Log
+            </Button>
           </div>
         </div>
       </header>

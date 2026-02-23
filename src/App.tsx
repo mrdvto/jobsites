@@ -7,6 +7,7 @@ import { DataProvider } from "./contexts/DataContext";
 import { useState } from "react";
 import JobSiteList from "./pages/JobSiteList";
 import JobSiteDetail from "./pages/JobSiteDetail";
+import JobSiteChangeLog from "./pages/JobSiteChangeLog";
 import ManageDropdowns from "./pages/ManageDropdowns";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +24,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<JobSiteList />} />
               <Route path="/site/:id" element={<JobSiteDetail />} />
+              <Route path="/site/:id/changelog" element={<JobSiteChangeLog />} />
               <Route path="/settings/dropdowns" element={<ManageDropdowns />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

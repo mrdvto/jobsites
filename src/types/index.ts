@@ -209,3 +209,14 @@ export interface Filters {
   status: string;
   hideCompleted: boolean;
 }
+
+export interface ChangeLogEntry {
+  id: number;
+  siteId: number;
+  timestamp: string;
+  action: string;
+  category: 'Site' | 'Opportunity' | 'Company' | 'Activity' | 'Note' | 'Equipment';
+  summary: string;
+  changedById: number;
+  details?: Record<string, any>;
+}

@@ -64,7 +64,7 @@ const ModalHistoryBlock = ({ history, getSalesRepName }: { history: NoteModifica
 interface NoteModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  siteId: number;
+  projectId: number;
   note?: Note;
   mode: 'create' | 'edit';
   noteTags: NoteTag[];

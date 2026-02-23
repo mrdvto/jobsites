@@ -91,7 +91,7 @@ interface NotesSectionProps {
   onUpdateNote: (noteId: number, noteData: Partial<Note>) => void;
   onDeleteNote: (noteId: number) => void;
   getSalesRepName: (id: number) => string;
-  siteId: number;
+  projectId: number;
 }
 
 export const NotesSection = ({
@@ -101,7 +101,7 @@ export const NotesSection = ({
   onUpdateNote,
   onDeleteNote,
   getSalesRepName,
-  siteId,
+  projectId,
 }: NotesSectionProps) => {
   const [showNoteModal, setShowNoteModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined);
@@ -235,7 +235,7 @@ export const NotesSection = ({
         {sortedNotes.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">
             {notes.length === 0
-              ? 'No notes recorded for this site yet.'
+              ? 'No notes recorded for this project yet.'
               : 'No notes match the selected filter.'}
           </p>
         ) : (
@@ -336,7 +336,7 @@ export const NotesSection = ({
       <NoteModal
         open={showNoteModal}
         onOpenChange={setShowNoteModal}
-        siteId={siteId}
+        projectId={projectId}
         note={selectedNote}
         mode={noteModalMode}
         noteTags={noteTags}

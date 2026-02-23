@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
-import { JobSite, SalesRep, Opportunity, OpportunityStage, OpportunityType, Filters, Activity, Note, NoteTag, SiteCompany, CompanyContact, CustomerEquipment, ChangeLogEntry } from '@/types';
-import jobSitesData from '@/data/JobSite.json';
+import { Project, SalesRep, Opportunity, OpportunityStage, OpportunityType, Filters, Activity, Note, NoteTag, ProjectCompany, CompanyContact, CustomerEquipment, ChangeLogEntry } from '@/types';
+import projectsData from '@/data/Project.json';
 import salesRepsData from '@/data/SalesReps.json';
 import opportunitiesData from '@/data/Opportunity.json';
 import opportunityStagesData from '@/data/OpportunityStages.json';
@@ -23,7 +23,7 @@ export const getDivisionName = (code: string): string => {
 };
 
 interface DataContextType {
-  jobSites: JobSite[];
+  projects: Project[];
   salesReps: SalesRep[];
   opportunities: Opportunity[];
   opportunityStages: OpportunityStage[];
@@ -32,32 +32,32 @@ interface DataContextType {
   setFilters: (filters: Filters) => void;
   currentUserId: number;
   setCurrentUserId: (id: number) => void;
-  getChangeLog: (siteId: number) => ChangeLogEntry[];
-  addOpportunityToSite: (siteId: number, opportunityId: number) => void;
+  getChangeLog: (projectId: number) => ChangeLogEntry[];
+  addOpportunityToProject: (projectId: number, opportunityId: number) => void;
   createNewOpportunity: (opportunity: Opportunity) => void;
   updateOpportunity: (opportunityId: number, updates: Partial<Opportunity>) => void;
-  createJobSite: (site: Omit<JobSite, 'id'>) => void;
-  addSiteCompany: (siteId: number, company: Omit<SiteCompany, 'companyContacts' | 'primaryContactIndex'> & { companyContacts?: CompanyContact[], companyContact?: { name: string; title: string; phone: string; email: string } }) => void;
-  removeSiteCompany: (siteId: number, companyName: string) => void;
-  updateSiteCompany: (siteId: number, oldCompanyName: string, updatedCompany: SiteCompany) => void;
-  updateJobSite: (siteId: number, updates: Partial<JobSite>) => void;
-  addActivity: (siteId: number, activity: Omit<Activity, 'id'>) => void;
-  updateActivity: (siteId: number, activityId: number, updates: Partial<Activity>) => void;
-  deleteActivity: (siteId: number, activityId: number) => void;
-  addNote: (siteId: number, noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>) => void;
-  updateNote: (siteId: number, noteId: number, updates: Partial<Note>) => void;
-  deleteNote: (siteId: number, noteId: number) => void;
-  addCustomerEquipment: (siteId: number, equipment: Omit<CustomerEquipment, 'id'>) => void;
-  updateCustomerEquipment: (siteId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => void;
-  deleteCustomerEquipment: (siteId: number, equipmentId: number) => void;
+  createProject: (project: Omit<Project, 'id'>) => void;
+  addProjectCompany: (projectId: number, company: Omit<ProjectCompany, 'companyContacts' | 'primaryContactIndex'> & { companyContacts?: CompanyContact[], companyContact?: { name: string; title: string; phone: string; email: string } }) => void;
+  removeProjectCompany: (projectId: number, companyName: string) => void;
+  updateProjectCompany: (projectId: number, oldCompanyName: string, updatedCompany: ProjectCompany) => void;
+  updateProject: (projectId: number, updates: Partial<Project>) => void;
+  addActivity: (projectId: number, activity: Omit<Activity, 'id'>) => void;
+  updateActivity: (projectId: number, activityId: number, updates: Partial<Activity>) => void;
+  deleteActivity: (projectId: number, activityId: number) => void;
+  addNote: (projectId: number, noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>) => void;
+  updateNote: (projectId: number, noteId: number, updates: Partial<Note>) => void;
+  deleteNote: (projectId: number, noteId: number) => void;
+  addCustomerEquipment: (projectId: number, equipment: Omit<CustomerEquipment, 'id'>) => void;
+  updateCustomerEquipment: (projectId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => void;
+  deleteCustomerEquipment: (projectId: number, equipmentId: number) => void;
   setNoteTags: (tags: NoteTag[]) => void;
   getSalesRepName: (id: number) => string;
   getSalesRepNames: (ids: number[]) => string;
   getStageName: (id: number) => string;
   getStage: (id: number) => OpportunityStage | undefined;
   getTypeName: (typeId: number) => string;
-  calculateSiteRevenue: (site: JobSite) => number;
-  getFilteredSites: () => JobSite[];
+  calculateProjectRevenue: (project: Project) => number;
+  getFilteredProjects: () => Project[];
   getTotalPipelineRevenue: () => number;
   getRevenueByType: () => { typeId: number; typeName: string; revenue: number }[];
 }
@@ -95,12 +95,12 @@ const migrateNotes = (notes: any[]): Note[] => {
 };
 
 // Helper to migrate single companyContact to companyContacts array
-const migrateSiteCompanies = (companies: any[]): SiteCompany[] => {
+const migrateProjectCompanies = (companies: any[]): ProjectCompany[] => {
   if (!companies || companies.length === 0) return [];
   
   return companies.map(company => {
     if (company.companyContacts && Array.isArray(company.companyContacts)) {
-      return company as SiteCompany;
+      return company as ProjectCompany;
     }
     
     const contacts: CompanyContact[] = [];
@@ -122,12 +122,12 @@ const migrateSiteCompanies = (companies: any[]): SiteCompany[] => {
       isPrimaryContact: company.isPrimaryContact,
       companyContacts: contacts,
       primaryContactIndex: 0,
-    } as SiteCompany;
+    } as ProjectCompany;
   });
 };
 
 export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [jobSites, setJobSites] = useState<JobSite[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [salesReps, setSalesReps] = useState<SalesRep[]>([]);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [opportunityStages, setOpportunityStages] = useState<OpportunityStage[]>([]);
@@ -147,44 +147,44 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Seed example change log entries
   const seedChangeLog: ChangeLogEntry[] = [
-    { id: 1, siteId: 500101, timestamp: '2025-11-02T09:15:00Z', action: 'SITE_CREATED', category: 'Site', summary: 'Job site "Highway 50 Expansion" created', changedById: 313 },
-    { id: 2, siteId: 500101, timestamp: '2025-11-03T14:22:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Walsh Construction" added as General Contractor', changedById: 313 },
-    { id: 3, siteId: 500101, timestamp: '2025-11-05T10:45:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "D6 Dozer rental for clearing phase" created', changedById: 260 },
-    { id: 4, siteId: 500101, timestamp: '2025-11-08T16:30:00Z', action: 'EQUIPMENT_ADDED', category: 'Equipment', summary: 'Equipment "Caterpillar 320F" added', changedById: 260 },
-    { id: 5, siteId: 500101, timestamp: '2025-11-12T08:10:00Z', action: 'NOTE_ADDED', category: 'Note', summary: 'Note added', changedById: 313 },
-    { id: 6, siteId: 500101, timestamp: '2025-11-15T11:05:00Z', action: 'SITE_UPDATED', category: 'Site', summary: 'Site details updated (statusId)', changedById: 292, details: { field: 'statusId', from: 'Planning', to: 'Active' } },
-    { id: 7, siteId: 500101, timestamp: '2025-11-18T13:40:00Z', action: 'ACTIVITY_ADDED', category: 'Activity', summary: 'Activity "Site Visit" added', changedById: 260 },
-    { id: 8, siteId: 500101, timestamp: '2025-11-22T09:55:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Rosendin Electric" added as Subcontractor - Electrical', changedById: 313 },
-    { id: 9, siteId: 500101, timestamp: '2025-12-01T15:20:00Z', action: 'OPPORTUNITY_UPDATED', category: 'Opportunity', summary: 'Opportunity "D6 Dozer rental for clearing phase" updated (stageId, estimateRevenue)', changedById: 292, details: { stageId: { from: 2, to: 4 }, estimateRevenue: { from: 45000, to: 52000 } } },
-    { id: 10, siteId: 500101, timestamp: '2025-12-05T10:30:00Z', action: 'EQUIPMENT_DELETED', category: 'Equipment', summary: 'Equipment "Komatsu PC210" removed', changedById: 260 },
-    { id: 11, siteId: 500101, timestamp: '2025-12-10T14:15:00Z', action: 'COMPANY_REMOVED', category: 'Company', summary: 'Company "Rosendin Electric" disassociated', changedById: 313 },
-    { id: 12, siteId: 500101, timestamp: '2025-12-15T08:45:00Z', action: 'NOTE_UPDATED', category: 'Note', summary: 'Note updated', changedById: 292 },
+    { id: 1, projectId: 500101, timestamp: '2025-11-02T09:15:00Z', action: 'PROJECT_CREATED', category: 'Project', summary: 'Project "Highway 50 Expansion" created', changedById: 313 },
+    { id: 2, projectId: 500101, timestamp: '2025-11-03T14:22:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Walsh Construction" added as General Contractor', changedById: 313 },
+    { id: 3, projectId: 500101, timestamp: '2025-11-05T10:45:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "D6 Dozer rental for clearing phase" created', changedById: 260 },
+    { id: 4, projectId: 500101, timestamp: '2025-11-08T16:30:00Z', action: 'EQUIPMENT_ADDED', category: 'Equipment', summary: 'Equipment "Caterpillar 320F" added', changedById: 260 },
+    { id: 5, projectId: 500101, timestamp: '2025-11-12T08:10:00Z', action: 'NOTE_ADDED', category: 'Note', summary: 'Note added', changedById: 313 },
+    { id: 6, projectId: 500101, timestamp: '2025-11-15T11:05:00Z', action: 'PROJECT_UPDATED', category: 'Project', summary: 'Project details updated (statusId)', changedById: 292, details: { field: 'statusId', from: 'Planning', to: 'Active' } },
+    { id: 7, projectId: 500101, timestamp: '2025-11-18T13:40:00Z', action: 'ACTIVITY_ADDED', category: 'Activity', summary: 'Activity "Site Visit" added', changedById: 260 },
+    { id: 8, projectId: 500101, timestamp: '2025-11-22T09:55:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Rosendin Electric" added as Subcontractor - Electrical', changedById: 313 },
+    { id: 9, projectId: 500101, timestamp: '2025-12-01T15:20:00Z', action: 'OPPORTUNITY_UPDATED', category: 'Opportunity', summary: 'Opportunity "D6 Dozer rental for clearing phase" updated (stageId, estimateRevenue)', changedById: 292, details: { stageId: { from: 2, to: 4 }, estimateRevenue: { from: 45000, to: 52000 } } },
+    { id: 10, projectId: 500101, timestamp: '2025-12-05T10:30:00Z', action: 'EQUIPMENT_DELETED', category: 'Equipment', summary: 'Equipment "Komatsu PC210" removed', changedById: 260 },
+    { id: 11, projectId: 500101, timestamp: '2025-12-10T14:15:00Z', action: 'COMPANY_REMOVED', category: 'Company', summary: 'Company "Rosendin Electric" disassociated', changedById: 313 },
+    { id: 12, projectId: 500101, timestamp: '2025-12-15T08:45:00Z', action: 'NOTE_UPDATED', category: 'Note', summary: 'Note updated', changedById: 292 },
 
-    { id: 13, siteId: 500102, timestamp: '2025-10-20T09:00:00Z', action: 'SITE_CREATED', category: 'Site', summary: 'Job site "Metro Line Extension" created', changedById: 262 },
-    { id: 14, siteId: 500102, timestamp: '2025-10-25T11:30:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Turner Construction" added as Subcontractor - Steel', changedById: 262 },
-    { id: 15, siteId: 500102, timestamp: '2025-11-01T14:00:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "Excavator fleet for foundation work" created', changedById: 303 },
-    { id: 16, siteId: 500102, timestamp: '2025-11-10T16:20:00Z', action: 'ACTIVITY_ADDED', category: 'Activity', summary: 'Activity "Phone Call" added', changedById: 262 },
-    { id: 17, siteId: 500102, timestamp: '2025-11-20T10:10:00Z', action: 'EQUIPMENT_ADDED', category: 'Equipment', summary: 'Equipment "Volvo EC220E" added', changedById: 303 },
-    { id: 18, siteId: 500102, timestamp: '2025-12-02T13:45:00Z', action: 'SITE_UPDATED', category: 'Site', summary: 'Site details updated (description, plannedAnnualRate)', changedById: 262 },
+    { id: 13, projectId: 500102, timestamp: '2025-10-20T09:00:00Z', action: 'PROJECT_CREATED', category: 'Project', summary: 'Project "Metro Line Extension" created', changedById: 262 },
+    { id: 14, projectId: 500102, timestamp: '2025-10-25T11:30:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Turner Construction" added as Subcontractor - Steel', changedById: 262 },
+    { id: 15, projectId: 500102, timestamp: '2025-11-01T14:00:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "Excavator fleet for foundation work" created', changedById: 303 },
+    { id: 16, projectId: 500102, timestamp: '2025-11-10T16:20:00Z', action: 'ACTIVITY_ADDED', category: 'Activity', summary: 'Activity "Phone Call" added', changedById: 262 },
+    { id: 17, projectId: 500102, timestamp: '2025-11-20T10:10:00Z', action: 'EQUIPMENT_ADDED', category: 'Equipment', summary: 'Equipment "Volvo EC220E" added', changedById: 303 },
+    { id: 18, projectId: 500102, timestamp: '2025-12-02T13:45:00Z', action: 'PROJECT_UPDATED', category: 'Project', summary: 'Project details updated (description, plannedAnnualRate)', changedById: 262 },
 
-    { id: 19, siteId: 500103, timestamp: '2025-09-15T08:30:00Z', action: 'SITE_CREATED', category: 'Site', summary: 'Job site "Riverside Commercial Park" created', changedById: 304 },
-    { id: 20, siteId: 500103, timestamp: '2025-09-20T12:00:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "Paving equipment package" created', changedById: 304 },
-    { id: 21, siteId: 500103, timestamp: '2025-10-05T09:15:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Curran Contracting" added as Subcontractor - Paving', changedById: 305 },
-    { id: 22, siteId: 500103, timestamp: '2025-10-15T15:30:00Z', action: 'NOTE_ADDED', category: 'Note', summary: 'Note added', changedById: 304 },
-    { id: 23, siteId: 500103, timestamp: '2025-11-01T10:45:00Z', action: 'EQUIPMENT_ADDED', category: 'Equipment', summary: 'Equipment "Case SV340B" added', changedById: 305 },
-    { id: 24, siteId: 500103, timestamp: '2025-11-20T14:00:00Z', action: 'ACTIVITY_ADDED', category: 'Activity', summary: 'Activity "Email" added', changedById: 304 },
+    { id: 19, projectId: 500103, timestamp: '2025-09-15T08:30:00Z', action: 'PROJECT_CREATED', category: 'Project', summary: 'Project "Riverside Commercial Park" created', changedById: 304 },
+    { id: 20, projectId: 500103, timestamp: '2025-09-20T12:00:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "Paving equipment package" created', changedById: 304 },
+    { id: 21, projectId: 500103, timestamp: '2025-10-05T09:15:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Curran Contracting" added as Subcontractor - Paving', changedById: 305 },
+    { id: 22, projectId: 500103, timestamp: '2025-10-15T15:30:00Z', action: 'NOTE_ADDED', category: 'Note', summary: 'Note added', changedById: 304 },
+    { id: 23, projectId: 500103, timestamp: '2025-11-01T10:45:00Z', action: 'EQUIPMENT_ADDED', category: 'Equipment', summary: 'Equipment "Case SV340B" added', changedById: 305 },
+    { id: 24, projectId: 500103, timestamp: '2025-11-20T14:00:00Z', action: 'ACTIVITY_ADDED', category: 'Activity', summary: 'Activity "Email" added', changedById: 304 },
 
-    { id: 25, siteId: 500104, timestamp: '2025-10-01T08:00:00Z', action: 'SITE_CREATED', category: 'Site', summary: 'Job site created', changedById: 292 },
-    { id: 26, siteId: 500104, timestamp: '2025-10-10T11:20:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "Generator rental for temp power" created', changedById: 292 },
-    { id: 27, siteId: 500104, timestamp: '2025-10-18T14:30:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company added as General Contractor', changedById: 292 },
-    { id: 28, siteId: 500104, timestamp: '2025-11-05T09:00:00Z', action: 'SITE_UPDATED', category: 'Site', summary: 'Site details updated (statusId)', changedById: 313, details: { field: 'statusId', from: 'Planning', to: 'Active' } },
+    { id: 25, projectId: 500104, timestamp: '2025-10-01T08:00:00Z', action: 'PROJECT_CREATED', category: 'Project', summary: 'Project created', changedById: 292 },
+    { id: 26, projectId: 500104, timestamp: '2025-10-10T11:20:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "Generator rental for temp power" created', changedById: 292 },
+    { id: 27, projectId: 500104, timestamp: '2025-10-18T14:30:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company added as General Contractor', changedById: 292 },
+    { id: 28, projectId: 500104, timestamp: '2025-11-05T09:00:00Z', action: 'PROJECT_UPDATED', category: 'Project', summary: 'Project details updated (statusId)', changedById: 313, details: { field: 'statusId', from: 'Planning', to: 'Active' } },
 
-    { id: 29, siteId: 500105, timestamp: '2025-08-20T10:00:00Z', action: 'SITE_CREATED', category: 'Site', summary: 'Job site created', changedById: 305 },
-    { id: 30, siteId: 500105, timestamp: '2025-09-01T13:15:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Rosendin Electric" added as Subcontractor - Electrical', changedById: 305 },
-    { id: 31, siteId: 500105, timestamp: '2025-09-15T16:45:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "Boom lift rental" created', changedById: 262 },
-    { id: 32, siteId: 500105, timestamp: '2025-10-01T08:30:00Z', action: 'EQUIPMENT_ADDED', category: 'Equipment', summary: 'Equipment "JLG 800S" added', changedById: 305 },
-    { id: 33, siteId: 500105, timestamp: '2025-10-20T11:00:00Z', action: 'ACTIVITY_ADDED', category: 'Activity', summary: 'Activity "Site Inspection" added', changedById: 262 },
-    { id: 34, siteId: 500105, timestamp: '2025-11-10T14:30:00Z', action: 'NOTE_ADDED', category: 'Note', summary: 'Note added', changedById: 305 },
+    { id: 29, projectId: 500105, timestamp: '2025-08-20T10:00:00Z', action: 'PROJECT_CREATED', category: 'Project', summary: 'Project created', changedById: 305 },
+    { id: 30, projectId: 500105, timestamp: '2025-09-01T13:15:00Z', action: 'COMPANY_ADDED', category: 'Company', summary: 'Company "Rosendin Electric" added as Subcontractor - Electrical', changedById: 305 },
+    { id: 31, projectId: 500105, timestamp: '2025-09-15T16:45:00Z', action: 'OPPORTUNITY_CREATED', category: 'Opportunity', summary: 'Opportunity "Boom lift rental" created', changedById: 262 },
+    { id: 32, projectId: 500105, timestamp: '2025-10-01T08:30:00Z', action: 'EQUIPMENT_ADDED', category: 'Equipment', summary: 'Equipment "JLG 800S" added', changedById: 305 },
+    { id: 33, projectId: 500105, timestamp: '2025-10-20T11:00:00Z', action: 'ACTIVITY_ADDED', category: 'Activity', summary: 'Activity "Site Inspection" added', changedById: 262 },
+    { id: 34, projectId: 500105, timestamp: '2025-11-10T14:30:00Z', action: 'NOTE_ADDED', category: 'Note', summary: 'Note added', changedById: 305 },
   ];
 
   const [changeLog, setChangeLog] = useState<ChangeLogEntry[]>(seedChangeLog);
@@ -193,7 +193,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => { currentUserIdRef.current = currentUserId; }, [currentUserId]);
 
   const logChange = useCallback((
-    siteId: number,
+    projectId: number,
     action: string,
     category: ChangeLogEntry['category'],
     summary: string,
@@ -201,7 +201,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   ) => {
     const entry: ChangeLogEntry = {
       id: nextLogId.current++,
-      siteId,
+      projectId,
       timestamp: new Date().toISOString(),
       action,
       category,
@@ -212,23 +212,26 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setChangeLog(prev => [...prev, entry]);
   }, []);
 
-  const getChangeLog = useCallback((siteId: number): ChangeLogEntry[] => {
-    return changeLog.filter(e => e.siteId === siteId);
+  const getChangeLog = useCallback((projectId: number): ChangeLogEntry[] => {
+    return changeLog.filter(e => e.projectId === projectId);
   }, [changeLog]);
 
   // Load data on mount
   useEffect(() => {
-    const sitesWithMigratedData = jobSitesData.content.map(site => ({
-      ...site,
-      activities: (site as any).activities || [],
-      notes: migrateNotes((site as any).notes || []),
-      siteCompanies: migrateSiteCompanies((site as any).siteCompanies || []),
-      customerEquipment: (site as any).customerEquipment || [],
-    })) as JobSite[];
+    const projectsWithMigratedData = projectsData.content.map(p => ({
+      ...p,
+      activities: (p as any).activities || [],
+      notes: migrateNotes((p as any).notes || []),
+      projectCompanies: migrateProjectCompanies((p as any).siteCompanies || (p as any).projectCompanies || []),
+      customerEquipment: (p as any).customerEquipment || [],
+    })) as Project[];
     
-    setJobSites(sitesWithMigratedData);
+    setProjects(projectsWithMigratedData);
     setSalesReps(salesRepsData.content);
-    setOpportunities(opportunitiesData.content);
+    setOpportunities(opportunitiesData.content.map((o: any) => ({
+      ...o,
+      projectId: o.projectId ?? o.jobSiteId,
+    })) as Opportunity[]);
     setOpportunityStages(opportunityStagesData.content);
 
     const savedNoteTags = localStorage.getItem(NOTE_TAGS_STORAGE_KEY);
@@ -284,46 +287,46 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return type ? type.opptypedesc : 'Unknown';
   };
 
-  const calculateSiteRevenue = (site: JobSite): number => {
-    return site.associatedOpportunities.reduce((sum, opp) => sum + opp.revenue, 0);
+  const calculateProjectRevenue = (project: Project): number => {
+    return project.associatedOpportunities.reduce((sum, opp) => sum + opp.revenue, 0);
   };
 
-  const getFilteredSites = (): JobSite[] => {
-    return jobSites.filter(site => {
-      if (filters.hideCompleted && site.statusId === 'Completed') return false;
-      if (filters.salesRepId && !site.salesRepIds.includes(parseInt(filters.salesRepId))) return false;
-      if (filters.status && site.statusId !== filters.status) return false;
+  const getFilteredProjects = (): Project[] => {
+    return projects.filter(project => {
+      if (filters.hideCompleted && project.statusId === 'Completed') return false;
+      if (filters.salesRepId && !project.salesRepIds.includes(parseInt(filters.salesRepId))) return false;
+      if (filters.status && project.statusId !== filters.status) return false;
       if (filters.division) {
-        const siteOpps = site.associatedOpportunities
+        const projectOpps = project.associatedOpportunities
           .map(ao => opportunities.find(o => o.id === ao.id))
           .filter(Boolean) as Opportunity[];
-        const division = siteOpps.length > 0 ? siteOpps[0].divisionId : 'E';
+        const division = projectOpps.length > 0 ? projectOpps[0].divisionId : 'E';
         if (division !== filters.division) return false;
       }
       if (filters.generalContractor) {
-        const hasMatchingGC = site.siteCompanies.some(
+        const hasMatchingGC = project.projectCompanies.some(
           company => company.roleId === 'GC' && company.companyName.toLowerCase().includes(filters.generalContractor.toLowerCase())
         );
         if (!hasMatchingGC) return false;
       }
       if (filters.showBehindPAR) {
-        const oppCount = site.associatedOpportunities.length;
-        if (oppCount >= site.plannedAnnualRate) return false;
+        const oppCount = project.associatedOpportunities.length;
+        if (oppCount >= project.plannedAnnualRate) return false;
       }
       return true;
     });
   };
 
   const getTotalPipelineRevenue = (): number => {
-    const filteredSites = getFilteredSites();
-    return filteredSites.reduce((total, site) => total + calculateSiteRevenue(site), 0);
+    const filteredProjects = getFilteredProjects();
+    return filteredProjects.reduce((total, project) => total + calculateProjectRevenue(project), 0);
   };
 
   const getRevenueByType = (): { typeId: number; typeName: string; revenue: number }[] => {
-    const filteredSites = getFilteredSites();
+    const filteredProjects = getFilteredProjects();
     const revenueMap = new Map<number, number>();
-    filteredSites.forEach(site => {
-      site.associatedOpportunities.forEach(ao => {
+    filteredProjects.forEach(project => {
+      project.associatedOpportunities.forEach(ao => {
         const opp = opportunities.find(o => o.id === ao.id);
         if (opp) revenueMap.set(opp.typeId, (revenueMap.get(opp.typeId) || 0) + ao.revenue);
       });
@@ -338,44 +341,44 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .map(({ typeId, typeName, revenue }) => ({ typeId, typeName, revenue }));
   };
 
-  const addOpportunityToSite = (siteId: number, opportunityId: number) => {
+  const addOpportunityToProject = (projectId: number, opportunityId: number) => {
     const opp = opportunities.find(o => o.id === opportunityId);
-    setJobSites(prevSites => 
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          if (opp && !site.associatedOpportunities.find(ao => ao.id === opportunityId)) {
+    setProjects(prev => 
+      prev.map(project => {
+        if (project.id === projectId) {
+          if (opp && !project.associatedOpportunities.find(ao => ao.id === opportunityId)) {
             return {
-              ...site,
+              ...project,
               associatedOpportunities: [
-                ...site.associatedOpportunities,
+                ...project.associatedOpportunities,
                 { id: opp.id, type: opp.typeId === 1 ? 'Sale' : 'Rental', description: opp.description, stageId: opp.stageId, revenue: opp.estimateRevenue }
               ]
             };
           }
         }
-        return site;
+        return project;
       })
     );
-    if (opp) logChange(siteId, 'OPPORTUNITY_ASSOCIATED', 'Opportunity', `Opportunity "${opp.description}" associated`);
+    if (opp) logChange(projectId, 'OPPORTUNITY_ASSOCIATED', 'Opportunity', `Opportunity "${opp.description}" associated`);
   };
 
   const createNewOpportunity = (opportunity: Opportunity) => {
     setOpportunities(prev => [...prev, opportunity]);
-    setJobSites(prevSites => 
-      prevSites.map(site => {
-        if (site.id === opportunity.jobSiteId) {
+    setProjects(prev => 
+      prev.map(project => {
+        if (project.id === opportunity.projectId) {
           return {
-            ...site,
+            ...project,
             associatedOpportunities: [
-              ...site.associatedOpportunities,
+              ...project.associatedOpportunities,
               { id: opportunity.id, type: opportunity.typeId === 1 ? 'Sale' : 'Rental', description: opportunity.description, stageId: opportunity.stageId, revenue: opportunity.estimateRevenue }
             ]
           };
         }
-        return site;
+        return project;
       })
     );
-    logChange(opportunity.jobSiteId, 'OPPORTUNITY_CREATED', 'Opportunity', `Opportunity "${opportunity.description}" created`);
+    logChange(opportunity.projectId, 'OPPORTUNITY_CREATED', 'Opportunity', `Opportunity "${opportunity.description}" created`);
   };
 
   const updateOpportunity = (opportunityId: number, updates: Partial<Opportunity>) => {
@@ -383,139 +386,138 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setOpportunities(prev => prev.map(opp => opp.id === opportunityId ? { ...opp, ...updates } : opp));
     if (existing) {
       const changedFields = Object.keys(updates).filter(k => (updates as any)[k] !== (existing as any)[k]);
-      logChange(existing.jobSiteId, 'OPPORTUNITY_UPDATED', 'Opportunity', `Opportunity "${existing.description}" updated (${changedFields.join(', ')})`);
+      logChange(existing.projectId, 'OPPORTUNITY_UPDATED', 'Opportunity', `Opportunity "${existing.description}" updated (${changedFields.join(', ')})`);
     }
   };
 
-  const addSiteCompany = (siteId: number, company: any) => {
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          return { ...site, siteCompanies: [...site.siteCompanies, company] };
+  const addProjectCompany = (projectId: number, company: any) => {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          return { ...project, projectCompanies: [...project.projectCompanies, company] };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'COMPANY_ADDED', 'Company', `Company "${company.companyName}" added as ${company.roleDescription || company.roleId}`);
+    logChange(projectId, 'COMPANY_ADDED', 'Company', `Company "${company.companyName}" added as ${company.roleDescription || company.roleId}`);
   };
 
-  const removeSiteCompany = (siteId: number, companyName: string) => {
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          return { ...site, siteCompanies: site.siteCompanies.filter(c => c.companyName !== companyName) };
+  const removeProjectCompany = (projectId: number, companyName: string) => {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          return { ...project, projectCompanies: project.projectCompanies.filter(c => c.companyName !== companyName) };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'COMPANY_REMOVED', 'Company', `Company "${companyName}" disassociated`);
+    logChange(projectId, 'COMPANY_REMOVED', 'Company', `Company "${companyName}" disassociated`);
   };
 
-  const updateSiteCompany = (siteId: number, oldCompanyName: string, updatedCompany: any) => {
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          return { ...site, siteCompanies: site.siteCompanies.map(c => c.companyName === oldCompanyName ? updatedCompany : c) };
+  const updateProjectCompany = (projectId: number, oldCompanyName: string, updatedCompany: any) => {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          return { ...project, projectCompanies: project.projectCompanies.map(c => c.companyName === oldCompanyName ? updatedCompany : c) };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'COMPANY_UPDATED', 'Company', `Company "${updatedCompany.companyName}" updated`);
+    logChange(projectId, 'COMPANY_UPDATED', 'Company', `Company "${updatedCompany.companyName}" updated`);
   };
 
-  const updateJobSite = (siteId: number, updates: Partial<JobSite>) => {
-    setJobSites(prevSites => {
-      const existing = prevSites.find(s => s.id === siteId);
+  const updateProject = (projectId: number, updates: Partial<Project>) => {
+    setProjects(prev => {
+      const existing = prev.find(p => p.id === projectId);
       if (existing) {
         const changedFields = Object.keys(updates).filter(k => JSON.stringify((updates as any)[k]) !== JSON.stringify((existing as any)[k]));
         if (changedFields.length > 0) {
-          logChange(siteId, 'SITE_UPDATED', 'Site', `Site details updated (${changedFields.join(', ')})`);
+          logChange(projectId, 'PROJECT_UPDATED', 'Project', `Project details updated (${changedFields.join(', ')})`);
         }
       }
-      return prevSites.map(site => site.id === siteId ? { ...site, ...updates } : site);
+      return prev.map(project => project.id === projectId ? { ...project, ...updates } : project);
     });
   };
 
-  const createJobSite = (site: Omit<JobSite, 'id'>) => {
-    const newId = Math.max(...jobSites.map(s => s.id), 0) + 1;
-    const newSite: JobSite = { ...site, id: newId };
-    setJobSites(prevSites => [...prevSites, newSite]);
-    logChange(newId, 'SITE_CREATED', 'Site', `Job site "${site.name}" created`);
+  const createProject = (project: Omit<Project, 'id'>) => {
+    const newId = Math.max(...projects.map(p => p.id), 0) + 1;
+    const newProject: Project = { ...project, id: newId };
+    setProjects(prev => [...prev, newProject]);
+    logChange(newId, 'PROJECT_CREATED', 'Project', `Project "${project.name}" created`);
   };
 
-  const addActivity = (siteId: number, activity: Omit<Activity, 'id'>) => {
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          const maxActivityId = Math.max(...site.activities.map(a => a.id), 0);
+  const addActivity = (projectId: number, activity: Omit<Activity, 'id'>) => {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          const maxActivityId = Math.max(...project.activities.map(a => a.id), 0);
           const newActivity: Activity = { ...activity, id: maxActivityId + 1 };
-          return { ...site, activities: [...site.activities, newActivity] };
+          return { ...project, activities: [...project.activities, newActivity] };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'ACTIVITY_ADDED', 'Activity', `Activity "${activity.activityType}" added`);
+    logChange(projectId, 'ACTIVITY_ADDED', 'Activity', `Activity "${activity.activityType}" added`);
   };
 
-  const updateActivity = (siteId: number, activityId: number, updates: Partial<Activity>) => {
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          return { ...site, activities: site.activities.map(a => a.id === activityId ? { ...a, ...updates } : a) };
+  const updateActivity = (projectId: number, activityId: number, updates: Partial<Activity>) => {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          return { ...project, activities: project.activities.map(a => a.id === activityId ? { ...a, ...updates } : a) };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'ACTIVITY_UPDATED', 'Activity', `Activity updated`);
+    logChange(projectId, 'ACTIVITY_UPDATED', 'Activity', `Activity updated`);
   };
 
-  const deleteActivity = (siteId: number, activityId: number) => {
+  const deleteActivity = (projectId: number, activityId: number) => {
     let desc = '';
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          const act = site.activities.find(a => a.id === activityId);
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          const act = project.activities.find(a => a.id === activityId);
           if (act) desc = act.activityType;
-          return { ...site, activities: site.activities.filter(a => a.id !== activityId) };
+          return { ...project, activities: project.activities.filter(a => a.id !== activityId) };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'ACTIVITY_DELETED', 'Activity', `Activity "${desc}" deleted`);
+    logChange(projectId, 'ACTIVITY_DELETED', 'Activity', `Activity "${desc}" deleted`);
   };
 
-  const addNote = (siteId: number, noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>) => {
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          const maxNoteId = Math.max(...(site.notes || []).map(n => n.id), 0);
+  const addNote = (projectId: number, noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>) => {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          const maxNoteId = Math.max(...(project.notes || []).map(n => n.id), 0);
           const newNote: Note = {
             ...noteData,
             id: maxNoteId + 1,
             createdAt: new Date().toISOString(),
             createdById: currentUserIdRef.current,
           };
-          return { ...site, notes: [...(site.notes || []), newNote] };
+          return { ...project, notes: [...(project.notes || []), newNote] };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'NOTE_ADDED', 'Note', `Note added`);
+    logChange(projectId, 'NOTE_ADDED', 'Note', `Note added`);
   };
 
-  const updateNote = (siteId: number, noteId: number, updates: Partial<Note>) => {
+  const updateNote = (projectId: number, noteId: number, updates: Partial<Note>) => {
     const now = new Date().toISOString();
     const userId = currentUserIdRef.current;
 
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
           return {
-            ...site,
-            notes: (site.notes || []).map(note => {
+            ...project,
+            notes: (project.notes || []).map(note => {
               if (note.id !== noteId) return note;
 
-              // Build summary of what changed
               const changes: string[] = [];
               if (updates.content !== undefined && updates.content !== note.content) changes.push('Content updated');
               if (updates.tagIds !== undefined && JSON.stringify(updates.tagIds) !== JSON.stringify(note.tagIds)) changes.push('Tags changed');
@@ -541,68 +543,68 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             }),
           };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'NOTE_UPDATED', 'Note', `Note updated`);
+    logChange(projectId, 'NOTE_UPDATED', 'Note', `Note updated`);
   };
 
-  const deleteNote = (siteId: number, noteId: number) => {
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          return { ...site, notes: (site.notes || []).filter(note => note.id !== noteId) };
+  const deleteNote = (projectId: number, noteId: number) => {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          return { ...project, notes: (project.notes || []).filter(note => note.id !== noteId) };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'NOTE_DELETED', 'Note', `Note deleted`);
+    logChange(projectId, 'NOTE_DELETED', 'Note', `Note deleted`);
   };
 
-  const addCustomerEquipment = (siteId: number, equipment: Omit<CustomerEquipment, 'id'>) => {
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          const maxId = Math.max(...(site.customerEquipment || []).map(e => e.id), 0);
-          return { ...site, customerEquipment: [...(site.customerEquipment || []), { ...equipment, id: maxId + 1 }] };
+  const addCustomerEquipment = (projectId: number, equipment: Omit<CustomerEquipment, 'id'>) => {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          const maxId = Math.max(...(project.customerEquipment || []).map(e => e.id), 0);
+          return { ...project, customerEquipment: [...(project.customerEquipment || []), { ...equipment, id: maxId + 1 }] };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'EQUIPMENT_ADDED', 'Equipment', `Equipment "${equipment.make} ${equipment.model}" added`);
+    logChange(projectId, 'EQUIPMENT_ADDED', 'Equipment', `Equipment "${equipment.make} ${equipment.model}" added`);
   };
 
-  const updateCustomerEquipment = (siteId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => {
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          return { ...site, customerEquipment: (site.customerEquipment || []).map(e => e.id === equipmentId ? { ...e, ...updates } : e) };
+  const updateCustomerEquipment = (projectId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => {
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          return { ...project, customerEquipment: (project.customerEquipment || []).map(e => e.id === equipmentId ? { ...e, ...updates } : e) };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'EQUIPMENT_UPDATED', 'Equipment', `Equipment updated`);
+    logChange(projectId, 'EQUIPMENT_UPDATED', 'Equipment', `Equipment updated`);
   };
 
-  const deleteCustomerEquipment = (siteId: number, equipmentId: number) => {
+  const deleteCustomerEquipment = (projectId: number, equipmentId: number) => {
     let desc = '';
-    setJobSites(prevSites =>
-      prevSites.map(site => {
-        if (site.id === siteId) {
-          const eq = (site.customerEquipment || []).find(e => e.id === equipmentId);
+    setProjects(prev =>
+      prev.map(project => {
+        if (project.id === projectId) {
+          const eq = (project.customerEquipment || []).find(e => e.id === equipmentId);
           if (eq) desc = `${eq.make} ${eq.model}`;
-          return { ...site, customerEquipment: (site.customerEquipment || []).filter(e => e.id !== equipmentId) };
+          return { ...project, customerEquipment: (project.customerEquipment || []).filter(e => e.id !== equipmentId) };
         }
-        return site;
+        return project;
       })
     );
-    logChange(siteId, 'EQUIPMENT_DELETED', 'Equipment', `Equipment "${desc}" removed`);
+    logChange(projectId, 'EQUIPMENT_DELETED', 'Equipment', `Equipment "${desc}" removed`);
   };
 
   return (
     <DataContext.Provider
       value={{
-        jobSites,
+        projects,
         salesReps,
         opportunities,
         opportunityStages,
@@ -612,14 +614,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         currentUserId,
         setCurrentUserId,
         getChangeLog,
-        addOpportunityToSite,
+        addOpportunityToProject,
         createNewOpportunity,
         updateOpportunity,
-        createJobSite,
-        addSiteCompany,
-        removeSiteCompany,
-        updateSiteCompany,
-        updateJobSite,
+        createProject,
+        addProjectCompany,
+        removeProjectCompany,
+        updateProjectCompany,
+        updateProject,
         addActivity,
         updateActivity,
         deleteActivity,
@@ -635,8 +637,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         getStageName,
         getStage,
         getTypeName,
-        calculateSiteRevenue,
-        getFilteredSites,
+        calculateProjectRevenue,
+        getFilteredProjects,
         getTotalPipelineRevenue,
         getRevenueByType,
       }}

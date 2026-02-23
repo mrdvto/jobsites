@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CustomerEquipment, SiteCompany } from '@/types';
+import { CustomerEquipment, ProjectCompany } from '@/types';
 
 interface AddCustomerEquipmentModalProps {
   open: boolean;
@@ -12,10 +12,10 @@ interface AddCustomerEquipmentModalProps {
   onSave: (equipment: Omit<CustomerEquipment, 'id'>) => void;
   equipment?: CustomerEquipment;
   mode: 'create' | 'edit';
-  siteCompanies: SiteCompany[];
+  projectCompanies: ProjectCompany[];
 }
 
-export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, equipment, mode, siteCompanies }: AddCustomerEquipmentModalProps) => {
+export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, equipment, mode, projectCompanies }: AddCustomerEquipmentModalProps) => {
   const [companyId, setCompanyId] = useState('');
   const [equipmentType, setEquipmentType] = useState('');
   const [make, setMake] = useState('');
@@ -74,7 +74,7 @@ export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, equipmen
                 <SelectValue placeholder="Select a company" />
               </SelectTrigger>
               <SelectContent>
-                {siteCompanies.map(c => (
+                {projectCompanies.map(c => (
                   <SelectItem key={c.companyId} value={c.companyId}>
                     {c.companyName}
                   </SelectItem>

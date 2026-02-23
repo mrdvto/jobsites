@@ -63,7 +63,7 @@ export interface CompanyContact {
   email: string;
 }
 
-export interface SiteCompany {
+export interface ProjectCompany {
   companyId: string;
   companyName: string;
   roleId: string;
@@ -80,7 +80,7 @@ export interface SiteCompany {
   };
 }
 
-export interface JobSite {
+export interface Project {
   id: number;
   name: string;
   description: string;
@@ -103,7 +103,7 @@ export interface JobSite {
     latitude: number;
     longitude: number;
   };
-  siteCompanies: SiteCompany[];
+  projectCompanies: ProjectCompany[];
   associatedOpportunities: Array<{
     id: number;
     type: string;
@@ -133,7 +133,7 @@ export interface Opportunity {
   stageId: number;
   phaseId: number;
   stageIdEnteredAt: number;
-  jobSiteId: number;
+  projectId: number;
   salesRepId: number;
   ownerUserId: number;
   originatorUserId: number;
@@ -223,10 +223,10 @@ export interface Filters {
 
 export interface ChangeLogEntry {
   id: number;
-  siteId: number;
+  projectId: number;
   timestamp: string;
   action: string;
-  category: 'Site' | 'Opportunity' | 'Company' | 'Activity' | 'Note' | 'Equipment';
+  category: 'Project' | 'Opportunity' | 'Company' | 'Activity' | 'Note' | 'Equipment';
   summary: string;
   changedById: number;
   details?: Record<string, any>;

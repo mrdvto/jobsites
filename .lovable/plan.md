@@ -1,49 +1,34 @@
 
 
-# Add Full Modification History Log to Notes
+# Add Example Modification History Data to Notes
 
 ## Overview
-Replace the single "last modified" tracking with a full edit history array, so every edit is recorded and users can see all past modifications.
+Seed several notes in `src/data/JobSite.json` with `modificationHistory` entries so the expandable "View history" feature is visible with realistic data out of the box.
 
 ## Changes
 
-### 1. Add `NoteModification` type and update `Note` (`src/types/index.ts`)
+### File: `src/data/JobSite.json`
 
-Add a new interface and a history array to the Note:
+Add `lastModifiedAt`, `lastModifiedById`, and `modificationHistory` fields to select notes across multiple job sites. This will make the history UI immediately visible without requiring users to edit notes first.
 
-```
-interface NoteModification {
-  modifiedAt: string;       // ISO timestamp
-  modifiedById: number;     // sales rep ID
-  summary: string;          // e.g. "Content updated", "Tags changed"
-}
+**Site 500101 (St. Mary's Hospital) - Notes 1 and 2:**
+- Note 1: Two edits -- first to update the shutdown time from 6 PM to 5:45 PM, then to add the compliance tag.
+- Note 2: One edit -- updated to add details about the security trailer check-in.
 
-interface Note {
-  ...existing fields...
-  lastModifiedAt?: string;          // keep for quick display
-  lastModifiedById?: number;        // keep for quick display
-  modificationHistory?: NoteModification[];  // full log
-}
-```
+**Site 500102 (MetLife Stadium) - Note 1:**
+- One edit -- schedule details refined after coordination with stadium operations.
 
-### 2. Update `updateNote` in DataContext (`src/contexts/DataContext.tsx`)
+**Site 500103 (I-95 Corridor) - Note 2:**
+- One edit -- delivery window adjusted based on DOT feedback.
 
-When a note is updated, push a new entry onto `modificationHistory` in addition to stamping `lastModifiedAt`/`lastModifiedById`. Generate a human-readable summary based on which fields changed (content, tags, attachments).
-
-### 3. Show expandable history on note cards (`src/components/NotesSection.tsx`)
-
-Below the "Created" / "Modified" lines, if `modificationHistory` has entries, add a small clickable "View history (N edits)" link. When clicked, expand to show a compact list of all edits with timestamp and author, newest first.
-
-### 4. Show history in edit modal (`src/components/NoteModal.tsx`)
-
-In edit mode, below the created/modified metadata, show the full modification history as a scrollable list so the editor has full context before making changes.
+Each `modificationHistory` entry will include a realistic `modifiedAt` timestamp (after the note's `createdAt`), a `modifiedById` referencing an existing sales rep, and a descriptive `summary` string (e.g., "Content updated", "Tags changed", "Content updated, Tags changed").
 
 ## Technical Details
 
-| File | Change |
-|------|--------|
-| `src/types/index.ts` | Add `NoteModification` interface; add `modificationHistory?: NoteModification[]` to `Note` |
-| `src/contexts/DataContext.tsx` | In `updateNote`, build a summary string from changed fields, push `{ modifiedAt, modifiedById, summary }` onto the history array |
-| `src/components/NotesSection.tsx` | Add collapsible "View history" toggle below metadata showing timestamped edit entries |
-| `src/components/NoteModal.tsx` | Add scrollable history list in edit mode metadata section |
+| Field | Example Value |
+|-------|--------------|
+| `modifiedAt` | `"2025-01-18T10:15:00.000Z"` |
+| `modifiedById` | `313` (or other valid sales rep IDs) |
+| `summary` | `"Content updated"`, `"Tags changed"`, `"Content updated, Tags changed"` |
 
+No code logic changes needed -- only JSON data updates to the existing notes array entries.

@@ -10,10 +10,56 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { X, Upload, FileText, Plus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Note, Attachment, NoteTag } from '@/types';
+import { Note, Attachment, NoteTag, NoteModification } from '@/types';
 import { STATUS_COLORS } from '@/hooks/useStatusColors';
+
+const HISTORY_PREVIEW_COUNT = 3;
+
+const ModalHistoryBlock = ({ history, getSalesRepName }: { history: NoteModification[]; getSalesRepName: (id: number) => string }) => {
+  const [showAll, setShowAll] = useState(false);
+  const sorted = [...history].reverse();
+  const visible = showAll ? sorted : sorted.slice(0, HISTORY_PREVIEW_COUNT);
+  const hasMore = sorted.length > HISTORY_PREVIEW_COUNT;
+
+  const entries = (
+    <div className="space-y-1 pl-2 border-l-2 border-muted">
+      {visible.map((mod, idx) => (
+        <div key={idx} className="text-xs">
+          <span>{new Date(mod.modifiedAt).toLocaleString()} — {getSalesRepName(mod.modifiedById)}</span>
+          <span className="ml-1 text-foreground">{mod.summary}</span>
+          {mod.previousContent && (
+            <div className="mt-0.5 pl-2 border-l border-muted-foreground/30 text-muted-foreground italic line-clamp-2">
+              "{mod.previousContent}"
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <div className="mt-2">
+      <div className="text-xs font-medium mb-1">Edit History</div>
+      {showAll ? (
+        <ScrollArea className="max-h-[200px]">{entries}</ScrollArea>
+      ) : (
+        entries
+      )}
+      {hasMore && (
+        <button
+          type="button"
+          onClick={() => setShowAll(!showAll)}
+          className="text-xs text-primary hover:underline mt-1"
+        >
+          {showAll ? 'Show less' : `Show all ${history.length} edits`}
+        </button>
+      )}
+    </div>
+  );
+};
 
 interface NoteModalProps {
   open: boolean;
@@ -182,22 +228,10 @@ export const NoteModal = ({
                 </div>
               )}
               {note.modificationHistory && note.modificationHistory.length > 0 && (
-                <div className="mt-2">
-                  <div className="text-xs font-medium mb-1">Edit History</div>
-                  <div className="max-h-32 overflow-y-auto space-y-1 pl-2 border-l-2 border-muted">
-                    {[...note.modificationHistory].reverse().map((mod, idx) => (
-                      <div key={idx} className="text-xs">
-                        <span>{new Date(mod.modifiedAt).toLocaleString()} — {getSalesRepName(mod.modifiedById)}</span>
-                        <span className="ml-1 text-foreground">{mod.summary}</span>
-                        {mod.previousContent && (
-                          <div className="mt-0.5 pl-2 border-l border-muted-foreground/30 text-muted-foreground italic line-clamp-2">
-                            "{mod.previousContent}"
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <ModalHistoryBlock
+                  history={note.modificationHistory}
+                  getSalesRepName={getSalesRepName}
+                />
               )}
             </div>
           )}

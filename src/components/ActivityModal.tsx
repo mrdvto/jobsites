@@ -28,12 +28,12 @@ const ACTIVITY_TYPES = [
 interface ActivityModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  siteId: number;
+  projectId: number;
   activity?: Activity;
   mode: 'create' | 'edit';
 }
 
-export const ActivityModal = ({ open, onOpenChange, siteId, activity, mode }: ActivityModalProps) => {
+export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }: ActivityModalProps) => {
   const { salesReps, addActivity, updateActivity } = useData();
   const { toast } = useToast();
 
@@ -76,13 +76,13 @@ export const ActivityModal = ({ open, onOpenChange, siteId, activity, mode }: Ac
     };
 
     if (mode === 'create') {
-      addActivity(siteId, activityData);
+      addActivity(projectId, activityData);
       toast({
         title: "Success",
         description: "Activity created successfully."
       });
     } else if (activity) {
-      updateActivity(siteId, activity.id, activityData);
+      updateActivity(projectId, activity.id, activityData);
       toast({
         title: "Success",
         description: "Activity updated successfully."

@@ -16,25 +16,25 @@ import { AssociateOpportunityModal } from '@/components/AssociateOpportunityModa
 import { CreateOpportunityModal } from '@/components/CreateOpportunityModal';
 import { AddGCModal } from '@/components/AddGCModal';
 import { AssociateCompanyModal } from '@/components/AssociateCompanyModal';
-import { EditJobSiteModal } from '@/components/EditJobSiteModal';
+import { EditProjectModal } from '@/components/EditProjectModal';
 import { EditGCModal } from '@/components/EditGCModal';
 import { ActivityModal } from '@/components/ActivityModal';
 import { AssociateActivityModal } from '@/components/AssociateActivityModal';
 import { NotesSection } from '@/components/NotesSection';
-import { SiteCompaniesTable } from '@/components/SiteCompaniesTable';
+import { ProjectCompaniesTable } from '@/components/ProjectCompaniesTable';
 import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';
 import { Input } from '@/components/ui/input';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Activity, SiteCompany, CustomerEquipment } from '@/types';
+import { Activity, ProjectCompany, CustomerEquipment } from '@/types';
 
 type LocationViewType = 'address' | 'coordinates';
 
-const JobSiteDetail = () => {
+const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { jobSites, getSalesRepName, getSalesRepNames, opportunities, getStageName, getStage, removeSiteCompany, updateJobSite, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, updateCustomerEquipment, deleteCustomerEquipment } = useData();
+  const { projects, getSalesRepName, getSalesRepNames, opportunities, getStageName, getStage, removeProjectCompany, updateProject, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, updateCustomerEquipment, deleteCustomerEquipment } = useData();
   const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
@@ -81,27 +81,25 @@ const JobSiteDetail = () => {
   const [eqSortColumn, setEqSortColumn] = useState<'type' | 'make' | 'model' | 'year' | 'serial' | 'hours' | null>(null);
   const [eqSortDirection, setEqSortDirection] = useState<'asc' | 'desc' | null>(null);
 
-  const site = jobSites.find(s => s.id === parseInt(id || '0'));
+  const project = projects.find(p => p.id === parseInt(id || '0'));
 
-  const hasAddress = site?.address.street && site?.address.city && site?.address.state;
-  const hasCoordinates = site?.address.latitude != null && site?.address.longitude != null && 
-    !isNaN(site?.address.latitude) && !isNaN(site?.address.longitude);
+  const hasAddress = project?.address.street && project?.address.city && project?.address.state;
+  const hasCoordinates = project?.address.latitude != null && project?.address.longitude != null && 
+    !isNaN(project?.address.latitude) && !isNaN(project?.address.longitude);
   
-  // Determine default location view: address if available, otherwise coordinates
   const defaultLocationView: LocationViewType = hasAddress ? 'address' : (hasCoordinates ? 'coordinates' : 'address');
   
-  // Set initial location view when site changes - must be before any early returns
   useEffect(() => {
-    if (site) {
+    if (project) {
       setLocationViewType(defaultLocationView);
     }
-  }, [site?.id, defaultLocationView]);
+  }, [project?.id, defaultLocationView]);
 
-  if (!site) {
+  if (!project) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Job Site Not Found</h1>
+          <h1 className="text-2xl font-bold mb-2">Project Not Found</h1>
           <Button onClick={() => navigate('/')}>Return to List</Button>
         </div>
       </div>
@@ -116,11 +114,11 @@ const JobSiteDetail = () => {
     }
   };
 
-  const primaryGC = site.siteCompanies.find(c => c.roleId === 'GC' && c.isPrimaryContact);
+  const primaryGC = project.projectCompanies.find(c => c.roleId === 'GC' && c.isPrimaryContact);
 
   const handleRemoveGC = () => {
     if (primaryGC) {
-      removeSiteCompany(site.id, primaryGC.companyName);
+      removeProjectCompany(project.id, primaryGC.companyName);
       toast({
         title: "Success",
         description: "General Contractor removed successfully."
@@ -131,7 +129,7 @@ const JobSiteDetail = () => {
 
   const handleRemoveCompany = () => {
     if (companyToRemove) {
-      removeSiteCompany(site.id, companyToRemove);
+      removeProjectCompany(project.id, companyToRemove);
       toast({
         title: "Success",
         description: "Company removed successfully."
@@ -146,11 +144,10 @@ const JobSiteDetail = () => {
     setShowRemoveCompanyDialog(true);
   };
 
-  // Get available status options from saved colors
   const statusOptions = Object.keys(statusColors);
 
   const handleStatusChange = (newStatus: string) => {
-    updateJobSite(site.id, { statusId: newStatus });
+    updateProject(project.id, { statusId: newStatus });
     toast({
       title: "Status updated",
       description: `Project status changed to "${newStatus}".`
@@ -171,7 +168,7 @@ const JobSiteDetail = () => {
 
   const handleDeleteActivity = () => {
     if (activityToDelete !== null) {
-      deleteActivity(site.id, activityToDelete);
+      deleteActivity(project.id, activityToDelete);
       toast({
         title: "Success",
         description: "Activity deleted successfully."
@@ -200,7 +197,7 @@ const JobSiteDetail = () => {
 
   const handleDeleteEquipment = () => {
     if (equipmentToDelete !== null) {
-      deleteCustomerEquipment(site.id, equipmentToDelete);
+      deleteCustomerEquipment(project.id, equipmentToDelete);
       toast({ title: "Success", description: "Equipment removed." });
       setEquipmentToDelete(null);
       setShowDeleteEquipmentDialog(false);
@@ -209,15 +206,14 @@ const JobSiteDetail = () => {
 
   const handleSaveEquipment = (data: Omit<CustomerEquipment, 'id'>) => {
     if (equipmentModalMode === 'edit' && selectedEquipment) {
-      updateCustomerEquipment(site.id, selectedEquipment.id, data);
+      updateCustomerEquipment(project.id, selectedEquipment.id, data);
       toast({ title: "Success", description: "Equipment updated." });
     } else {
-      addCustomerEquipment(site.id, data);
+      addCustomerEquipment(project.id, data);
       toast({ title: "Success", description: "Equipment added." });
     }
   };
 
-  // Generic sort handler factory
   const makeSortHandler = <T,>(
     currentCol: T | null, setCol: (c: T | null) => void,
     currentDir: 'asc' | 'desc' | null, setDir: (d: 'asc' | 'desc' | null) => void
@@ -232,15 +228,13 @@ const JobSiteDetail = () => {
   const handleActSort = makeSortHandler(actSortColumn, setActSortColumn as (c: typeof actSortColumn) => void, actSortDirection, setActSortDirection);
   const handleEqSort = makeSortHandler(eqSortColumn, setEqSortColumn as (c: typeof eqSortColumn) => void, eqSortDirection, setEqSortDirection);
 
-  // Sort icon component
   const SortIcon = ({ active, direction }: { active: boolean; direction: 'asc' | 'desc' | null }) => {
     if (!active) return <ArrowUpDown className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-50 transition-opacity" />;
     if (direction === 'asc') return <ArrowUp className="h-4 w-4 ml-1" />;
     return <ArrowDown className="h-4 w-4 ml-1" />;
   };
 
-  // Filtered & sorted opportunities
-  const filteredOpportunities = site.associatedOpportunities.filter(opp => {
+  const filteredOpportunities = project.associatedOpportunities.filter(opp => {
     const stage = getStage(opp.stageId);
     if (oppShowOpenOnly && stage && (stage.phaseid === 3 || stage.phaseid === 4)) return false;
     if (oppFilterStage !== 'all' && opp.stageId !== Number(oppFilterStage)) return false;
@@ -255,13 +249,13 @@ const JobSiteDetail = () => {
     return true;
   });
 
-  const uniqueStages = [...new Map(site.associatedOpportunities.map(o => [o.stageId, getStageName(o.stageId)] as [number, string])).entries()].sort((a, b) => a[1].localeCompare(b[1]));
-  const uniqueTypes = [...new Set(site.associatedOpportunities.map(o => o.type))].sort();
-  const uniqueDivisions = [...new Set(site.associatedOpportunities.map(o => {
+  const uniqueStages = [...new Map(project.associatedOpportunities.map(o => [o.stageId, getStageName(o.stageId)] as [number, string])).entries()].sort((a, b) => (a[1] as string).localeCompare(b[1] as string));
+  const uniqueTypes = [...new Set(project.associatedOpportunities.map(o => o.type))].sort();
+  const uniqueDivisions = [...new Set(project.associatedOpportunities.map(o => {
     const full = opportunities.find(f => f.id === o.id);
     return full?.divisionId || '';
   }).filter(Boolean))].sort();
-  const uniqueOppSalesReps = [...new Set(site.associatedOpportunities.map(o => {
+  const uniqueOppSalesReps = [...new Set(project.associatedOpportunities.map(o => {
     const full = opportunities.find(f => f.id === o.id);
     return full ? getSalesRepName(full.salesRepId) : '';
   }).filter(Boolean))].sort();
@@ -285,7 +279,6 @@ const JobSiteDetail = () => {
       }
       case 'revenue': cmp = (a.revenue || 0) - (b.revenue || 0); break;
     }
-    // Secondary sort: break ties by estimated close date ascending
     if (cmp === 0) {
       const dateA = (fullA?.estimateDeliveryYear || 0) * 100 + (fullA?.estimateDeliveryMonth || 0);
       const dateB = (fullB?.estimateDeliveryYear || 0) * 100 + (fullB?.estimateDeliveryMonth || 0);
@@ -294,8 +287,7 @@ const JobSiteDetail = () => {
     return oppSortDirection === 'asc' ? cmp : -cmp;
   });
 
-  // Sorted activities
-  const sortedActivities = [...(site.activities || [])].sort((a, b) => {
+  const sortedActivities = [...(project.activities || [])].sort((a, b) => {
     if (!actSortColumn || !actSortDirection) return 0;
     let cmp = 0;
     switch (actSortColumn) {
@@ -307,7 +299,6 @@ const JobSiteDetail = () => {
     return actSortDirection === 'asc' ? cmp : -cmp;
   });
 
-  // Sort equipment items within a group
   const sortEquipment = (items: CustomerEquipment[]) => {
     if (!eqSortColumn || !eqSortDirection) return items;
     return [...items].sort((a, b) => {
@@ -332,10 +323,10 @@ const JobSiteDetail = () => {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to List
           </Button>
-          <h1 className="text-3xl font-bold">{site.name}</h1>
+          <h1 className="text-3xl font-bold">{project.name}</h1>
           <div className="flex items-center gap-2 mt-2">
-            <Select value={site.statusId} onValueChange={handleStatusChange}>
-              <SelectTrigger className={`w-auto h-7 text-xs font-medium rounded-full border-0 ${getStatusColorClasses(site.statusId)}`}>
+            <Select value={project.statusId} onValueChange={handleStatusChange}>
+              <SelectTrigger className={`w-auto h-7 text-xs font-medium rounded-full border-0 ${getStatusColorClasses(project.statusId)}`}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -353,8 +344,8 @@ const JobSiteDetail = () => {
                 })}
               </SelectContent>
             </Select>
-            <span className="text-sm text-muted-foreground">ID: {site.id}</span>
-            <Button variant="outline" size="sm" onClick={() => navigate(`/site/${site.id}/changelog`)} className="ml-2">
+            <span className="text-sm text-muted-foreground">ID: {project.id}</span>
+            <Button variant="outline" size="sm" onClick={() => navigate(`/project/${project.id}/changelog`)} className="ml-2">
               <History className="h-4 w-4 mr-1" />
               Change Log
             </Button>
@@ -366,7 +357,7 @@ const JobSiteDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <Card className="p-6 lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">Site Information</h2>
+              <h2 className="text-lg font-semibold">Project Information</h2>
               <Button
                 variant="outline"
                 size="sm"
@@ -411,9 +402,9 @@ const JobSiteDetail = () => {
                   {locationViewType === 'address' ? (
                     hasAddress ? (
                       <p className="text-sm text-muted-foreground">
-                        {site.address.street}<br />
-                        {site.address.city}, {site.address.state} {site.address.zipCode}<br />
-                        {site.address.country}
+                        {project.address.street}<br />
+                        {project.address.city}, {project.address.state} {project.address.zipCode}<br />
+                        {project.address.country}
                       </p>
                     ) : (
                       <p className="text-sm text-muted-foreground italic">No address available</p>
@@ -421,8 +412,8 @@ const JobSiteDetail = () => {
                   ) : (
                     hasCoordinates ? (
                       <p className="text-sm text-muted-foreground">
-                        Latitude: {site.address.latitude}<br />
-                        Longitude: {site.address.longitude}
+                        Latitude: {project.address.latitude}<br />
+                        Longitude: {project.address.longitude}
                       </p>
                     ) : (
                       <p className="text-sm text-muted-foreground italic">No coordinates available</p>
@@ -437,17 +428,17 @@ const JobSiteDetail = () => {
                 <User className="h-5 w-5 text-muted-foreground mt-0.5" />
                 <div className="flex-1">
                   <p className="font-medium">Primary Contact</p>
-                  <p className="text-sm">{site.projectPrimaryContact.name}</p>
-                  <p className="text-sm text-muted-foreground">{site.projectPrimaryContact.title}</p>
+                  <p className="text-sm">{project.projectPrimaryContact.name}</p>
+                  <p className="text-sm text-muted-foreground">{project.projectPrimaryContact.title}</p>
                   <div className="flex items-center gap-4 mt-2 text-sm">
                     <div className="flex items-center gap-1">
                       <Phone className="h-3 w-3" />
-                      <span>{site.projectPrimaryContact.phone}</span>
+                      <span>{project.projectPrimaryContact.phone}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Mail className="h-3 w-3" />
-                      <a href={`mailto:${site.projectPrimaryContact.email}`} className="text-primary hover:underline">
-                        {site.projectPrimaryContact.email}
+                      <a href={`mailto:${project.projectPrimaryContact.email}`} className="text-primary hover:underline">
+                        {project.projectPrimaryContact.email}
                       </a>
                     </div>
                   </div>
@@ -458,10 +449,8 @@ const JobSiteDetail = () => {
 
               <div>
                 <p className="font-medium mb-2">Description</p>
-                <p className="text-sm text-muted-foreground">{site.description}</p>
+                <p className="text-sm text-muted-foreground">{project.description}</p>
               </div>
-
-              {/* Notes are now managed in the separate Notes Section below */}
             </div>
           </Card>
 
@@ -470,20 +459,20 @@ const JobSiteDetail = () => {
               <h3 className="font-semibold mb-3">Sales Information</h3>
               <div className="space-y-3 text-sm">
                 <div>
-                <span className="text-muted-foreground">Sales Rep{site.salesRepIds.length > 1 ? 's' : ''}</span>
-                  <p className="font-medium">{getSalesRepNames(site.salesRepIds)}</p>
+                <span className="text-muted-foreground">Sales Rep{project.salesRepIds.length > 1 ? 's' : ''}</span>
+                  <p className="font-medium">{getSalesRepNames(project.salesRepIds)}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Planned Annual Rate</span>
-                  <p className="font-medium">{site.plannedAnnualRate} sales activities/year</p>
+                  <p className="font-medium">{project.plannedAnnualRate} sales activities/year</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">PAR Start Date</span>
-                  <p className="font-medium">{site.parStartDate ? new Date(site.parStartDate).toLocaleDateString() : 'Not set'}</p>
+                  <p className="font-medium">{project.parStartDate ? new Date(project.parStartDate).toLocaleDateString() : 'Not set'}</p>
                 </div>
                 <div>
                   <span className="text-muted-foreground">Current Opportunities</span>
-                  <p className="font-medium">{site.associatedOpportunities.length}</p>
+                  <p className="font-medium">{project.associatedOpportunities.length}</p>
                 </div>
               </div>
             </Card>
@@ -585,9 +574,9 @@ const JobSiteDetail = () => {
             </div>
           </div>
 
-          {site.associatedOpportunities.length === 0 ? (
+          {project.associatedOpportunities.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
-              No opportunities associated with this site yet.
+              No opportunities associated with this project yet.
             </p>
           ) : (
             <>
@@ -599,7 +588,7 @@ const JobSiteDetail = () => {
                   <SelectContent>
                     <SelectItem value="all">All Stages</SelectItem>
                     {uniqueStages.map(([stageId, stageName]) => (
-                      <SelectItem key={stageId} value={String(stageId)}>{stageName}</SelectItem>
+                      <SelectItem key={stageId as number} value={String(stageId)}>{stageName as string}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -609,7 +598,7 @@ const JobSiteDetail = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Divisions</SelectItem>
-                    {uniqueDivisions.map(d => (
+                    {uniqueDivisions.map((d: string) => (
                       <SelectItem key={d} value={d}>{d}</SelectItem>
                     ))}
                   </SelectContent>
@@ -620,7 +609,7 @@ const JobSiteDetail = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Types</SelectItem>
-                    {uniqueTypes.map(t => (
+                    {uniqueTypes.map((t: string) => (
                       <SelectItem key={t} value={t}>{t}</SelectItem>
                     ))}
                   </SelectContent>
@@ -631,7 +620,7 @@ const JobSiteDetail = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Sales Reps</SelectItem>
-                    {uniqueOppSalesReps.map(r => (
+                    {uniqueOppSalesReps.map((r: string) => (
                       <SelectItem key={r} value={r}>{r}</SelectItem>
                     ))}
                   </SelectContent>
@@ -722,14 +711,14 @@ const JobSiteDetail = () => {
               Associate Existing
             </Button>
           </div>
-          {site.siteCompanies.length === 0 ? (
+          {project.projectCompanies.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
-              No companies associated with this site yet.
+              No companies associated with this project yet.
             </p>
           ) : (
-            <SiteCompaniesTable
-              siteId={site.id}
-              companies={site.siteCompanies}
+            <ProjectCompaniesTable
+              projectId={project.id}
+              companies={project.projectCompanies}
               onRemoveCompany={initiateRemoveCompany}
             />
           )}
@@ -754,9 +743,9 @@ const JobSiteDetail = () => {
             </div>
           </div>
 
-          {(!site.activities || site.activities.length === 0) ? (
+          {(!project.activities || project.activities.length === 0) ? (
             <p className="text-center text-muted-foreground py-8">
-              No activities recorded for this site yet.
+              No activities recorded for this project yet.
             </p>
           ) : (
             <Table>
@@ -824,17 +813,17 @@ const JobSiteDetail = () => {
             </Button>
           </div>
 
-          {(!site.customerEquipment || site.customerEquipment.length === 0) ? (
+          {(!project.customerEquipment || project.customerEquipment.length === 0) ? (
             <p className="text-center text-muted-foreground py-8">
-              No customer equipment recorded at this site.
+              No customer equipment recorded for this project.
             </p>
           ) : (() => {
             const searchLower = equipmentSearch.toLowerCase();
             const hasSearch = searchLower.length > 0;
 
-            const filteredEquipment = site.customerEquipment.filter(eq => {
+            const filteredEquipment = project.customerEquipment.filter(eq => {
               if (!hasSearch) return true;
-              const companyName = site.siteCompanies.find(c => c.companyId === eq.companyId)?.companyName || '';
+              const companyName = project.projectCompanies.find(c => c.companyId === eq.companyId)?.companyName || '';
               const searchStr = `${companyName} ${eq.equipmentType} ${eq.make} ${eq.model} ${eq.year || ''} ${eq.serialNumber || ''}`.toLowerCase();
               return searchStr.includes(searchLower);
             });
@@ -842,7 +831,7 @@ const JobSiteDetail = () => {
             const grouped = filteredEquipment.reduce<Record<string, { companyName: string; items: CustomerEquipment[] }>>((acc, eq) => {
               if (!acc[eq.companyId]) {
                 acc[eq.companyId] = {
-                  companyName: site.siteCompanies.find(c => c.companyId === eq.companyId)?.companyName || 'Unknown',
+                  companyName: project.projectCompanies.find(c => c.companyId === eq.companyId)?.companyName || 'Unknown',
                   items: [],
                 };
               }
@@ -873,9 +862,9 @@ const JobSiteDetail = () => {
                         <CollapsibleTrigger className="flex items-center justify-between w-full rounded-md border px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors [&[data-state=open]_svg.chevron]:rotate-90">
                           <div className="flex items-center gap-2">
                             <ChevronRight className="chevron h-4 w-4 shrink-0 transition-transform duration-200" />
-                            <span>{group.companyName}</span>
+                            <span>{(group as { companyName: string; items: CustomerEquipment[] }).companyName}</span>
                             <Badge variant="secondary" className="ml-1">
-                              {group.items.length} {group.items.length === 1 ? 'machine' : 'machines'}
+                              {(group as { companyName: string; items: CustomerEquipment[] }).items.length} {(group as { companyName: string; items: CustomerEquipment[] }).items.length === 1 ? 'machine' : 'machines'}
                             </Badge>
                           </div>
                         </CollapsibleTrigger>
@@ -905,7 +894,7 @@ const JobSiteDetail = () => {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {sortEquipment(group.items).map(eq => (
+                              {sortEquipment((group as { companyName: string; items: CustomerEquipment[] }).items).map(eq => (
                                 <TableRow key={eq.id}>
                                   <TableCell>{eq.equipmentType}</TableCell>
                                   <TableCell>{eq.make}</TableCell>
@@ -937,13 +926,13 @@ const JobSiteDetail = () => {
           })()}
         </Card>
         <NotesSection
-          notes={site.notes || []}
+          notes={project.notes || []}
           noteTags={noteTags}
-          onAddNote={(noteData) => addNote(site.id, noteData)}
-          onUpdateNote={(noteId, noteData) => updateNote(site.id, noteId, noteData)}
-          onDeleteNote={(noteId) => deleteNote(site.id, noteId)}
+          onAddNote={(noteData) => addNote(project.id, noteData)}
+          onUpdateNote={(noteId, noteData) => updateNote(project.id, noteId, noteData)}
+          onDeleteNote={(noteId) => deleteNote(project.id, noteId)}
           getSalesRepName={getSalesRepName}
-          siteId={site.id}
+          projectId={project.id}
         />
       </main>
 
@@ -954,27 +943,27 @@ const JobSiteDetail = () => {
       />
 
       <AssociateOpportunityModal
-        siteId={site.id}
-        currentOpportunityIds={site.associatedOpportunities.map(o => o.id)}
+        projectId={project.id}
+        currentOpportunityIds={project.associatedOpportunities.map(o => o.id)}
         open={showAssociateModal}
         onOpenChange={setShowAssociateModal}
       />
 
       <CreateOpportunityModal
-        siteId={site.id}
+        projectId={project.id}
         open={showCreateModal}
         onOpenChange={setShowCreateModal}
       />
 
       <AddGCModal
-        siteId={site.id}
+        projectId={project.id}
         open={showAddGCModal}
         onOpenChange={setShowAddGCModal}
       />
 
       <AssociateCompanyModal
-        siteId={site.id}
-        currentCompanyNames={site.siteCompanies.map(c => c.companyName)}
+        projectId={project.id}
+        currentCompanyNames={project.projectCompanies.map(c => c.companyName)}
         open={showAssociateCompanyModal}
         onOpenChange={setShowAssociateCompanyModal}
       />
@@ -984,7 +973,7 @@ const JobSiteDetail = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Remove General Contractor?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove {primaryGC?.companyName} as the general contractor for this job site? This action cannot be undone.
+              Are you sure you want to remove {primaryGC?.companyName} as the general contractor for this project? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -999,7 +988,7 @@ const JobSiteDetail = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Remove Company?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove {companyToRemove} from this job site? This action cannot be undone.
+              Are you sure you want to remove {companyToRemove} from this project? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -1009,15 +998,15 @@ const JobSiteDetail = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <EditJobSiteModal
-        site={site}
+      <EditProjectModal
+        project={project}
         open={showEditModal}
         onOpenChange={setShowEditModal}
       />
 
       {primaryGC && (
         <EditGCModal
-          siteId={site.id}
+          projectId={project.id}
           currentGC={primaryGC}
           open={showEditGCModal}
           onOpenChange={setShowEditGCModal}
@@ -1027,7 +1016,7 @@ const JobSiteDetail = () => {
       <ActivityModal
         open={showActivityModal}
         onOpenChange={setShowActivityModal}
-        siteId={site.id}
+        projectId={project.id}
         activity={selectedActivity}
         mode={activityModalMode}
       />
@@ -1048,8 +1037,8 @@ const JobSiteDetail = () => {
       </AlertDialog>
 
       <AssociateActivityModal
-        siteId={site.id}
-        currentActivityIds={site.activities?.map(a => a.id) || []}
+        projectId={project.id}
+        currentActivityIds={project.activities?.map(a => a.id) || []}
         open={showAssociateActivityModal}
         onOpenChange={setShowAssociateActivityModal}
       />
@@ -1060,7 +1049,7 @@ const JobSiteDetail = () => {
         onSave={handleSaveEquipment}
         equipment={selectedEquipment}
         mode={equipmentModalMode}
-        siteCompanies={site.siteCompanies}
+        projectCompanies={project.projectCompanies}
       />
 
       <AlertDialog open={showDeleteEquipmentDialog} onOpenChange={setShowDeleteEquipmentDialog}>
@@ -1068,7 +1057,7 @@ const JobSiteDetail = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Remove Equipment?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove the equipment record from this job site. This action cannot be undone.
+              This will remove the equipment record from this project. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -1081,4 +1070,4 @@ const JobSiteDetail = () => {
   );
 };
 
-export default JobSiteDetail;
+export default ProjectDetail;

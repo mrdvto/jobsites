@@ -869,7 +869,7 @@ const JobSiteDetail = () => {
                 ) : (
                   <div className="space-y-2">
                     {groupEntries.map(([companyId, group]) => (
-                      <Collapsible key={`${companyId}-${hasSearch}`} defaultOpen={hasSearch}>
+                      <Collapsible key={`${companyId}-${hasSearch}`} defaultOpen={true}>
                         <CollapsibleTrigger className="flex items-center justify-between w-full rounded-md border px-4 py-3 text-sm font-medium hover:bg-muted/50 transition-colors [&[data-state=open]>svg.chevron]:rotate-90">
                           <div className="flex items-center gap-2">
                             <ChevronRight className="chevron h-4 w-4 shrink-0 transition-transform duration-200" />

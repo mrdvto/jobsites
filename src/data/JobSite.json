@@ -57,8 +57,8 @@
                 { "id": 300003, "type": "Rental Service", "description": "Crane service with operator for steel erection", "stageId": 8, "revenue": 22000 }
             ],
             "notes": [
-                { "id": 1, "content": "Strict noise ordinances after 6 PM. All equipment must be shut down by 5:45 PM to allow for proper wind-down.", "createdAt": "2025-01-15T09:30:00.000Z", "createdById": 313, "tagIds": ["COMPLIANCE"], "attachments": [] },
-                { "id": 2, "content": "Badging required for site access. All personnel must check in at the security trailer before entering the construction zone.", "createdAt": "2025-01-16T14:22:00.000Z", "createdById": 313, "tagIds": ["SECURITY"], "attachments": [] },
+                { "id": 1, "content": "Strict noise ordinances after 6 PM. All equipment must be shut down by 5:45 PM to allow for proper wind-down.", "createdAt": "2025-01-15T09:30:00.000Z", "createdById": 313, "tagIds": ["COMPLIANCE"], "attachments": [], "lastModifiedAt": "2025-01-18T10:15:00.000Z", "lastModifiedById": 313, "modificationHistory": [{ "modifiedAt": "2025-01-17T14:00:00.000Z", "modifiedById": 313, "summary": "Content updated" }, { "modifiedAt": "2025-01-18T10:15:00.000Z", "modifiedById": 313, "summary": "Content updated, Tags changed" }] },
+                { "id": 2, "content": "Badging required for site access. All personnel must check in at the security trailer before entering the construction zone.", "createdAt": "2025-01-16T14:22:00.000Z", "createdById": 313, "tagIds": ["SECURITY"], "attachments": [], "lastModifiedAt": "2025-01-19T11:30:00.000Z", "lastModifiedById": 305, "modificationHistory": [{ "modifiedAt": "2025-01-19T11:30:00.000Z", "modifiedById": 305, "summary": "Content updated" }] },
                 { "id": 3, "content": "Hard hats and steel-toed boots mandatory at all times. High-visibility vests required in active construction areas.", "createdAt": "2025-01-20T11:00:00.000Z", "createdById": 313, "tagIds": ["SAFETY"], "attachments": [] },
                 { "id": 4, "content": "Hospital loading dock available for equipment deliveries on Tuesdays and Thursdays only.", "createdAt": "2025-02-01T08:45:00.000Z", "createdById": 313, "tagIds": ["GENERAL"], "attachments": [] }
             ],
@@ -131,7 +131,7 @@
                 { "id": 300006, "type": "Lease", "description": "24-month lease of CAT 950GC Wheel Loader", "stageId": 16, "revenue": 95000 }
             ],
             "notes": [
-                { "id": 1, "content": "Stadium will remain operational during renovation. Work must be scheduled around game days and events.", "createdAt": "2025-02-15T10:30:00.000Z", "createdById": 305, "tagIds": ["GENERAL", "COMPLIANCE"], "attachments": [] },
+                { "id": 1, "content": "Stadium will remain operational during renovation. Work must be scheduled around game days and events.", "createdAt": "2025-02-15T10:30:00.000Z", "createdById": 305, "tagIds": ["GENERAL", "COMPLIANCE"], "attachments": [], "lastModifiedAt": "2025-02-18T16:45:00.000Z", "lastModifiedById": 305, "modificationHistory": [{ "modifiedAt": "2025-02-18T16:45:00.000Z", "modifiedById": 305, "summary": "Content updated" }] },
                 { "id": 2, "content": "All workers must complete crowd safety training before accessing field areas.", "createdAt": "2025-02-20T09:00:00.000Z", "createdById": 305, "tagIds": ["SAFETY"], "attachments": [] },
                 { "id": 3, "content": "Background checks required for all personnel due to public venue security protocols.", "createdAt": "2025-03-01T14:15:00.000Z", "createdById": 305, "tagIds": ["SECURITY"], "attachments": [] }
             ],
@@ -204,7 +204,7 @@
             ],
             "notes": [
                 { "id": 1, "content": "Safety vest required at all times. All personnel must wear high-visibility vests when on or near the roadway.", "createdAt": "2025-02-25T22:30:00.000Z", "createdById": 303, "tagIds": ["SAFETY"], "attachments": [] },
-                { "id": 2, "content": "Deliveries must be scheduled between 10 PM and 4 AM due to lane closure restrictions.", "createdAt": "2025-02-26T10:15:00.000Z", "createdById": 303, "tagIds": ["COMPLIANCE", "GENERAL"], "attachments": [] },
+                { "id": 2, "content": "Deliveries must be scheduled between 10 PM and 4 AM due to lane closure restrictions.", "createdAt": "2025-02-26T10:15:00.000Z", "createdById": 303, "tagIds": ["COMPLIANCE", "GENERAL"], "attachments": [], "lastModifiedAt": "2025-02-28T08:00:00.000Z", "lastModifiedById": 303, "modificationHistory": [{ "modifiedAt": "2025-02-28T08:00:00.000Z", "modifiedById": 303, "summary": "Content updated" }] },
                 { "id": 3, "content": "IDOT inspector will be on-site every night. All work must meet state highway standards.", "createdAt": "2025-03-01T23:00:00.000Z", "createdById": 303, "tagIds": ["COMPLIANCE"], "attachments": [] },
                 { "id": 4, "content": "Emergency vehicle access lane must be maintained at all times during night work operations.", "createdAt": "2025-03-05T21:45:00.000Z", "createdById": 303, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],

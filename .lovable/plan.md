@@ -1,34 +1,36 @@
 
 
-# Add Example Modification History Data to Notes
+# Save Previous Note Content in Modification History
 
 ## Overview
-Seed several notes in `src/data/JobSite.json` with `modificationHistory` entries so the expandable "View history" feature is visible with realistic data out of the box.
+When a note is edited, capture a snapshot of the old content and tags so users can see exactly what the note said before each edit.
 
 ## Changes
 
-### File: `src/data/JobSite.json`
+### 1. Extend `NoteModification` type (`src/types/index.ts`)
 
-Add `lastModifiedAt`, `lastModifiedById`, and `modificationHistory` fields to select notes across multiple job sites. This will make the history UI immediately visible without requiring users to edit notes first.
+Add two optional fields to store the previous state:
+- `previousContent?: string` -- the note content before the edit
+- `previousTagIds?: string[]` -- the tag IDs before the edit
 
-**Site 500101 (St. Mary's Hospital) - Notes 1 and 2:**
-- Note 1: Two edits -- first to update the shutdown time from 6 PM to 5:45 PM, then to add the compliance tag.
-- Note 2: One edit -- updated to add details about the security trailer check-in.
+### 2. Capture old values in `updateNote` (`src/contexts/DataContext.tsx`)
 
-**Site 500102 (MetLife Stadium) - Note 1:**
-- One edit -- schedule details refined after coordination with stadium operations.
+Before applying the update, save the current `content` and `tagIds` into the new modification entry (only when those fields actually changed).
 
-**Site 500103 (I-95 Corridor) - Note 2:**
-- One edit -- delivery window adjusted based on DOT feedback.
+### 3. Display old content in history UI (`src/components/NotesSection.tsx`)
 
-Each `modificationHistory` entry will include a realistic `modifiedAt` timestamp (after the note's `createdAt`), a `modifiedById` referencing an existing sales rep, and a descriptive `summary` string (e.g., "Content updated", "Tags changed", "Content updated, Tags changed").
+In the collapsible history list, show the previous content as a small quoted block below each edit entry when available.
+
+### 4. Display old content in edit modal history (`src/components/NoteModal.tsx`)
+
+Same treatment in the edit modal's history section -- show the previous content snippet under each entry.
 
 ## Technical Details
 
-| Field | Example Value |
-|-------|--------------|
-| `modifiedAt` | `"2025-01-18T10:15:00.000Z"` |
-| `modifiedById` | `313` (or other valid sales rep IDs) |
-| `summary` | `"Content updated"`, `"Tags changed"`, `"Content updated, Tags changed"` |
+| File | Change |
+|------|--------|
+| `src/types/index.ts` | Add `previousContent?: string` and `previousTagIds?: string[]` to `NoteModification` |
+| `src/contexts/DataContext.tsx` | In `updateNote`, set `previousContent: note.content` when content changed; set `previousTagIds: note.tagIds` when tags changed |
+| `src/components/NotesSection.tsx` | Render `mod.previousContent` as a truncated quote block inside history entries |
+| `src/components/NoteModal.tsx` | Render `mod.previousContent` in the modal's history section |
 
-No code logic changes needed -- only JSON data updates to the existing notes array entries.

@@ -16,7 +16,7 @@ const ProjectList = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Project Management</h1>
+              <h1 className="text-2xl font-bold">Projects List</h1>
               <p className="text-sm text-muted-foreground">Manage construction projects and opportunities</p>
             </div>
             <div className="flex items-center gap-2">
@@ -36,12 +36,12 @@ const ProjectList = () => {
         <ProjectTable />
       </main>
 
-      <CreateProjectModal 
+      <CreateProjectModal
         open={showCreateModal}
-        onOpenChange={setShowCreateModal}
-      />
-    </div>
-  );
+        onOpenChange={setShowCreateModal} />
+
+    </div>);
+
 };
 
 export default ProjectList;

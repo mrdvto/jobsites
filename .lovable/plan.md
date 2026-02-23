@@ -1,33 +1,49 @@
 
 
-# Fix Chevron Rotation for Equipment Group Expansion State
+# Add Modification Tracking to Notes
 
-## Problem
-The chevron icon in the equipment group headers doesn't visually indicate whether the group is expanded or collapsed.
+## Overview
+Currently, notes track who created them and when, but there's no record of modifications. This plan adds a modification history to each note so users can see who last edited it and a full log of all edits.
 
-## Solution
-The CSS class `[&[data-state=open]>svg.chevron]:rotate-90` on the `CollapsibleTrigger` already handles rotation based on the Radix `data-state` attribute. This should already work -- but let me verify the current markup is correct.
+## Changes
 
-### File: `src/pages/JobSiteDetail.tsx` (line ~870)
+### 1. Update the `Note` type (`src/types/index.ts`)
 
-The trigger currently has:
+Add two new fields to the `Note` interface:
+- `lastModifiedAt?: string` -- ISO timestamp of the most recent edit
+- `lastModifiedById?: number` -- the sales rep ID who last made the edit
+
+These optional fields keep backward compatibility with existing notes that haven't been edited.
+
+### 2. Update `updateNote` in `DataContext` (`src/contexts/DataContext.tsx`)
+
+When a note is updated, automatically stamp `lastModifiedAt` and `lastModifiedById` using the current user and current time, so the caller doesn't need to pass these explicitly:
+
 ```
-className="... [&[data-state=open]>svg.chevron]:rotate-90"
+const updateNote = (siteId, noteId, updates) => {
+  // Merge updates + set lastModifiedAt/lastModifiedById automatically
+};
 ```
 
-And the chevron:
+### 3. Display modification info on each note (`src/components/NotesSection.tsx`)
+
+In the footer of each note card (line ~227-231), add a "Modified" line below the existing "Created" line when `lastModifiedAt` is present:
+
 ```
-<ChevronRight className="chevron h-4 w-4 shrink-0 transition-transform duration-200" />
+Created: 1/15/2025 by John Smith
+Modified: 1/18/2025 by Jane Doe
 ```
 
-This CSS selector targets a direct child (`>`) SVG with class `chevron` of the trigger element. However, the `ChevronRight` is nested inside a `<div>` wrapper, not a direct child of `CollapsibleTrigger`. The selector `>svg.chevron` won't match because the SVG is inside `<div className="flex items-center gap-2">`.
+### 4. Show modification info in the edit modal (`src/components/NoteModal.tsx`)
 
-### Fix
-Move the CSS rotation selector to target the nested SVG properly. Change the selector from:
-- `[&[data-state=open]>svg.chevron]:rotate-90`
+In edit mode, the modal already shows "Created: ... by ...". Add a second line showing the last modification info if present, so the editor can see the full history before making further changes.
 
-to:
-- `[&[data-state=open]_svg.chevron]:rotate-90`
+## Technical Details
 
-(Replace `>` with `_` which maps to a descendant selector in Tailwind, matching the SVG regardless of nesting depth.)
+| File | Change |
+|------|--------|
+| `src/types/index.ts` | Add `lastModifiedAt?: string` and `lastModifiedById?: number` to `Note` interface |
+| `src/contexts/DataContext.tsx` | In `updateNote`, merge `lastModifiedAt: new Date().toISOString()` and `lastModifiedById: currentUserIdRef.current` into the update |
+| `src/components/NotesSection.tsx` | Below the "Created" span (~line 229), conditionally render a "Modified" span with date and author |
+| `src/components/NoteModal.tsx` | In edit mode metadata block (~line 148), conditionally show last modified info |
 

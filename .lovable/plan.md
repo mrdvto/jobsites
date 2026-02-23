@@ -1,49 +1,49 @@
 
 
-# Add Modification Tracking to Notes
+# Add Full Modification History Log to Notes
 
 ## Overview
-Currently, notes track who created them and when, but there's no record of modifications. This plan adds a modification history to each note so users can see who last edited it and a full log of all edits.
+Replace the single "last modified" tracking with a full edit history array, so every edit is recorded and users can see all past modifications.
 
 ## Changes
 
-### 1. Update the `Note` type (`src/types/index.ts`)
+### 1. Add `NoteModification` type and update `Note` (`src/types/index.ts`)
 
-Add two new fields to the `Note` interface:
-- `lastModifiedAt?: string` -- ISO timestamp of the most recent edit
-- `lastModifiedById?: number` -- the sales rep ID who last made the edit
-
-These optional fields keep backward compatibility with existing notes that haven't been edited.
-
-### 2. Update `updateNote` in `DataContext` (`src/contexts/DataContext.tsx`)
-
-When a note is updated, automatically stamp `lastModifiedAt` and `lastModifiedById` using the current user and current time, so the caller doesn't need to pass these explicitly:
+Add a new interface and a history array to the Note:
 
 ```
-const updateNote = (siteId, noteId, updates) => {
-  // Merge updates + set lastModifiedAt/lastModifiedById automatically
-};
+interface NoteModification {
+  modifiedAt: string;       // ISO timestamp
+  modifiedById: number;     // sales rep ID
+  summary: string;          // e.g. "Content updated", "Tags changed"
+}
+
+interface Note {
+  ...existing fields...
+  lastModifiedAt?: string;          // keep for quick display
+  lastModifiedById?: number;        // keep for quick display
+  modificationHistory?: NoteModification[];  // full log
+}
 ```
 
-### 3. Display modification info on each note (`src/components/NotesSection.tsx`)
+### 2. Update `updateNote` in DataContext (`src/contexts/DataContext.tsx`)
 
-In the footer of each note card (line ~227-231), add a "Modified" line below the existing "Created" line when `lastModifiedAt` is present:
+When a note is updated, push a new entry onto `modificationHistory` in addition to stamping `lastModifiedAt`/`lastModifiedById`. Generate a human-readable summary based on which fields changed (content, tags, attachments).
 
-```
-Created: 1/15/2025 by John Smith
-Modified: 1/18/2025 by Jane Doe
-```
+### 3. Show expandable history on note cards (`src/components/NotesSection.tsx`)
 
-### 4. Show modification info in the edit modal (`src/components/NoteModal.tsx`)
+Below the "Created" / "Modified" lines, if `modificationHistory` has entries, add a small clickable "View history (N edits)" link. When clicked, expand to show a compact list of all edits with timestamp and author, newest first.
 
-In edit mode, the modal already shows "Created: ... by ...". Add a second line showing the last modification info if present, so the editor can see the full history before making further changes.
+### 4. Show history in edit modal (`src/components/NoteModal.tsx`)
+
+In edit mode, below the created/modified metadata, show the full modification history as a scrollable list so the editor has full context before making changes.
 
 ## Technical Details
 
 | File | Change |
 |------|--------|
-| `src/types/index.ts` | Add `lastModifiedAt?: string` and `lastModifiedById?: number` to `Note` interface |
-| `src/contexts/DataContext.tsx` | In `updateNote`, merge `lastModifiedAt: new Date().toISOString()` and `lastModifiedById: currentUserIdRef.current` into the update |
-| `src/components/NotesSection.tsx` | Below the "Created" span (~line 229), conditionally render a "Modified" span with date and author |
-| `src/components/NoteModal.tsx` | In edit mode metadata block (~line 148), conditionally show last modified info |
+| `src/types/index.ts` | Add `NoteModification` interface; add `modificationHistory?: NoteModification[]` to `Note` |
+| `src/contexts/DataContext.tsx` | In `updateNote`, build a summary string from changed fields, push `{ modifiedAt, modifiedById, summary }` onto the history array |
+| `src/components/NotesSection.tsx` | Add collapsible "View history" toggle below metadata showing timestamped edit entries |
+| `src/components/NoteModal.tsx` | Add scrollable history list in edit mode metadata section |
 

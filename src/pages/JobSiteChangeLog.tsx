@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
+
 import { ArrowLeft, ChevronDown, ChevronRight, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { ChangeLogEntry } from '@/types';
@@ -27,8 +27,8 @@ const ExpandableRow = ({ entry, changedByName }: { entry: ChangeLogEntry; change
   const hasDetails = entry.details && Object.keys(entry.details).length > 0;
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen}>
-      <TableRow className={hasDetails ? 'cursor-pointer' : ''}>
+    <>
+      <TableRow className={hasDetails ? 'cursor-pointer' : ''} onClick={() => hasDetails && setOpen(!open)}>
         <TableCell className="whitespace-nowrap">
           {format(new Date(entry.timestamp), 'MMM d, yyyy h:mm a')}
         </TableCell>
@@ -38,31 +38,29 @@ const ExpandableRow = ({ entry, changedByName }: { entry: ChangeLogEntry; change
             {entry.category}
           </Badge>
         </TableCell>
-        <TableCell className="flex items-center gap-1">
-          {hasDetails && (
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
+        <TableCell>
+          <div className="inline-flex items-center gap-1">
+            {hasDetails && (
+              <Button variant="ghost" size="icon" className="h-6 w-6" onClick={(e) => { e.stopPropagation(); setOpen(!open); }}>
                 {open ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
               </Button>
-            </CollapsibleTrigger>
-          )}
-          {entry.summary}
+            )}
+            {entry.summary}
+          </div>
         </TableCell>
       </TableRow>
-      {hasDetails && (
-        <CollapsibleContent asChild>
-          <tr>
-            <td colSpan={4} className="px-4 pb-3 pt-0">
-              <div className="ml-8 p-3 rounded-md bg-muted text-sm">
-                <pre className="whitespace-pre-wrap font-mono text-xs">
-                  {JSON.stringify(entry.details, null, 2)}
-                </pre>
-              </div>
-            </td>
-          </tr>
-        </CollapsibleContent>
+      {open && hasDetails && (
+        <TableRow className="bg-muted/30 hover:bg-muted/30">
+          <TableCell colSpan={4} className="px-4 pb-3 pt-0">
+            <div className="ml-8 p-3 rounded-md bg-muted text-sm">
+              <pre className="whitespace-pre-wrap font-mono text-xs">
+                {JSON.stringify(entry.details, null, 2)}
+              </pre>
+            </div>
+          </TableCell>
+        </TableRow>
       )}
-    </Collapsible>
+    </>
   );
 };
 

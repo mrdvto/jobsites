@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -26,9 +27,62 @@ import {
 } from '@/components/ui/collapsible';
 import { Input } from '@/components/ui/input';
 import { Plus, Pencil, X, FileText, Download, Search, History, ChevronDown } from 'lucide-react';
-import { Note, NoteTag } from '@/types';
+import { Note, NoteTag, NoteModification } from '@/types';
 import { NoteModal } from '@/components/NoteModal';
 import { STATUS_COLORS } from '@/hooks/useStatusColors';
+
+const HISTORY_PREVIEW_COUNT = 3;
+
+const NoteHistoryBlock = ({ history, getSalesRepName }: { history: NoteModification[]; getSalesRepName: (id: number) => string }) => {
+  const [showAll, setShowAll] = useState(false);
+  const sorted = [...history].reverse();
+  const visible = showAll ? sorted : sorted.slice(0, HISTORY_PREVIEW_COUNT);
+  const hasMore = sorted.length > HISTORY_PREVIEW_COUNT;
+
+  const entries = (
+    <div className="space-y-1">
+      {visible.map((mod, idx) => (
+        <div key={idx} className="text-xs">
+          <span className="text-muted-foreground">
+            {new Date(mod.modifiedAt).toLocaleString()} — {getSalesRepName(mod.modifiedById)}
+          </span>
+          <span className="ml-1">{mod.summary}</span>
+          {mod.previousContent && (
+            <div className="mt-0.5 pl-2 border-l border-muted-foreground/30 text-muted-foreground italic line-clamp-2">
+              "{mod.previousContent}"
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <Collapsible className="mt-2">
+      <CollapsibleTrigger className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+        <History className="h-3 w-3" />
+        <span>View history ({history.length} edit{history.length !== 1 ? 's' : ''})</span>
+        <ChevronDown className="h-3 w-3" />
+      </CollapsibleTrigger>
+      <CollapsibleContent className="mt-1 pl-4 border-l-2 border-muted">
+        {showAll ? (
+          <ScrollArea className="max-h-[200px]">{entries}</ScrollArea>
+        ) : (
+          entries
+        )}
+        {hasMore && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setShowAll(!showAll); }}
+            className="text-xs text-primary hover:underline mt-1"
+          >
+            {showAll ? 'Show less' : `Show all ${history.length} edits`}
+          </button>
+        )}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
 
 interface NotesSectionProps {
   notes: Note[];
@@ -266,28 +320,10 @@ export const NotesSection = ({
                       </div>
 
                       {note.modificationHistory && note.modificationHistory.length > 0 && (
-                        <Collapsible className="mt-2">
-                          <CollapsibleTrigger className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                            <History className="h-3 w-3" />
-                            <span>View history ({note.modificationHistory.length} edit{note.modificationHistory.length !== 1 ? 's' : ''})</span>
-                            <ChevronDown className="h-3 w-3" />
-                          </CollapsibleTrigger>
-                          <CollapsibleContent className="mt-1 pl-4 border-l-2 border-muted space-y-1">
-                            {[...note.modificationHistory].reverse().map((mod, idx) => (
-                              <div key={idx} className="text-xs">
-                                <span className="text-muted-foreground">
-                                  {new Date(mod.modifiedAt).toLocaleString()} — {getSalesRepName(mod.modifiedById)}
-                                </span>
-                                <span className="ml-1">{mod.summary}</span>
-                                {mod.previousContent && (
-                                  <div className="mt-0.5 pl-2 border-l border-muted-foreground/30 text-muted-foreground italic line-clamp-2">
-                                    "{mod.previousContent}"
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                          </CollapsibleContent>
-                        </Collapsible>
+                        <NoteHistoryBlock
+                          history={note.modificationHistory}
+                          getSalesRepName={getSalesRepName}
+                        />
                       )}
                     </div>
                 </div>

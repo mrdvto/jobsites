@@ -1,36 +1,33 @@
 
 
-# Save Previous Note Content in Modification History
+# Limit Displayed Edit History with "Show All" Expansion
 
-## Overview
-When a note is edited, capture a snapshot of the old content and tags so users can see exactly what the note said before each edit.
+## Problem
+As notes accumulate edits, the modification history list grows unbounded, cluttering the note card and the edit modal.
+
+## Solution
+Show only the **3 most recent edits** by default, with a "Show all X edits" link that expands the full list inside a scroll-constrained container (max ~200px). This keeps the UI compact while preserving full access to history.
 
 ## Changes
 
-### 1. Extend `NoteModification` type (`src/types/index.ts`)
+### 1. `src/components/NotesSection.tsx`
+- Slice the reversed `modificationHistory` to the first 3 entries by default.
+- Add local state per note (or inline toggle) to expand the full list.
+- When expanded, wrap entries in a `ScrollArea` with `max-h-[200px]` so very long histories don't blow out the card.
+- Show a small link: "Show all 12 edits" / "Show less" to toggle.
 
-Add two optional fields to store the previous state:
-- `previousContent?: string` -- the note content before the edit
-- `previousTagIds?: string[]` -- the tag IDs before the edit
-
-### 2. Capture old values in `updateNote` (`src/contexts/DataContext.tsx`)
-
-Before applying the update, save the current `content` and `tagIds` into the new modification entry (only when those fields actually changed).
-
-### 3. Display old content in history UI (`src/components/NotesSection.tsx`)
-
-In the collapsible history list, show the previous content as a small quoted block below each edit entry when available.
-
-### 4. Display old content in edit modal history (`src/components/NoteModal.tsx`)
-
-Same treatment in the edit modal's history section -- show the previous content snippet under each entry.
+### 2. `src/components/NoteModal.tsx`
+- Apply the same pattern to the edit modal's history section: show 3 most recent, with a toggle and scroll area for the rest.
 
 ## Technical Details
 
-| File | Change |
-|------|--------|
-| `src/types/index.ts` | Add `previousContent?: string` and `previousTagIds?: string[]` to `NoteModification` |
-| `src/contexts/DataContext.tsx` | In `updateNote`, set `previousContent: note.content` when content changed; set `previousTagIds: note.tagIds` when tags changed |
-| `src/components/NotesSection.tsx` | Render `mod.previousContent` as a truncated quote block inside history entries |
-| `src/components/NoteModal.tsx` | Render `mod.previousContent` in the modal's history section |
+| Aspect | Detail |
+|--------|--------|
+| Default visible entries | 3 (most recent) |
+| Expanded container | `ScrollArea` with `max-h-[200px]` |
+| Toggle text | "Show all N edits" / "Show less" |
+| State management | Local `useState` boolean per component instance |
+| Files changed | `NotesSection.tsx`, `NoteModal.tsx` |
+
+No data model or context changes needed -- this is purely a UI display concern.
 

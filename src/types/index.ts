@@ -28,6 +28,12 @@ export interface Attachment {
   uploadedAt: string;
 }
 
+export interface NoteModification {
+  modifiedAt: string;
+  modifiedById: number;
+  summary: string;
+}
+
 export interface Note {
   id: number;
   content: string;
@@ -37,6 +43,7 @@ export interface Note {
   attachments: Attachment[];
   lastModifiedAt?: string;
   lastModifiedById?: number;
+  modificationHistory?: NoteModification[];
 }
 
 export interface NoteTag {

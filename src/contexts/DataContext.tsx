@@ -504,15 +504,36 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const updateNote = (siteId: number, noteId: number, updates: Partial<Note>) => {
-    const stampedUpdates = {
-      ...updates,
-      lastModifiedAt: new Date().toISOString(),
-      lastModifiedById: currentUserIdRef.current,
-    };
+    const now = new Date().toISOString();
+    const userId = currentUserIdRef.current;
+
     setJobSites(prevSites =>
       prevSites.map(site => {
         if (site.id === siteId) {
-          return { ...site, notes: (site.notes || []).map(note => note.id === noteId ? { ...note, ...stampedUpdates } : note) };
+          return {
+            ...site,
+            notes: (site.notes || []).map(note => {
+              if (note.id !== noteId) return note;
+
+              // Build summary of what changed
+              const changes: string[] = [];
+              if (updates.content !== undefined && updates.content !== note.content) changes.push('Content updated');
+              if (updates.tagIds !== undefined && JSON.stringify(updates.tagIds) !== JSON.stringify(note.tagIds)) changes.push('Tags changed');
+              if (updates.attachments !== undefined && JSON.stringify(updates.attachments) !== JSON.stringify(note.attachments)) changes.push('Attachments changed');
+              const summary = changes.length > 0 ? changes.join(', ') : 'Note updated';
+
+              const modification = { modifiedAt: now, modifiedById: userId, summary };
+              const history = [...(note.modificationHistory || []), modification];
+
+              return {
+                ...note,
+                ...updates,
+                lastModifiedAt: now,
+                lastModifiedById: userId,
+                modificationHistory: history,
+              };
+            }),
+          };
         }
         return site;
       })

@@ -1,16 +1,19 @@
 
-# Fix Changelog Table Misalignment
+# Default Equipment Groups to Expanded and Remove Chevron Icon
 
-## Problem
-The `Collapsible` component from Radix wraps each table row with a `<div>`, breaking the valid HTML table structure (`<tbody> > <div> > <tr>` instead of `<tbody> > <tr>`). This causes columns to lose their alignment.
+## Changes
 
-## Solution
-Remove the `Collapsible`/`CollapsibleTrigger`/`CollapsibleContent` wrappers and use plain React state (`open` boolean) to conditionally render the details row. This keeps the table DOM valid.
+### File: `src/pages/JobSiteDetail.tsx`
 
-### File: `src/pages/JobSiteChangeLog.tsx`
+Two small tweaks on the equipment collapsible groups:
 
-- Remove `Collapsible`, `CollapsibleTrigger`, `CollapsibleContent` imports
-- In `ExpandableRow`, replace the `Collapsible` wrapper with a React Fragment (`<>`)
-- Replace `CollapsibleTrigger` with a plain `Button` that calls `setOpen(!open)`
-- Replace `CollapsibleContent` with a conditional render: `{open && hasDetails && <tr>...</tr>}`
-- Change the Summary `TableCell` from `className="flex items-center gap-1"` to use `inline-flex` or a wrapper `<div>` inside the cell to avoid breaking cell layout
+1. **Default open**: Change `defaultOpen={hasSearch}` to `defaultOpen={true}` on line 875 so groups are always expanded by default (not just during search).
+
+2. **Remove chevron icon**: Remove the `<ChevronRight>` element on line 878 and its surrounding `gap-2` div, leaving just the company name and badge.
+
+| Line | Before | After |
+|------|--------|-------|
+| 875 | `defaultOpen={hasSearch}` | `defaultOpen={true}` |
+| 877-879 | `<div className="flex items-center gap-2"><ChevronRight .../><span>` | `<div className="flex items-center gap-2"><span>` |
+
+Also remove the `[&[data-state=open]>svg.chevron]:rotate-90` class from the `CollapsibleTrigger` on line 876 since the chevron is gone.

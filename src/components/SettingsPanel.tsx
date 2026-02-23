@@ -6,11 +6,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useNavigate } from 'react-router-dom';
+import { useData } from '@/contexts/DataContext';
 
 export const SettingsPanel = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { salesReps, currentUserId, setCurrentUserId, getSalesRepName } = useData();
 
   const handleManageDropdowns = () => {
     setOpen(false);
@@ -24,9 +27,24 @@ export const SettingsPanel = () => {
           <Settings className="h-5 w-5" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-56 p-2" align="end">
+      <PopoverContent className="w-64 p-2" align="end">
         <div className="text-sm font-medium text-muted-foreground px-2 py-1.5">
           Settings
+        </div>
+        <div className="px-2 py-2">
+          <label className="text-xs text-muted-foreground mb-1 block">Current User</label>
+          <Select value={String(currentUserId)} onValueChange={(v) => setCurrentUserId(Number(v))}>
+            <SelectTrigger className="h-8 text-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {salesReps.map(rep => (
+                <SelectItem key={rep.salesrepid} value={String(rep.salesrepid)}>
+                  {rep.lastname}, {rep.firstname}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <Button
           variant="ghost"

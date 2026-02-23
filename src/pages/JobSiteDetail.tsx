@@ -817,10 +817,7 @@ const JobSiteDetail = () => {
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Wrench className="h-5 w-5" />
-              <h2 className="text-lg font-semibold">Customer Equipment</h2>
-            </div>
+            <h2 className="text-lg font-semibold">Customer Equipment</h2>
             <Button size="sm" onClick={handleCreateEquipment}>
               <Plus className="h-4 w-4 mr-2" />
               Add Equipment

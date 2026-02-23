@@ -170,9 +170,17 @@ export const NoteModal = ({
 
         <div className="space-y-4 py-4">
           {mode === 'edit' && note && (
-            <div className="text-sm text-muted-foreground">
-              Created: {new Date(note.createdAt).toLocaleString()} by{' '}
-              {getSalesRepName(note.createdById)}
+            <div className="text-sm text-muted-foreground space-y-1">
+              <div>
+                Created: {new Date(note.createdAt).toLocaleString()} by{' '}
+                {getSalesRepName(note.createdById)}
+              </div>
+              {note.lastModifiedAt && (
+                <div>
+                  Modified: {new Date(note.lastModifiedAt).toLocaleString()} by{' '}
+                  {getSalesRepName(note.lastModifiedById!)}
+                </div>
+              )}
             </div>
           )}
 

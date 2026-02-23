@@ -504,10 +504,15 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const updateNote = (siteId: number, noteId: number, updates: Partial<Note>) => {
+    const stampedUpdates = {
+      ...updates,
+      lastModifiedAt: new Date().toISOString(),
+      lastModifiedById: currentUserIdRef.current,
+    };
     setJobSites(prevSites =>
       prevSites.map(site => {
         if (site.id === siteId) {
-          return { ...site, notes: (site.notes || []).map(note => note.id === noteId ? { ...note, ...updates } : note) };
+          return { ...site, notes: (site.notes || []).map(note => note.id === noteId ? { ...note, ...stampedUpdates } : note) };
         }
         return site;
       })

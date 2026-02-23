@@ -225,10 +225,18 @@ export const NotesSection = ({
                   )}
 
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>
-                      Created: {new Date(note.createdAt).toLocaleDateString()} by{' '}
-                      {getSalesRepName(note.createdById)}
-                    </span>
+                    <div className="flex flex-col gap-0.5">
+                      <span>
+                        Created: {new Date(note.createdAt).toLocaleDateString()} by{' '}
+                        {getSalesRepName(note.createdById)}
+                      </span>
+                      {note.lastModifiedAt && (
+                        <span>
+                          Modified: {new Date(note.lastModifiedAt).toLocaleDateString()} by{' '}
+                          {getSalesRepName(note.lastModifiedById!)}
+                        </span>
+                      )}
+                    </div>
                     <div className="flex gap-1">
                       <Button
                         variant="ghost"

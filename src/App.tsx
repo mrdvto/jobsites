@@ -5,9 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DataProvider } from "./contexts/DataContext";
 import { useState } from "react";
-import JobSiteList from "./pages/JobSiteList";
-import JobSiteDetail from "./pages/JobSiteDetail";
-import JobSiteChangeLog from "./pages/JobSiteChangeLog";
+import ProjectList from "./pages/ProjectList";
+import ProjectDetail from "./pages/ProjectDetail";
+import ProjectChangeLog from "./pages/ProjectChangeLog";
 import ManageDropdowns from "./pages/ManageDropdowns";
 import NotFound from "./pages/NotFound";
 
@@ -22,9 +22,9 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<JobSiteList />} />
-              <Route path="/site/:id" element={<JobSiteDetail />} />
-              <Route path="/site/:id/changelog" element={<JobSiteChangeLog />} />
+              <Route path="/" element={<ProjectList />} />
+              <Route path="/project/:id" element={<ProjectDetail />} />
+              <Route path="/project/:id/changelog" element={<ProjectChangeLog />} />
               <Route path="/settings/dropdowns" element={<ManageDropdowns />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

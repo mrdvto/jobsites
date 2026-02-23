@@ -6,40 +6,24 @@ import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { CompanyContact, SiteCompany } from '@/types';
+import { CompanyContact, ProjectCompany } from '@/types';
 import { Star, Pencil, Trash2, Plus, X, Check } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
+import { useData } from '@/contexts/DataContext';
 
 interface ManageCompanyContactsModalProps {
-  company: SiteCompany;
+  company: ProjectCompany;
   allCompanyContacts: CompanyContact[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (updatedCompany: SiteCompany) => void;
+  onSave: (updatedCompany: ProjectCompany) => void;
 }
 
-interface ContactFormData {
-  name: string;
-  title: string;
-  phone: string;
-  email: string;
-}
+interface ContactFormData { name: string; title: string; phone: string; email: string; }
+const emptyContact: ContactFormData = { name: '', title: '', phone: '', email: '' };
 
-const emptyContact: ContactFormData = {
-  name: '',
-  title: '',
-  phone: '',
-  email: '',
-};
-
-export const ManageCompanyContactsModal = ({ 
-  company,
-  allCompanyContacts,
-  open, 
-  onOpenChange, 
-  onSave 
-}: ManageCompanyContactsModalProps) => {
+export const ManageCompanyContactsModal = ({ company, allCompanyContacts, open, onOpenChange, onSave }: ManageCompanyContactsModalProps) => {
   const { toast } = useToast();
   const [contacts, setContacts] = useState<CompanyContact[]>([]);
   const [primaryIndex, setPrimaryIndex] = useState(0);
@@ -48,334 +32,97 @@ export const ManageCompanyContactsModal = ({
   const [showAddSection, setShowAddSection] = useState(false);
   const [selectedEmails, setSelectedEmails] = useState<Set<string>>(new Set());
 
-  // Compute available contacts (not already at this site)
-  const availableContacts = allCompanyContacts.filter(
-    ac => !contacts.some(c => c.email === ac.email)
-  );
+  const availableContacts = allCompanyContacts.filter(ac => !contacts.some(c => c.email === ac.email));
 
   useEffect(() => {
-    if (open && company) {
-      setContacts([...(company.companyContacts || [])]);
-      setPrimaryIndex(company.primaryContactIndex || 0);
-      setEditingId(null);
-      setShowAddSection(false);
-      setSelectedEmails(new Set());
-    }
+    if (open && company) { setContacts([...(company.companyContacts || [])]); setPrimaryIndex(company.primaryContactIndex || 0); setEditingId(null); setShowAddSection(false); setSelectedEmails(new Set()); }
   }, [open, company]);
 
-  const handleSetPrimary = (index: number) => {
-    setPrimaryIndex(index);
-  };
-
-  const handleStartEdit = (contact: CompanyContact) => {
-    setEditingId(contact.id);
-    setEditForm({
-      name: contact.name,
-      title: contact.title || '',
-      phone: contact.phone,
-      email: contact.email,
-    });
-  };
-
-  const handleCancelEdit = () => {
-    setEditingId(null);
-    setEditForm(emptyContact);
-  };
-
+  const handleSetPrimary = (index: number) => setPrimaryIndex(index);
+  const handleStartEdit = (contact: CompanyContact) => { setEditingId(contact.id); setEditForm({ name: contact.name, title: contact.title || '', phone: contact.phone, email: contact.email }); };
+  const handleCancelEdit = () => { setEditingId(null); setEditForm(emptyContact); };
   const handleSaveEdit = (contactId: number) => {
-    if (!editForm.name.trim() || !editForm.email.trim()) {
-      toast({
-        title: "Missing Information",
-        description: "Name and email are required.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setContacts(prev => prev.map(c => 
-      c.id === contactId 
-        ? { ...c, name: editForm.name.trim(), title: editForm.title.trim(), phone: editForm.phone.trim(), email: editForm.email.trim() }
-        : c
-    ));
-    setEditingId(null);
-    setEditForm(emptyContact);
+    if (!editForm.name.trim() || !editForm.email.trim()) { toast({ title: "Missing Information", description: "Name and email are required.", variant: "destructive" }); return; }
+    setContacts(prev => prev.map(c => c.id === contactId ? { ...c, name: editForm.name.trim(), title: editForm.title.trim(), phone: editForm.phone.trim(), email: editForm.email.trim() } : c));
+    setEditingId(null); setEditForm(emptyContact);
   };
-
   const handleRemoveContact = (contactId: number) => {
-    if (contacts.length <= 1) {
-      toast({
-        title: "Cannot Remove",
-        description: "At least one contact is required per company.",
-        variant: "destructive"
-      });
-      return;
-    }
-
+    if (contacts.length <= 1) { toast({ title: "Cannot Remove", description: "At least one contact is required per company.", variant: "destructive" }); return; }
     const contactIndex = contacts.findIndex(c => c.id === contactId);
     setContacts(prev => prev.filter(c => c.id !== contactId));
-    
-    // Adjust primary index if needed
-    if (contactIndex < primaryIndex) {
-      setPrimaryIndex(prev => prev - 1);
-    } else if (contactIndex === primaryIndex) {
-      setPrimaryIndex(0);
-    }
+    if (contactIndex < primaryIndex) setPrimaryIndex(prev => prev - 1);
+    else if (contactIndex === primaryIndex) setPrimaryIndex(0);
   };
-
-  const handleToggleContact = (email: string) => {
-    setSelectedEmails(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(email)) {
-        newSet.delete(email);
-      } else {
-        newSet.add(email);
-      }
-      return newSet;
-    });
-  };
-
+  const handleToggleContact = (email: string) => { setSelectedEmails(prev => { const n = new Set(prev); if (n.has(email)) n.delete(email); else n.add(email); return n; }); };
   const handleAddSelectedContacts = () => {
-    if (selectedEmails.size === 0) {
-      toast({
-        title: "No Contacts Selected",
-        description: "Please select at least one contact to add.",
-        variant: "destructive"
-      });
-      return;
-    }
-
+    if (selectedEmails.size === 0) { toast({ title: "No Contacts Selected", description: "Please select at least one contact to add.", variant: "destructive" }); return; }
     const contactsToAdd = availableContacts.filter(c => selectedEmails.has(c.email));
     const maxId = Math.max(...contacts.map(c => c.id), 0);
-    
-    const newContacts = contactsToAdd.map((c, idx) => ({
-      ...c,
-      id: maxId + idx + 1,
-    }));
-
-    setContacts(prev => [...prev, ...newContacts]);
-    setShowAddSection(false);
-    setSelectedEmails(new Set());
+    setContacts(prev => [...prev, ...contactsToAdd.map((c, idx) => ({ ...c, id: maxId + idx + 1 }))]); setShowAddSection(false); setSelectedEmails(new Set());
   };
-
   const handleSave = () => {
-    if (contacts.length === 0) {
-      toast({
-        title: "No Contacts",
-        description: "At least one contact is required.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const updatedCompany: SiteCompany = {
-      ...company,
-      companyContacts: contacts,
-      primaryContactIndex: primaryIndex,
-    };
-
-    onSave(updatedCompany);
-    onOpenChange(false);
+    if (contacts.length === 0) { toast({ title: "No Contacts", description: "At least one contact is required.", variant: "destructive" }); return; }
+    onSave({ ...company, companyContacts: contacts, primaryContactIndex: primaryIndex }); onOpenChange(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Manage {company.companyName} Contacts</DialogTitle>
-          <DialogDescription>
-            <Badge variant="outline">{company.roleDescription}</Badge>
-          </DialogDescription>
-        </DialogHeader>
-        
+        <DialogHeader><DialogTitle>Manage {company.companyName} Contacts</DialogTitle><DialogDescription><Badge variant="outline">{company.roleDescription}</Badge></DialogDescription></DialogHeader>
         <div className="space-y-4 py-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-medium text-sm text-muted-foreground">
-              Contacts at this site ({contacts.length})
-            </h3>
-          </div>
-
+          <div className="flex items-center justify-between"><h3 className="font-medium text-sm text-muted-foreground">Contacts at this project ({contacts.length})</h3></div>
           {contacts.map((contact, index) => (
-            <Card key={contact.id} className={cn(
-              "p-4 relative",
-              index === primaryIndex && "ring-2 ring-primary"
-            )}>
+            <Card key={contact.id} className={cn("p-4 relative", index === primaryIndex && "ring-2 ring-primary")}>
               {editingId === contact.id ? (
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-xs">Name *</Label>
-                      <Input
-                        value={editForm.name}
-                        onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="Contact name"
-                        className="h-8"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">Title</Label>
-                      <Input
-                        value={editForm.title}
-                        onChange={(e) => setEditForm(prev => ({ ...prev, title: e.target.value }))}
-                        placeholder="Job title"
-                        className="h-8"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">Phone</Label>
-                      <Input
-                        value={editForm.phone}
-                        onChange={(e) => setEditForm(prev => ({ ...prev, phone: e.target.value }))}
-                        placeholder="(555) 123-4567"
-                        className="h-8"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">Email *</Label>
-                      <Input
-                        type="email"
-                        value={editForm.email}
-                        onChange={(e) => setEditForm(prev => ({ ...prev, email: e.target.value }))}
-                        placeholder="email@example.com"
-                        className="h-8"
-                      />
-                    </div>
+                    <div><Label className="text-xs">Name *</Label><Input value={editForm.name} onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))} placeholder="Contact name" className="h-8" /></div>
+                    <div><Label className="text-xs">Title</Label><Input value={editForm.title} onChange={(e) => setEditForm(prev => ({ ...prev, title: e.target.value }))} placeholder="Job title" className="h-8" /></div>
+                    <div><Label className="text-xs">Phone</Label><Input value={editForm.phone} onChange={(e) => setEditForm(prev => ({ ...prev, phone: e.target.value }))} placeholder="(555) 123-4567" className="h-8" /></div>
+                    <div><Label className="text-xs">Email *</Label><Input type="email" value={editForm.email} onChange={(e) => setEditForm(prev => ({ ...prev, email: e.target.value }))} placeholder="email@example.com" className="h-8" /></div>
                   </div>
-                  <div className="flex justify-end gap-2">
-                    <Button variant="ghost" size="sm" onClick={handleCancelEdit}>
-                      <X className="h-4 w-4 mr-1" /> Cancel
-                    </Button>
-                    <Button size="sm" onClick={() => handleSaveEdit(contact.id)}>
-                      <Check className="h-4 w-4 mr-1" /> Save
-                    </Button>
-                  </div>
+                  <div className="flex justify-end gap-2"><Button variant="ghost" size="sm" onClick={handleCancelEdit}><X className="h-4 w-4 mr-1" /> Cancel</Button><Button size="sm" onClick={() => handleSaveEdit(contact.id)}><Check className="h-4 w-4 mr-1" /> Save</Button></div>
                 </div>
               ) : (
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      {index === primaryIndex && (
-                        <Star className="h-4 w-4 text-primary fill-primary" />
-                      )}
-                      <span className="font-medium">{contact.name}</span>
-                      {contact.title && (
-                        <span className="text-muted-foreground text-sm">• {contact.title}</span>
-                      )}
-                    </div>
-                    <div className="text-sm text-muted-foreground space-y-0.5">
-                      {contact.phone && <p>{contact.phone}</p>}
-                      <a href={`mailto:${contact.email}`} className="text-primary hover:underline block">
-                        {contact.email}
-                      </a>
-                    </div>
+                    <div className="flex items-center gap-2">{index === primaryIndex && <Star className="h-4 w-4 text-primary fill-primary" />}<span className="font-medium">{contact.name}</span>{contact.title && <span className="text-muted-foreground text-sm">• {contact.title}</span>}</div>
+                    <div className="text-sm text-muted-foreground space-y-0.5">{contact.phone && <p>{contact.phone}</p>}<a href={`mailto:${contact.email}`} className="text-primary hover:underline block">{contact.email}</a></div>
                   </div>
                   <div className="flex items-center gap-1">
-                    {index !== primaryIndex && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleSetPrimary(index)}
-                        className="text-xs"
-                      >
-                        <Star className="h-3 w-3 mr-1" /> Set Primary
-                      </Button>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => handleStartEdit(contact)}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-destructive hover:text-destructive"
-                      onClick={() => handleRemoveContact(contact.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    {index !== primaryIndex && <Button variant="ghost" size="sm" onClick={() => handleSetPrimary(index)} className="text-xs"><Star className="h-3 w-3 mr-1" /> Set Primary</Button>}
+                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleStartEdit(contact)}><Pencil className="h-4 w-4" /></Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => handleRemoveContact(contact.id)}><Trash2 className="h-4 w-4" /></Button>
                   </div>
                 </div>
               )}
             </Card>
           ))}
-
           {showAddSection ? (
             <Card className="p-4 border-dashed">
               <h4 className="font-medium mb-3">Add Contacts from {company.companyName}</h4>
               {availableContacts.length === 0 ? (
-                <div className="text-center py-4 text-muted-foreground">
-                  <p>All contacts from this company are already assigned to this site.</p>
-                  <Button variant="ghost" size="sm" className="mt-2" onClick={() => setShowAddSection(false)}>
-                    Close
-                  </Button>
-                </div>
+                <div className="text-center py-4 text-muted-foreground"><p>All contacts from this company are already assigned to this project.</p><Button variant="ghost" size="sm" className="mt-2" onClick={() => setShowAddSection(false)}>Close</Button></div>
               ) : (
                 <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">Select contacts to add to this site:</p>
+                  <p className="text-sm text-muted-foreground">Select contacts to add to this project:</p>
                   <div className="space-y-2 max-h-[200px] overflow-y-auto">
                     {availableContacts.map((contact) => (
-                      <div
-                        key={contact.email}
-                        className={cn(
-                          "flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
-                          selectedEmails.has(contact.email) ? "bg-primary/10 border-primary" : "hover:bg-muted/50"
-                        )}
-                        onClick={() => handleToggleContact(contact.email)}
-                      >
-                        <Checkbox
-                          checked={selectedEmails.has(contact.email)}
-                          onCheckedChange={() => handleToggleContact(contact.email)}
-                          className="mt-1"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium">{contact.name}</div>
-                          {contact.title && (
-                            <div className="text-sm text-muted-foreground">{contact.title}</div>
-                          )}
-                          <div className="text-sm text-muted-foreground truncate">
-                            {contact.phone && <span>{contact.phone} • </span>}
-                            {contact.email}
-                          </div>
-                        </div>
+                      <div key={contact.email} className={cn("flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors", selectedEmails.has(contact.email) ? "bg-primary/10 border-primary" : "hover:bg-muted/50")} onClick={() => handleToggleContact(contact.email)}>
+                        <Checkbox checked={selectedEmails.has(contact.email)} onCheckedChange={() => handleToggleContact(contact.email)} className="mt-1" />
+                        <div className="flex-1 min-w-0"><div className="font-medium">{contact.name}</div>{contact.title && <div className="text-sm text-muted-foreground">{contact.title}</div>}<div className="text-sm text-muted-foreground truncate">{contact.phone && <span>{contact.phone} • </span>}{contact.email}</div></div>
                       </div>
                     ))}
                   </div>
-                  <div className="flex justify-end gap-2 pt-2">
-                    <Button variant="ghost" size="sm" onClick={() => { setShowAddSection(false); setSelectedEmails(new Set()); }}>
-                      Cancel
-                    </Button>
-                    <Button size="sm" onClick={handleAddSelectedContacts} disabled={selectedEmails.size === 0}>
-                      <Plus className="h-4 w-4 mr-1" /> Add Selected ({selectedEmails.size})
-                    </Button>
-                  </div>
+                  <div className="flex justify-end gap-2 pt-2"><Button variant="ghost" size="sm" onClick={() => { setShowAddSection(false); setSelectedEmails(new Set()); }}>Cancel</Button><Button size="sm" onClick={handleAddSelectedContacts} disabled={selectedEmails.size === 0}><Plus className="h-4 w-4 mr-1" /> Add Selected ({selectedEmails.size})</Button></div>
                 </div>
               )}
             </Card>
           ) : (
-            <Button
-              variant="outline"
-              className="w-full border-dashed"
-              onClick={() => setShowAddSection(true)}
-              disabled={availableContacts.length === 0}
-            >
-              <Plus className="h-4 w-4 mr-2" /> 
-              {availableContacts.length === 0 
-                ? "All company contacts already added" 
-                : "Add Another Contact"}
-            </Button>
+            <Button variant="outline" className="w-full border-dashed" onClick={() => setShowAddSection(true)} disabled={availableContacts.length === 0}><Plus className="h-4 w-4 mr-2" /> {availableContacts.length === 0 ? "All company contacts already added" : "Add Another Contact"}</Button>
           )}
         </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave}>
-            Done
-          </Button>
-        </DialogFooter>
+        <DialogFooter><Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button><Button onClick={handleSave}>Done</Button></DialogFooter>
       </DialogContent>
     </Dialog>
   );

@@ -189,6 +189,11 @@ export const NoteModal = ({
                       <div key={idx} className="text-xs">
                         <span>{new Date(mod.modifiedAt).toLocaleString()} — {getSalesRepName(mod.modifiedById)}</span>
                         <span className="ml-1 text-foreground">{mod.summary}</span>
+                        {mod.previousContent && (
+                          <div className="mt-0.5 pl-2 border-l border-muted-foreground/30 text-muted-foreground italic line-clamp-2">
+                            "{mod.previousContent}"
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

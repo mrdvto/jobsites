@@ -522,7 +522,13 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
               if (updates.attachments !== undefined && JSON.stringify(updates.attachments) !== JSON.stringify(note.attachments)) changes.push('Attachments changed');
               const summary = changes.length > 0 ? changes.join(', ') : 'Note updated';
 
-              const modification = { modifiedAt: now, modifiedById: userId, summary };
+              const modification: any = { modifiedAt: now, modifiedById: userId, summary };
+              if (updates.content !== undefined && updates.content !== note.content) {
+                modification.previousContent = note.content;
+              }
+              if (updates.tagIds !== undefined && JSON.stringify(updates.tagIds) !== JSON.stringify(note.tagIds)) {
+                modification.previousTagIds = note.tagIds;
+              }
               const history = [...(note.modificationHistory || []), modification];
 
               return {

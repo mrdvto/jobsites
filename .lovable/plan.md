@@ -1,69 +1,74 @@
 
 
-# Enrich Example Data
+# Change Log with User Attribution
 
 ## Overview
-Update both `JobSite.json` and `Opportunity.json` with richer sample data: fill in missing estimated close dates, add 3 new opportunities and 3 new customer equipment entries per site, and fix subcontractor role labels to match the Manage Dropdowns configuration.
+Extend the previously approved change log plan to include who made each change. Since this is a single-user demo app without authentication, we will use a "Current User" setting (defaulting to the first sales rep) that can be changed via the Settings panel. Every log entry will record the acting user's sales rep ID.
 
-## Summary of Changes
+## Changes
+
+### 1. `src/types/index.ts` -- Add ChangeLogEntry type
+
+```typescript
+export interface ChangeLogEntry {
+  id: number;
+  siteId: number;
+  timestamp: string;
+  action: string;           // e.g. "COMPANY_REMOVED"
+  category: string;         // "Site" | "Opportunity" | "Company" | "Activity" | "Note" | "Equipment"
+  summary: string;          // Human-readable description
+  changedById: number;      // Sales rep ID of the person who made the change
+  details?: Record<string, any>;
+}
+```
+
+### 2. `src/contexts/DataContext.tsx` -- Track current user and log changes
+
+- Add `currentUserId` state (defaults to first sales rep ID from data, e.g. 313) and `setCurrentUserId` setter, both exposed on the context.
+- Add `changeLog` state array and internal `logChange(siteId, action, category, summary, details?)` helper that appends an entry with `changedById: currentUserId` and the current timestamp.
+- Expose `getChangeLog(siteId): ChangeLogEntry[]` on the context.
+- Instrument all mutation functions to call `logChange` with descriptive summaries:
+  - `updateJobSite` -- "Site details updated (fields: ...)"
+  - `addOpportunityToSite` -- "Opportunity '[desc]' associated"
+  - `createNewOpportunity` -- "Opportunity '[desc]' created"
+  - `updateOpportunity` -- "Opportunity updated (fields: ...)"
+  - `addSiteCompany` / `removeSiteCompany` / `updateSiteCompany`
+  - `addActivity` / `updateActivity` / `deleteActivity`
+  - `addNote` / `updateNote` / `deleteNote`
+  - `addCustomerEquipment` / `updateCustomerEquipment` / `deleteCustomerEquipment`
+
+### 3. `src/pages/JobSiteChangeLog.tsx` -- New page
+
+- Route: `/site/:id/changelog`
+- Header with back button, site name, and "Change Log" title
+- Category filter tabs: All, Site, Opportunity, Company, Activity, Note, Equipment
+- Table columns: **Date/Time**, **Changed By** (formatted name via `getSalesRepName`), **Category** (badge), **Summary**
+- Expandable rows to show `details` when present
+- Empty state when no entries exist
+
+### 4. `src/App.tsx` -- Add route
+
+- `<Route path="/site/:id/changelog" element={<JobSiteChangeLog />} />`
+
+### 5. `src/pages/JobSiteDetail.tsx` -- Add navigation button
+
+- Add a "Change Log" button with a `History` icon in the header, linking to `/site/${site.id}/changelog`
+
+### 6. `src/components/SettingsPanel.tsx` -- Add current user selector
+
+- Add a "Current User" dropdown populated from `salesReps`, bound to `currentUserId` / `setCurrentUserId` from context
+- This lets the demo simulate different users making changes
+
+---
 
 ### Files Changed
 
 | File | What changes |
 |------|-------------|
-| `src/data/JobSite.json` | Add 30 new associated opportunities (3 per site), add 30 new customer equipment entries (3 per site), fix misaligned role IDs and descriptions |
-| `src/data/Opportunity.json` | Add 30 new full opportunity records with estimated close dates; all existing records already have close dates |
-
----
-
-### 1. Fix Subcontractor Role Alignment
-
-The Manage Dropdowns configuration defines these roles:
-
-| ID | Label |
-|----|-------|
-| GC | General Contractor |
-| SUB-EXC | Subcontractor - Excavation |
-| SUB-PAV | Subcontractor - Paving |
-| SUB-ELEC | Subcontractor - Electrical |
-| SUB-MECH | Subcontractor - Mechanical |
-| SUB-SPEC | Subcontractor - Specialized |
-| SUB-STEEL | Subcontractor - Steel |
-
-Current mismatches to fix:
-
-| Site | Company | Current roleId / Description | Fix to |
-|------|---------|------------------------------|--------|
-| 500102 | Turner Construction | SUB-STRUCT / "Structural" | SUB-STEEL / "Subcontractor - Steel" |
-| 500103 | Curran Contracting | SUB-PAV / "Finish Paving" | SUB-PAV / "Subcontractor - Paving" |
-| 500105 | Rosendin Electric | SUB-ELEC / "Power Systems" | SUB-ELEC / "Subcontractor - Electrical" |
-| 500106 | Layne Christensen | SUB-SPEC / "Specialized Drilling" | SUB-SPEC / "Subcontractor - Specialized" |
-| 500106 | Rosendin Electric | SUB-ELEC / "Power Systems" | SUB-ELEC / "Subcontractor - Electrical" |
-| 500108 | Stupp Bridge | SUB-STEEL / "Steel Fabrication" | SUB-STEEL / "Subcontractor - Steel" |
-| 500109 | Christy Webber | SUB-LAND / "Landscaping" | SUB-SPEC / "Subcontractor - Specialized" |
-| 500110 | Layne Christensen | SUB-SPEC / "Specialized Drilling" | SUB-SPEC / "Subcontractor - Specialized" |
-| 500110 | Curran Contracting | SUB-PAV / "Finish Paving" | SUB-PAV / "Subcontractor - Paving" |
-
----
-
-### 2. Add 3 New Opportunities per Job Site
-
-Each site gets 3 new opportunities with varying types (Sales, Rent, Parts, Service, Rental Service, Lease) and sales reps matching those assigned to that site. All new opportunities will have `estimateDeliveryMonth` and `estimateDeliveryYear` set.
-
-New opportunity IDs will start at 300001 and increment. Each will have a full record in `Opportunity.json` and a summary entry in the site's `associatedOpportunities` array in `JobSite.json`. Stages will vary across Lead, Outstanding, Development, Proposal, Won, Lost to provide diverse test data.
-
----
-
-### 3. Add 3 New Customer Equipment per Job Site
-
-Each site gets 3 additional equipment entries associated with companies already on that site. Equipment types will vary (Excavator, Dozer, Wheel Loader, Skid Steer, Compactor, Generator, Boom Lift, etc.) with realistic makes (Caterpillar, Komatsu, John Deere, Volvo, Case, Bobcat), model numbers, years, serial numbers, and hour readings.
-
----
-
-### Scale of Changes
-
-- 30 new opportunities across both JSON files
-- 30 new customer equipment entries in JobSite.json
-- 9 role description fixes in JobSite.json
-- No code/logic changes needed -- data files only
+| `src/types/index.ts` | Add `ChangeLogEntry` interface with `changedById` field |
+| `src/contexts/DataContext.tsx` | Add `currentUserId`, `changeLog`, `logChange`, `getChangeLog`; instrument all mutations |
+| `src/pages/JobSiteChangeLog.tsx` | New page with filtered table showing who changed what and when |
+| `src/App.tsx` | Add changelog route |
+| `src/pages/JobSiteDetail.tsx` | Add "Change Log" button in header |
+| `src/components/SettingsPanel.tsx` | Add "Current User" selector |
 

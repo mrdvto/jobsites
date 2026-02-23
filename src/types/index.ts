@@ -35,6 +35,8 @@ export interface Note {
   createdById: number;
   tagIds: string[];
   attachments: Attachment[];
+  lastModifiedAt?: string;
+  lastModifiedById?: number;
 }
 
 export interface NoteTag {

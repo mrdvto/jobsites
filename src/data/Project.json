@@ -374,7 +374,7 @@
             "name": "City Water Treatment Plant Upgrade",
             "description": "Installation of new filtration pumps and backup power systems.",
             "statusId": "Active",
-            "salesRepIds": [304],
+            "assigneeIds": [304],
             "projectPrimaryContact": {
                 "name": "City of Springfield",
                 "title": "Public Works Director",

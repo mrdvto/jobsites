@@ -141,10 +141,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [opportunityTypes] = useState<OpportunityType[]>(opportunityTypesData.content as OpportunityType[]);
   const [noteTags, setNoteTagsState] = useState<NoteTag[]>([]);
   const [filters, setFilters] = useState<Filters>({
-    assigneeId: '',
-    division: '',
+    assigneeIds: [],
+    divisions: [],
     generalContractor: '',
-    status: '',
+    statuses: [],
     hideCompleted: true,
   });
 

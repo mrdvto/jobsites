@@ -769,7 +769,7 @@ const ProjectDetail = () => {
               <TableBody>
                 {sortedActivities.map(activity => (
                   <TableRow key={activity.id}>
-                    <TableCell className="font-medium">{getSalesRepName(activity.assigneeId)}</TableCell>
+                    <TableCell className="font-medium">{getUserName(activity.assigneeId)}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{activity.activityType}</Badge>
                     </TableCell>

@@ -59,6 +59,14 @@ export const SettingsPanel = () => {
           Manage dropdowns
           <ChevronRight className="h-4 w-4" />
         </Button>
+        <Button
+          variant="ghost"
+          className="w-full justify-between"
+          onClick={handleDodgeMappings}
+        >
+          Dodge project mappings
+          <ChevronRight className="h-4 w-4" />
+        </Button>
       </PopoverContent>
     </Popover>
   );

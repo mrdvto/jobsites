@@ -141,10 +141,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [opportunityTypes] = useState<OpportunityType[]>(opportunityTypesData.content as OpportunityType[]);
   const [noteTags, setNoteTagsState] = useState<NoteTag[]>([]);
   const [filters, setFilters] = useState<Filters>({
-    assigneeId: '',
-    division: '',
+    assigneeIds: [],
+    divisions: [],
     generalContractor: '',
-    status: '',
+    statuses: [],
     hideCompleted: true,
   });
 
@@ -257,10 +257,22 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (savedFilters) {
       try {
         const parsed = JSON.parse(savedFilters);
-        // Migrate old salesRepId to assigneeId
-        if ('salesRepId' in parsed && !('assigneeId' in parsed)) {
-          parsed.assigneeId = parsed.salesRepId;
+        // Migrate old single-value filters to arrays
+        if ('assigneeId' in parsed && !('assigneeIds' in parsed)) {
+          parsed.assigneeIds = parsed.assigneeId ? [parsed.assigneeId] : [];
+          delete parsed.assigneeId;
+        }
+        if ('salesRepId' in parsed) {
+          parsed.assigneeIds = parsed.salesRepId ? [String(parsed.salesRepId)] : [];
           delete parsed.salesRepId;
+        }
+        if ('division' in parsed && !('divisions' in parsed)) {
+          parsed.divisions = parsed.division ? [parsed.division] : [];
+          delete parsed.division;
+        }
+        if ('status' in parsed && !('statuses' in parsed)) {
+          parsed.statuses = parsed.status ? [parsed.status] : [];
+          delete parsed.status;
         }
         setFilters(parsed);
       } catch (e) {
@@ -340,14 +352,14 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const getFilteredProjects = (): Project[] => {
     return projects.filter(project => {
       if (filters.hideCompleted && project.statusId === 'Completed') return false;
-      if (filters.assigneeId && !project.assigneeIds.includes(parseInt(filters.assigneeId))) return false;
-      if (filters.status && project.statusId !== filters.status) return false;
-      if (filters.division) {
+      if (filters.assigneeIds.length > 0 && !project.assigneeIds.some(id => filters.assigneeIds.includes(id.toString()))) return false;
+      if (filters.statuses.length > 0 && !filters.statuses.includes(project.statusId)) return false;
+      if (filters.divisions.length > 0) {
         const projectOpps = project.associatedOpportunities
           .map(ao => opportunities.find(o => o.id === ao.id))
           .filter(Boolean) as Opportunity[];
         const division = projectOpps.length > 0 ? projectOpps[0].divisionId : 'E';
-        if (division !== filters.division) return false;
+        if (!filters.divisions.includes(division)) return false;
       }
       if (filters.generalContractor) {
         const hasMatchingGC = project.projectCompanies.some(

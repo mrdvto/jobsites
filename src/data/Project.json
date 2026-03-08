@@ -518,7 +518,7 @@
             "name": "Downtown Bridge Rehabilitation",
             "description": "Structural steel repairs and repainting of the main street bridge.",
             "statusId": "Active",
-            "salesRepIds": [292],
+            "assigneeIds": [292],
             "projectPrimaryContact": {
                 "name": "Civil Eng Corp",
                 "title": "Chief Engineer",

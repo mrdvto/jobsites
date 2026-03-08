@@ -314,6 +314,29 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return project.associatedOpportunities.reduce((sum, opp) => sum + opp.revenue, 0);
   };
 
+  const getCompanyById = (companyId: string): ProjectCompany | undefined => {
+    for (const project of projects) {
+      const company = project.projectCompanies.find(c => c.companyId === companyId);
+      if (company) return company;
+    }
+    return undefined;
+  };
+
+  const getAllKnownCompanies = (): ProjectCompany[] => {
+    const seen = new Set<string>();
+    const result: ProjectCompany[] = [];
+    for (const project of projects) {
+      for (const company of project.projectCompanies) {
+        const key = company.companyId;
+        if (!seen.has(key)) {
+          seen.add(key);
+          result.push(company);
+        }
+      }
+    }
+    return result.sort((a, b) => a.companyName.localeCompare(b.companyName));
+  };
+
   const getFilteredProjects = (): Project[] => {
     return projects.filter(project => {
       if (filters.hideCompleted && project.statusId === 'Completed') return false;

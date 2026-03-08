@@ -124,11 +124,11 @@ export const ProjectTable = () => {
             </TableHead>
             <TableHead 
               className="cursor-pointer select-none group hover:bg-muted/50"
-              onClick={() => handleSort('contact')}
+              onClick={() => handleSort('owner')}
             >
               <div className="flex items-center">
-                Primary Contact
-                <SortIcon column="contact" />
+                Owner
+                <SortIcon column="owner" />
               </div>
             </TableHead>
             <TableHead 

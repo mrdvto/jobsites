@@ -219,7 +219,7 @@
             "name": "Fox Valley Mall - Landscaping Refurbishment",
             "description": "Updating exterior landscaping, tree removal, and new retaining walls.",
             "statusId": "Completed",
-            "salesRepIds": [292],
+            "assigneeIds": [292],
             "projectPrimaryContact": {
                 "name": "Karen Fields",
                 "title": "Property Manager",

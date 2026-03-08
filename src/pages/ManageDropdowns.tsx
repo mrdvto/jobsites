@@ -208,6 +208,17 @@ const ManageDropdowns = () => {
           color: item.color || 'slate'
         })));
       }
+
+      // Sync lookup types to context
+      if (selectedDropdown === 'primaryStage') {
+        setPrimaryStages(editedValues.map(item => ({ id: item.id, label: item.label, displayOrder: item.displayOrder })));
+      }
+      if (selectedDropdown === 'primaryProjectType') {
+        setPrimaryProjectTypes(editedValues.map(item => ({ id: item.id, label: item.label, displayOrder: item.displayOrder })));
+      }
+      if (selectedDropdown === 'ownershipType') {
+        setOwnershipTypes(editedValues.map(item => ({ id: item.id, label: item.label, displayOrder: item.displayOrder })));
+      }
       
       setIsEditing(false);
       toast({

@@ -227,6 +227,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const projectsWithMigratedData = projectsData.content.map(p => ({
       ...p,
       assigneeIds: (p as any).assigneeIds || (p as any).salesRepIds || [],
+      projectOwner: (p as any).projectOwner || { companyId: '', contactIds: [] },
       activities: (p as any).activities || [],
       notes: migrateNotes((p as any).notes || []),
       projectCompanies: migrateProjectCompanies((p as any).siteCompanies || (p as any).projectCompanies || []),

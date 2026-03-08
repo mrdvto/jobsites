@@ -43,7 +43,7 @@ const ExpandableRow = ({ entry, changedByName }: { entry: ChangeLogEntry; change
 const ProjectChangeLog = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { projects, getChangeLog, getSalesRepName } = useData();
+  const { projects, getChangeLog, getUserName } = useData();
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(15);

@@ -153,6 +153,15 @@ const ManageDropdowns = () => {
   }, {
     key: 'noteTags',
     label: 'Note Tags'
+  }, {
+    key: 'primaryStage',
+    label: 'Primary Stage'
+  }, {
+    key: 'primaryProjectType',
+    label: 'Primary Project Type'
+  }, {
+    key: 'ownershipType',
+    label: 'Ownership Type'
   }];
   const sortByDisplayOrder = (items: DropdownOption[]) => {
     return [...items].sort((a, b) => a.displayOrder - b.displayOrder);

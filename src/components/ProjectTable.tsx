@@ -24,7 +24,7 @@ const getStatusOrder = (statusId: string): number => {
 
 export const ProjectTable = () => {
   const navigate = useNavigate();
-  const { getFilteredProjects, getUserNames, calculateProjectRevenue } = useData();
+  const { getFilteredProjects, getUserNames, calculateProjectRevenue, getCompanyById } = useData();
   const { getStatusColorClasses } = useStatusColors();
   const [sortColumn, setSortColumn] = useState<SortColumn | null>('status');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');

@@ -654,7 +654,7 @@
             "name": "Limestone Quarry - South Face Expansion",
             "description": "Stripping overburden to access new aggregate veins.",
             "statusId": "Active",
-            "salesRepIds": [305, 303],
+            "assigneeIds": [305, 303],
             "projectPrimaryContact": {
                 "name": "Fred Flint",
                 "title": "Quarry Manager",

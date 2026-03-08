@@ -168,7 +168,7 @@ export const ProjectTable = () => {
                 <TableCell className="font-medium">{project.name}</TableCell>
                 <TableCell>{project.address.city}, {project.address.state}</TableCell>
                 <TableCell>{getUserNames(project.assigneeIds)}</TableCell>
-                <TableCell>{project.projectPrimaryContact.name}</TableCell>
+                <TableCell>{project.projectOwner?.companyId ? getCompanyById(project.projectOwner.companyId)?.companyName || '—' : '—'}</TableCell>
                 <TableCell>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColorClasses(project.statusId)}`}>
                     {project.statusId}

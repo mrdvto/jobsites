@@ -686,6 +686,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         getFilteredProjects,
         getTotalPipelineRevenue,
         getRevenueByType,
+        getCompanyById,
+        getAllKnownCompanies,
       }}
     >
       {children}

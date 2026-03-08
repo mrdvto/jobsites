@@ -257,10 +257,22 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (savedFilters) {
       try {
         const parsed = JSON.parse(savedFilters);
-        // Migrate old salesRepId to assigneeId
-        if ('salesRepId' in parsed && !('assigneeId' in parsed)) {
-          parsed.assigneeId = parsed.salesRepId;
+        // Migrate old single-value filters to arrays
+        if ('assigneeId' in parsed && !('assigneeIds' in parsed)) {
+          parsed.assigneeIds = parsed.assigneeId ? [parsed.assigneeId] : [];
+          delete parsed.assigneeId;
+        }
+        if ('salesRepId' in parsed) {
+          parsed.assigneeIds = parsed.salesRepId ? [String(parsed.salesRepId)] : [];
           delete parsed.salesRepId;
+        }
+        if ('division' in parsed && !('divisions' in parsed)) {
+          parsed.divisions = parsed.division ? [parsed.division] : [];
+          delete parsed.division;
+        }
+        if ('status' in parsed && !('statuses' in parsed)) {
+          parsed.statuses = parsed.status ? [parsed.status] : [];
+          delete parsed.status;
         }
         setFilters(parsed);
       } catch (e) {

@@ -64,6 +64,8 @@ interface DataContextType {
   getFilteredProjects: () => Project[];
   getTotalPipelineRevenue: () => number;
   getRevenueByType: () => { typeId: number; typeName: string; revenue: number }[];
+  getCompanyById: (companyId: string) => ProjectCompany | undefined;
+  getAllKnownCompanies: () => ProjectCompany[];
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);

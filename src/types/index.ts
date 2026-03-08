@@ -80,12 +80,19 @@ export interface ProjectCompany {
   };
 }
 
+export interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string | null;
+}
+
 export interface Project {
   id: number;
   name: string;
   description: string;
   statusId: string;
-  salesRepIds: number[];
+  assigneeIds: number[];
   projectPrimaryContact: {
     name: string;
     title: string;

@@ -20,79 +20,49 @@ interface DropdownOption {
   color?: string; // Only used for projectStatus
 }
 
-// Initial dropdown data
 const initialDropdowns: Record<DropdownType, DropdownOption[]> = {
   projectStatus: [{
-    id: 'Active',
-    label: 'Active',
-    displayOrder: 1,
-    color: 'emerald'
+    id: 'Active', label: 'Active', displayOrder: 1, color: 'emerald'
   }, {
-    id: 'Planning',
-    label: 'Planning',
-    displayOrder: 2,
-    color: 'sky'
+    id: 'Planning', label: 'Planning', displayOrder: 2, color: 'sky'
   }, {
-    id: 'On Hold',
-    label: 'On Hold',
-    displayOrder: 3,
-    color: 'amber'
+    id: 'On Hold', label: 'On Hold', displayOrder: 3, color: 'amber'
   }, {
-    id: 'Completed',
-    label: 'Completed',
-    displayOrder: 99,
-    color: 'slate'
+    id: 'Completed', label: 'Completed', displayOrder: 99, color: 'slate'
   }],
-  subcontractorRole: [{
-    id: 'GC',
-    label: 'General Contractor',
-    displayOrder: 1
-  }, {
-    id: 'SUB-EXC',
-    label: 'Subcontractor - Excavation',
-    displayOrder: 2
-  }, {
-    id: 'SUB-PAV',
-    label: 'Subcontractor - Paving',
-    displayOrder: 3
-  }, {
-    id: 'SUB-ELEC',
-    label: 'Subcontractor - Electrical',
-    displayOrder: 4
-  }, {
-    id: 'SUB-MECH',
-    label: 'Subcontractor - Mechanical',
-    displayOrder: 5
-  }, {
-    id: 'SUB-SPEC',
-    label: 'Subcontractor - Specialized',
-    displayOrder: 6
-  }, {
-    id: 'SUB-STEEL',
-    label: 'Subcontractor - Steel',
-    displayOrder: 7
-  }],
-  noteTags: [{
-    id: 'SAFETY',
-    label: 'Safety',
-    displayOrder: 1,
-    color: 'red'
-  }, {
-    id: 'SECURITY',
-    label: 'Security',
-    displayOrder: 2,
-    color: 'amber'
-  }, {
-    id: 'COMPLIANCE',
-    label: 'Compliance',
-    displayOrder: 3,
-    color: 'sky'
-  }, {
-    id: 'GENERAL',
-    label: 'General',
-    displayOrder: 4,
-    color: 'slate'
-  }]
+  subcontractorRole: [
+    { id: 'GC', label: 'General Contractor', displayOrder: 1 },
+    { id: 'SUB-EXC', label: 'Subcontractor - Excavation', displayOrder: 2 },
+    { id: 'SUB-PAV', label: 'Subcontractor - Paving', displayOrder: 3 },
+    { id: 'SUB-ELEC', label: 'Subcontractor - Electrical', displayOrder: 4 },
+    { id: 'SUB-MECH', label: 'Subcontractor - Mechanical', displayOrder: 5 },
+    { id: 'SUB-SPEC', label: 'Subcontractor - Specialized', displayOrder: 6 },
+    { id: 'SUB-STEEL', label: 'Subcontractor - Steel', displayOrder: 7 },
+  ],
+  noteTags: [
+    { id: 'SAFETY', label: 'Safety', displayOrder: 1, color: 'red' },
+    { id: 'SECURITY', label: 'Security', displayOrder: 2, color: 'amber' },
+    { id: 'COMPLIANCE', label: 'Compliance', displayOrder: 3, color: 'sky' },
+    { id: 'GENERAL', label: 'General', displayOrder: 4, color: 'slate' },
+  ],
+  primaryStage: [
+    { id: 'PRE_CONSTRUCTION', label: 'Pre-Construction', displayOrder: 1 },
+    { id: 'BIDDING', label: 'Bidding', displayOrder: 2 },
+    { id: 'AWARDED', label: 'Awarded', displayOrder: 3 },
+    { id: 'UNDER_CONSTRUCTION', label: 'Under Construction', displayOrder: 4 },
+    { id: 'COMPLETED', label: 'Completed', displayOrder: 5 },
+  ],
+  primaryProjectType: [
+    { id: 'COMMERCIAL', label: 'Commercial', displayOrder: 1 },
+    { id: 'RESIDENTIAL', label: 'Residential', displayOrder: 2 },
+    { id: 'INDUSTRIAL', label: 'Industrial', displayOrder: 3 },
+    { id: 'INFRASTRUCTURE', label: 'Infrastructure', displayOrder: 4 },
+    { id: 'INSTITUTIONAL', label: 'Institutional', displayOrder: 5 },
+  ],
+  ownershipType: [
+    { id: 'GOVERNMENTAL', label: 'Governmental', displayOrder: 1 },
+    { id: 'PRIVATE', label: 'Private', displayOrder: 2 },
+  ],
 };
 const ManageDropdowns = () => {
   const navigate = useNavigate();

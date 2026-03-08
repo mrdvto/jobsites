@@ -11,7 +11,7 @@ import { useStatusColors, STATUS_COLORS } from '@/hooks/useStatusColors';
 import { useData } from '@/contexts/DataContext';
 import { LookupOption } from '@/types';
 
-type DropdownType = 'projectStatus' | 'subcontractorRole' | 'noteTags';
+type DropdownType = 'projectStatus' | 'subcontractorRole' | 'noteTags' | 'primaryStage' | 'primaryProjectType' | 'ownershipType';
 
 interface DropdownOption {
   id: string;

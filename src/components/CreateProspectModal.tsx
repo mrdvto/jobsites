@@ -255,7 +255,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
   }, [submitted, companyName, divisionId, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
 
   const resetForm = useCallback(() => {
-    setCompanyName(''); setPhone('');
+    setCompanyName(''); setPhone(''); setDivisionId('');
     setAddress1(''); setAddress2(''); setAddress3('');
     setCity(''); setCountryCode(''); setStateCode(''); setZipCode('');
     setFirstName(''); setLastName(''); setTitle('');

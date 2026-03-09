@@ -171,6 +171,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [primaryStages, setPrimaryStagesState] = useState<LookupOption[]>(lookupsData.primaryStages);
   const [primaryProjectTypes, setPrimaryProjectTypesState] = useState<LookupOption[]>(lookupsData.primaryProjectTypes);
   const [ownershipTypes, setOwnershipTypesState] = useState<LookupOption[]>(lookupsData.ownershipTypes);
+  const [uomTypes] = useState<LookupOption[]>(lookupsData.uomTypes || []);
   const [dodgeMappings, setDodgeMappingsState] = useState<Record<string, DodgeMapping[]>>({});
 
   // Current user and change log

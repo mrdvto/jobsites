@@ -847,6 +847,7 @@ const ProjectDetail = () => {
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('date')}>
                     <div className="flex items-center">Date<SortIcon active={actSortColumn === 'date'} direction={actSortDirection} /></div>
                   </TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('description')}>
                     <div className="flex items-center">Description<SortIcon active={actSortColumn === 'description'} direction={actSortDirection} /></div>
                   </TableHead>

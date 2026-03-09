@@ -6,11 +6,12 @@ import { useColumnVisibility, ColumnId } from '@/hooks/useColumnVisibility';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ColumnVisibilitySelector } from '@/components/ColumnVisibilitySelector';
 import { FilterModal } from '@/components/FilterModal';
 import { ActiveFilterBadges } from '@/components/ActiveFilterBadges';
-import { ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Filter, Search } from 'lucide-react';
 import { Project } from '@/types';
 
 type SortColumn =
@@ -78,8 +79,12 @@ export const ProjectTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProjects = getFilteredProjects();
+  const searchedProjects = searchQuery
+    ? filteredProjects.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : filteredProjects;
 
   const formatDate = (d?: string): string => {
     if (!d) return '—';
@@ -208,7 +213,7 @@ export const ProjectTable = () => {
     }
   };
 
-  const sortedProjects = [...filteredProjects].sort((a, b) => {
+  const sortedProjects = [...searchedProjects].sort((a, b) => {
     if (!sortColumn || !sortDirection) return 0;
 
     let comparison = 0;
@@ -320,6 +325,15 @@ export const ProjectTable = () => {
         <p className="text-sm text-muted-foreground shrink-0">
           {totalProjects} project{totalProjects !== 1 ? 's' : ''} total
         </p>
+        <div className="relative shrink-0">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+          <Input
+            placeholder="Search projects..."
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+            className="h-8 w-48 pl-8 text-sm"
+          />
+        </div>
         <div className="flex-1 min-w-0">
           <ActiveFilterBadges />
         </div>

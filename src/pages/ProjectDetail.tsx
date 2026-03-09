@@ -1163,9 +1163,21 @@ const ProjectDetail = () => {
         open={showCreateProspectModal}
         onOpenChange={setShowCreateProspectModal}
         onSave={(data: ProspectData) => {
-          // Add as a project company with the contact
-          const { addProjectCompany } = { addProjectCompany: (window as any).__addProjectCompany };
-          // Use the context's addProjectCompany via the existing pattern
+          const companyId = `PROSPECT-${Date.now()}`;
+          addProjectCompany(project.id, {
+            companyId,
+            companyName: data.companyName,
+            roleId: 'PROSPECT',
+            roleDescription: 'Prospect',
+            isPrimaryContact: false,
+            companyContacts: [{
+              id: 1,
+              name: `${data.contact.firstName} ${data.contact.lastName}`,
+              title: data.contact.title,
+              phone: data.contact.mobilePhone,
+              email: data.contact.email,
+            }],
+          });
         }}
       />
 

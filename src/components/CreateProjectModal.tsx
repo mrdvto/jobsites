@@ -119,16 +119,7 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
       }
     }
 
-    // Dodge Project validation
-    if ((dodgeProjectName.trim() && !dodgeProjectUrl.trim()) || (!dodgeProjectName.trim() && dodgeProjectUrl.trim())) {
-      toast({ title: "Error", description: "Dodge Project requires both a name and URL.", variant: "destructive" });
-      return;
-    }
-
     const parsedValuation = valuation ? parseFloat(valuation.replace(/,/g, '')) : undefined;
-    const dodgeProject = dodgeProjectName.trim() && dodgeProjectUrl.trim()
-      ? { name: dodgeProjectName.trim(), url: dodgeProjectUrl.trim() }
-      : undefined;
 
     createProject({
       name: name.trim(),

@@ -115,6 +115,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
       setSelectedContactId('');
       setCampaignId('');
       setIssueId('');
+      setLinkedActivityId('');
       setShowMoreFields(false);
     }
   }, [activity, mode, open, followUpFrom]);

@@ -657,7 +657,7 @@
                 { "id": 3, "content": "Bridge remains open to traffic during construction. Work zones must be clearly marked with proper signage.", "createdAt": "2025-09-01T14:00:00.000Z", "createdById": 292, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1014, "assigneeId": 292, "activityType": "Phone Call", "date": "2025-08-20T00:00:00.000Z", "description": "Coordinated parts delivery schedule" }
+                { "id": 1014, "statusId": 1, "salesRepId": 292, "typeId": "P", "date": "2026-08-20T11:00:00.000Z", "description": "Coordinated parts delivery schedule", "contactName": "Betsy Owens", "notes": "Parts shipment expected by end of month." }
             ],
             "customerEquipment": [1030, 1031, 1032]
         },

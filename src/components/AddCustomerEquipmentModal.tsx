@@ -107,6 +107,7 @@ export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, projectI
                           <TableHead>Year</TableHead>
                           <TableHead>Serial #</TableHead>
                           <TableHead className="text-right">SMU</TableHead>
+                          <TableHead>UOM</TableHead>
                           <TableHead>Ownership</TableHead>
                         </TableRow>
                       </TableHeader>

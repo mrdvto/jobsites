@@ -266,7 +266,8 @@
                 { "id": 2, "companyId": "NON-DBS", "equipmentType": "Roller", "make": "Volvo", "model": "DD120C", "year": 2020, "serialNumber": "VLVDD120CX3", "hours": 3500 },
                 { "id": 3, "companyId": "NON-DBS", "equipmentType": "Skid Steer", "make": "Case", "model": "SV340B", "year": 2021, "serialNumber": "CASESV340B7", "hours": 2100 }
             ],
-            "dodgeProject": {
+            "externalReference": {
+                "source": "Dodge Data & Analytics",
                 "url": "https://www.construction.com/projects/5001030/i-55-highway-resurfacing",
                 "name": "I-55 Highway Resurfacing Project (MM 20-35)"
             }

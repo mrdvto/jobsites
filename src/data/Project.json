@@ -416,9 +416,9 @@
                 { "id": 5, "content": "Weekly safety meetings held every Monday at 7:00 AM in the main trailer. Attendance is mandatory.", "createdAt": "2025-01-06T07:30:00.000Z", "createdById": 313, "tagIds": ["SAFETY"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1008, "assigneeId": 305, "activityType": "Meeting", "date": "2025-01-10T00:00:00.000Z", "description": "Weekly progress meeting with Amazon construction team" },
-                { "id": 1009, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-01-17T00:00:00.000Z", "description": "Generator installation inspection" },
-                { "id": 1010, "assigneeId": 313, "activityType": "Phone Call", "date": "2025-02-01T00:00:00.000Z", "description": "Discussed additional equipment requirements" }
+                { "id": 1008, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-01-10T07:00:00.000Z", "description": "Weekly progress meeting with Amazon construction team", "contactName": "Greg Harmon", "notes": "Reviewed generator installation timeline.", "campaignId": 3 },
+                { "id": 1009, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-01-17T09:00:00.000Z", "description": "Generator installation inspection", "contactName": "Derek Washington", "notes": "Units placed per spec. Electrical hookup pending.", "issueId": 4, "customerId": "OWN-AMZN" },
+                { "id": 1010, "statusId": 2, "salesRepId": 313, "typeId": "P", "date": "2025-02-01T15:30:00.000Z", "description": "Discussed additional equipment requirements", "contactName": "Priya Patel", "notes": "Amazon requesting additional telescopic handler for Q2." }
             ],
             "customerEquipment": [1016, 1017, 1018, 1019, 1020, 1021],
             "externalReference": {

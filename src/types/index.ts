@@ -9,6 +9,7 @@ export interface CustomerEquipment {
   year?: number;
   serialNumber?: string;
   hours?: number;
+  ownershipStatus: 'owned' | 'rented';
 }
 
 export interface Activity {
@@ -127,7 +128,7 @@ export interface Project {
   }>;
   notes: Note[];
   activities: Activity[];
-  customerEquipment: CustomerEquipment[];
+  customerEquipment: number[];
   valuation?: number;
   primaryStageId?: string;
   primaryProjectTypeId?: string;

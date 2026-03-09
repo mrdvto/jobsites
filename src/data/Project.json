@@ -82,13 +82,7 @@
                 { "id": 1002, "assigneeId": 313, "activityType": "Phone Call", "date": "2025-02-05T00:00:00.000Z", "description": "Follow-up call regarding equipment needs" },
                 { "id": 1003, "assigneeId": 305, "activityType": "Meeting", "date": "2025-02-15T00:00:00.000Z", "description": "Quarterly review meeting with Turner Construction" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1019550", "equipmentType": "Excavator", "make": "Caterpillar", "model": "320F", "year": 2019, "serialNumber": "CAT0320FHBN", "hours": 4250 },
-                { "id": 2, "companyId": "1019550", "equipmentType": "Boom Lift", "make": "JLG", "model": "600S", "year": 2021, "serialNumber": "JLG600S9827", "hours": 1120 },
-                { "id": 3, "companyId": "998810", "equipmentType": "Wheel Loader", "make": "Volvo", "model": "L90H", "year": 2021, "serialNumber": "VLV90H8834A", "hours": 2800 },
-                { "id": 4, "companyId": "1019550", "equipmentType": "Skid Steer", "make": "Bobcat", "model": "T770", "year": 2022, "serialNumber": "BCT770KL921", "hours": 950 },
-                { "id": 5, "companyId": "998810", "equipmentType": "Compactor", "make": "Caterpillar", "model": "CS56B", "year": 2020, "serialNumber": "CATCS56BXMR", "hours": 3400 }
-            ],
+            "customerEquipment": [1001, 1002, 1003, 1004, 1005],
             "externalReference": {
                 "source": "Dodge Data & Analytics",
                 "url": "https://www.construction.com/projects/5001010/st-marys-hospital-west-wing-expansion",
@@ -175,11 +169,7 @@
                 { "id": 1004, "assigneeId": 305, "activityType": "Email", "date": "2025-03-01T00:00:00.000Z", "description": "Sent proposal for excavator purchase" },
                 { "id": 1005, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-03-10T00:00:00.000Z", "description": "Equipment demonstration scheduled" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1067200", "equipmentType": "Dozer", "make": "John Deere", "model": "700K", "year": 2019, "serialNumber": "JD700KFRT52", "hours": 5200 },
-                { "id": 2, "companyId": "998810", "equipmentType": "Generator", "make": "Caterpillar", "model": "XQ575", "year": 2021, "serialNumber": "CATXQ575PP1", "hours": 1800 },
-                { "id": 3, "companyId": "1067200", "equipmentType": "Excavator", "make": "Komatsu", "model": "PC138", "year": 2020, "serialNumber": "KMTPC138AB2", "hours": 4100 }
-            ]
+            "customerEquipment": [1008, 1007, 1009],
         },
         {
             "id": 500103,
@@ -261,11 +251,7 @@
             "activities": [
                 { "id": 1006, "assigneeId": 303, "activityType": "Phone Call", "date": "2025-02-28T00:00:00.000Z", "description": "Confirmed delivery schedule for paving equipment" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "NON-DBS", "equipmentType": "Paver", "make": "Caterpillar", "model": "AP655F", "year": 2018, "serialNumber": "CATAP655FM1", "hours": 6200 },
-                { "id": 2, "companyId": "NON-DBS", "equipmentType": "Roller", "make": "Volvo", "model": "DD120C", "year": 2020, "serialNumber": "VLVDD120CX3", "hours": 3500 },
-                { "id": 3, "companyId": "NON-DBS", "equipmentType": "Skid Steer", "make": "Case", "model": "SV340B", "year": 2021, "serialNumber": "CASESV340B7", "hours": 2100 }
-            ],
+            "customerEquipment": [1010, 1011, 1012],
             "externalReference": {
                 "source": "Dodge Data & Analytics",
                 "url": "https://www.construction.com/projects/5001030/i-55-highway-resurfacing",
@@ -343,11 +329,7 @@
             "activities": [
                 { "id": 1007, "assigneeId": 292, "activityType": "Site Visit", "date": "2024-11-15T00:00:00.000Z", "description": "Final walkthrough and project closeout" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1764465", "equipmentType": "Compact Track Loader", "make": "Bobcat", "model": "T595", "year": 2022, "serialNumber": "BCT595NR211", "hours": 1400 },
-                { "id": 2, "companyId": "1019550", "equipmentType": "Mini Excavator", "make": "Kubota", "model": "KX040", "year": 2021, "serialNumber": "KBTKX040ML2", "hours": 2200 },
-                { "id": 3, "companyId": "1764465", "equipmentType": "Stump Grinder", "make": "Vermeer", "model": "SC60TX", "year": 2020, "serialNumber": "VRMSC60TXA1", "hours": 800 }
-            ]
+            "customerEquipment": [1013, 1014, 1015]
         },
         {
             "id": 500105,
@@ -438,14 +420,7 @@
                 { "id": 1009, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-01-17T00:00:00.000Z", "description": "Generator installation inspection" },
                 { "id": 1010, "assigneeId": 313, "activityType": "Phone Call", "date": "2025-02-01T00:00:00.000Z", "description": "Discussed additional equipment requirements" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1067200", "equipmentType": "Excavator", "make": "Komatsu", "model": "PC210", "year": 2020, "serialNumber": "KMTPC210LCK", "hours": 6800 },
-                { "id": 2, "companyId": "1067200", "equipmentType": "Dozer", "make": "Caterpillar", "model": "D6T", "year": 2018, "serialNumber": "CATD6TXLWP3", "hours": 9200 },
-                { "id": 3, "companyId": "1035040", "equipmentType": "Wheel Loader", "make": "John Deere", "model": "644K", "year": 2017, "serialNumber": "JD644KZBA42", "hours": 11500 },
-                { "id": 4, "companyId": "1140350", "equipmentType": "Boom Lift", "make": "JLG", "model": "860SJ", "year": 2019, "serialNumber": "JLG860SJWR1", "hours": 3800 },
-                { "id": 5, "companyId": "1035040", "equipmentType": "Forklift", "make": "Caterpillar", "model": "DP50", "year": 2020, "serialNumber": "CATDP50NWJ2", "hours": 5100 },
-                { "id": 6, "companyId": "1067200", "equipmentType": "Compactor", "make": "Bomag", "model": "BW211D", "year": 2021, "serialNumber": "BMGBW211DA1", "hours": 2900 }
-            ],
+            "customerEquipment": [1016, 1017, 1018, 1019, 1020, 1021],
             "externalReference": {
                 "source": "Dodge Data & Analytics",
                 "url": "https://www.construction.com/projects/5001050/amazon-fulfillment-center-ord5",
@@ -530,11 +505,7 @@
             "activities": [
                 { "id": 1011, "assigneeId": 304, "activityType": "Email", "date": "2025-05-15T00:00:00.000Z", "description": "Sent service contract renewal proposal" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1293500", "equipmentType": "Drill Rig", "make": "Schramm", "model": "T130XD", "year": 2018, "serialNumber": "SCHRT130XD1", "hours": 7800 },
-                { "id": 2, "companyId": "1140350", "equipmentType": "Generator", "make": "Caterpillar", "model": "C15", "year": 2020, "serialNumber": "CATC15PWRX1", "hours": 4200 },
-                { "id": 3, "companyId": "1293500", "equipmentType": "Excavator", "make": "Caterpillar", "model": "330F", "year": 2019, "serialNumber": "CAT330FLCR1", "hours": 6100 }
-            ]
+            "customerEquipment": [1022, 1023, 1024]
         },
         {
             "id": 500107,
@@ -608,13 +579,7 @@
                 { "id": 1012, "assigneeId": 260, "activityType": "Meeting", "date": "2025-04-01T00:00:00.000Z", "description": "Initial planning meeting with developer" },
                 { "id": 1013, "assigneeId": 260, "activityType": "Site Visit", "date": "2025-04-10T00:00:00.000Z", "description": "Soil assessment and equipment evaluation" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1174395", "equipmentType": "Backhoe", "make": "Case", "model": "580N", "year": 2020, "serialNumber": "CASE580NJK7", "hours": 3100 },
-                { "id": 2, "companyId": "1174395", "equipmentType": "Excavator", "make": "Volvo", "model": "EC140E", "year": 2022, "serialNumber": "VLVEC140EAB", "hours": 1850 },
-                { "id": 3, "companyId": "1174395", "equipmentType": "Wheel Loader", "make": "Caterpillar", "model": "950GC", "year": 2021, "serialNumber": "CAT950GCWL1", "hours": 2400 },
-                { "id": 4, "companyId": "1035040", "equipmentType": "Boom Lift", "make": "Genie", "model": "S-65", "year": 2022, "serialNumber": "GENS65XC141", "hours": 1200 },
-                { "id": 5, "companyId": "1174395", "equipmentType": "Dozer", "make": "Komatsu", "model": "D39PX", "year": 2020, "serialNumber": "KMTD39PXRR1", "hours": 3600 }
-            ],
+            "customerEquipment": [1025, 1026, 1027, 1028, 1029],
             "externalReference": {
                 "source": "Dodge Data & Analytics",
                 "url": "https://www.construction.com/projects/5001070/willow-creek-residential-subdivision",
@@ -694,11 +659,7 @@
             "activities": [
                 { "id": 1014, "assigneeId": 292, "activityType": "Phone Call", "date": "2025-08-20T00:00:00.000Z", "description": "Coordinated parts delivery schedule" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "$000313", "equipmentType": "Crane", "make": "Liebherr", "model": "LTM1100", "year": 2017, "serialNumber": "LBHLTM11001", "hours": 8500 },
-                { "id": 2, "companyId": "NON-DBS", "equipmentType": "Milling Machine", "make": "Wirtgen", "model": "W210Fi", "year": 2019, "serialNumber": "WRTW210FiX1", "hours": 4800 },
-                { "id": 3, "companyId": "$000313", "equipmentType": "Boom Lift", "make": "JLG", "model": "1350SJP", "year": 2021, "serialNumber": "JLG1350SJP1", "hours": 1900 }
-            ]
+            "customerEquipment": [1030, 1031, 1032]
         },
         {
             "id": 500109,
@@ -771,11 +732,7 @@
             "activities": [
                 { "id": 1015, "assigneeId": 313, "activityType": "Email", "date": "2025-03-15T00:00:00.000Z", "description": "Sent equipment catalog and pricing" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1174395", "equipmentType": "Excavator", "make": "Volvo", "model": "EC220E", "year": 2021, "serialNumber": "VLVEC220EA1", "hours": 2600 },
-                { "id": 2, "companyId": "1764465", "equipmentType": "Skid Steer", "make": "Bobcat", "model": "S650", "year": 2022, "serialNumber": "BCS650MN431", "hours": 1100 },
-                { "id": 3, "companyId": "1174395", "equipmentType": "Backhoe", "make": "Case", "model": "590SN", "year": 2020, "serialNumber": "CASE590SNA1", "hours": 3200 }
-            ]
+            "customerEquipment": [1033, 1034, 1035]
         },
         {
             "id": 500110,
@@ -861,14 +818,7 @@
                 { "id": 1016, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-02-20T00:00:00.000Z", "description": "Equipment assessment for overburden removal" },
                 { "id": 1017, "assigneeId": 305, "activityType": "Meeting", "date": "2025-03-05T00:00:00.000Z", "description": "Quarterly review with quarry operations team" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1067200", "equipmentType": "Haul Truck", "make": "Caterpillar", "model": "777G", "year": 2016, "serialNumber": "CAT777GFXR9", "hours": 18400 },
-                { "id": 2, "companyId": "1067200", "equipmentType": "Excavator", "make": "Komatsu", "model": "PC490", "year": 2019, "serialNumber": "KMTPC490MNT", "hours": 7600 },
-                { "id": 3, "companyId": "1293500", "equipmentType": "Jaw Crusher", "make": "Sandvik", "model": "QJ341", "year": 2020, "serialNumber": "SVK341QJ002", "hours": 5200 },
-                { "id": 4, "companyId": "1293500", "equipmentType": "Drill Rig", "make": "Epiroc", "model": "D65", "year": 2020, "serialNumber": "EPRD65KM121", "hours": 4500 },
-                { "id": 5, "companyId": "NON-DBS", "equipmentType": "Roller", "make": "Caterpillar", "model": "CB54B", "year": 2021, "serialNumber": "CATCB54BXX1", "hours": 2300 },
-                { "id": 6, "companyId": "1067200", "equipmentType": "Wheel Loader", "make": "Komatsu", "model": "WA380", "year": 2018, "serialNumber": "KMTWA380ZT1", "hours": 9800 }
-            ]
+            "customerEquipment": [1036, 1037, 1038, 1039, 1040, 1041]
         }
     ],
     "sorting": "id",

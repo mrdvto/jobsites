@@ -7,6 +7,7 @@ import opportunitiesData from '@/data/Opportunity.json';
 import opportunityStagesData from '@/data/OpportunityStages.json';
 import opportunityTypesData from '@/data/OpportunityTypes.json';
 import lookupsData from '@/data/Lookups.json';
+import companyEquipmentData from '@/data/CompanyEquipment.json';
 
 // Division constants
 export const DIVISIONS = [
@@ -50,8 +51,11 @@ interface DataContextType {
   addNote: (projectId: number, noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>) => void;
   updateNote: (projectId: number, noteId: number, updates: Partial<Note>) => void;
   deleteNote: (projectId: number, noteId: number) => void;
-  addCustomerEquipment: (projectId: number, equipment: Omit<CustomerEquipment, 'id'>) => void;
-  updateCustomerEquipment: (projectId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => void;
+  companyEquipment: CustomerEquipment[];
+  getEquipmentById: (id: number) => CustomerEquipment | undefined;
+  getCompanyEquipment: (companyId: string) => CustomerEquipment[];
+  getEquipmentProjectAssignment: (equipmentId: number, excludeProjectId?: number) => { projectId: number; projectName: string } | null;
+  addCustomerEquipment: (projectId: number, equipmentId: number) => void;
   deleteCustomerEquipment: (projectId: number, equipmentId: number) => void;
   setNoteTags: (tags: NoteTag[]) => void;
   getSalesRepName: (id: number) => string;
@@ -247,7 +251,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       activities: (p as any).activities || [],
       notes: migrateNotes((p as any).notes || []),
       projectCompanies: migrateProjectCompanies((p as any).siteCompanies || (p as any).projectCompanies || []),
-      customerEquipment: (p as any).customerEquipment || [],
+      customerEquipment: ((p as any).customerEquipment || []).map((e: any) => typeof e === 'number' ? e : e.id) as number[],
     })) as Project[];
     
     setProjects(projectsWithMigratedData);
@@ -690,44 +694,51 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     logChange(projectId, 'NOTE_DELETED', 'Note', `Note deleted`);
   };
 
-  const addCustomerEquipment = (projectId: number, equipment: Omit<CustomerEquipment, 'id'>) => {
-    setProjects(prev =>
-      prev.map(project => {
-        if (project.id === projectId) {
-          const maxId = Math.max(...(project.customerEquipment || []).map(e => e.id), 0);
-          return { ...project, customerEquipment: [...(project.customerEquipment || []), { ...equipment, id: maxId + 1 }] };
-        }
-        return project;
-      })
-    );
-    logChange(projectId, 'EQUIPMENT_ADDED', 'Equipment', `Equipment "${equipment.make} ${equipment.model}" added`);
-  };
+  const masterEquipment = companyEquipmentData as CustomerEquipment[];
 
-  const updateCustomerEquipment = (projectId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => {
+  const getEquipmentById = useCallback((id: number): CustomerEquipment | undefined => {
+    return masterEquipment.find(e => e.id === id);
+  }, [masterEquipment]);
+
+  const getCompanyEquipment = useCallback((companyId: string): CustomerEquipment[] => {
+    return masterEquipment.filter(e => e.companyId === companyId);
+  }, [masterEquipment]);
+
+  const getEquipmentProjectAssignment = useCallback((equipmentId: number, excludeProjectId?: number): { projectId: number; projectName: string } | null => {
+    for (const p of projects) {
+      if (excludeProjectId !== undefined && p.id === excludeProjectId) continue;
+      if (p.customerEquipment.includes(equipmentId)) {
+        return { projectId: p.id, projectName: p.name };
+      }
+    }
+    return null;
+  }, [projects]);
+
+  const addCustomerEquipment = (projectId: number, equipmentId: number) => {
+    const eq = getEquipmentById(equipmentId);
     setProjects(prev =>
       prev.map(project => {
         if (project.id === projectId) {
-          return { ...project, customerEquipment: (project.customerEquipment || []).map(e => e.id === equipmentId ? { ...e, ...updates } : e) };
+          if (project.customerEquipment.includes(equipmentId)) return project;
+          return { ...project, customerEquipment: [...project.customerEquipment, equipmentId] };
         }
         return project;
       })
     );
-    logChange(projectId, 'EQUIPMENT_UPDATED', 'Equipment', `Equipment updated`);
+    logChange(projectId, 'EQUIPMENT_ADDED', 'Equipment', `Equipment "${eq ? `${eq.make} ${eq.model}` : equipmentId}" added`);
   };
 
   const deleteCustomerEquipment = (projectId: number, equipmentId: number) => {
-    let desc = '';
+    const eq = getEquipmentById(equipmentId);
     setProjects(prev =>
       prev.map(project => {
         if (project.id === projectId) {
-          const eq = (project.customerEquipment || []).find(e => e.id === equipmentId);
-          if (eq) desc = `${eq.make} ${eq.model}`;
-          return { ...project, customerEquipment: (project.customerEquipment || []).filter(e => e.id !== equipmentId) };
+          return { ...project, customerEquipment: project.customerEquipment.filter(id => id !== equipmentId) };
         }
         return project;
       })
     );
-    logChange(projectId, 'EQUIPMENT_DELETED', 'Equipment', `Equipment "${desc}" removed`);
+    logChange(projectId, 'EQUIPMENT_DELETED', 'Equipment', `Equipment "${eq ? `${eq.make} ${eq.model}` : equipmentId}" removed`);
   };
 
   return (
@@ -758,8 +769,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         addNote,
         updateNote,
         deleteNote,
+        companyEquipment: masterEquipment,
+        getEquipmentById,
+        getCompanyEquipment,
+        getEquipmentProjectAssignment,
         addCustomerEquipment,
-        updateCustomerEquipment,
         deleteCustomerEquipment,
         setNoteTags,
         getSalesRepName,

@@ -35,7 +35,7 @@ type LocationViewType = 'address' | 'coordinates';
 const ProjectDetail = () => {
   const { id } = useParams<{id: string;}>();
   const navigate = useNavigate();
-  const { projects, getSalesRepName, getSalesRepNames, getUserName, getUserNames, opportunities, getStageName, getStage, removeProjectCompany, updateProject, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, updateCustomerEquipment, deleteCustomerEquipment, getCompanyById, getLookupLabel } = useData();
+  const { projects, getSalesRepName, getSalesRepNames, getUserName, getUserNames, opportunities, getStageName, getStage, removeProjectCompany, updateProject, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, deleteCustomerEquipment, getCompanyById, getLookupLabel, getEquipmentById } = useData();
   const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
@@ -57,8 +57,6 @@ const ProjectDetail = () => {
   const [activityToDelete, setActivityToDelete] = useState<number | null>(null);
   const [showAssociateActivityModal, setShowAssociateActivityModal] = useState(false);
   const [showEquipmentModal, setShowEquipmentModal] = useState(false);
-  const [selectedEquipment, setSelectedEquipment] = useState<CustomerEquipment | undefined>(undefined);
-  const [equipmentModalMode, setEquipmentModalMode] = useState<'create' | 'edit'>('create');
   const [showDeleteEquipmentDialog, setShowDeleteEquipmentDialog] = useState(false);
   const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
   const [equipmentSearch, setEquipmentSearch] = useState('');
@@ -80,7 +78,7 @@ const ProjectDetail = () => {
   const [actSortDirection, setActSortDirection] = useState<'asc' | 'desc' | null>('desc');
 
   // Sort state for Equipment table
-  const [eqSortColumn, setEqSortColumn] = useState<'type' | 'make' | 'model' | 'year' | 'serial' | 'hours' | null>(null);
+  const [eqSortColumn, setEqSortColumn] = useState<'type' | 'make' | 'model' | 'year' | 'serial' | 'hours' | 'ownership' | null>(null);
   const [eqSortDirection, setEqSortDirection] = useState<'asc' | 'desc' | null>(null);
 
   const project = projects.find((p) => p.id === parseInt(id || '0'));
@@ -186,14 +184,6 @@ const ProjectDetail = () => {
   };
 
   const handleCreateEquipment = () => {
-    setSelectedEquipment(undefined);
-    setEquipmentModalMode('create');
-    setShowEquipmentModal(true);
-  };
-
-  const handleEditEquipment = (eq: CustomerEquipment) => {
-    setSelectedEquipment(eq);
-    setEquipmentModalMode('edit');
     setShowEquipmentModal(true);
   };
 
@@ -206,14 +196,9 @@ const ProjectDetail = () => {
     }
   };
 
-  const handleSaveEquipment = (data: Omit<CustomerEquipment, 'id'>) => {
-    if (equipmentModalMode === 'edit' && selectedEquipment) {
-      updateCustomerEquipment(project.id, selectedEquipment.id, data);
-      toast({ title: "Success", description: "Equipment updated." });
-    } else {
-      addCustomerEquipment(project.id, data);
-      toast({ title: "Success", description: "Equipment added." });
-    }
+  const handleSaveEquipment = (equipmentId: number) => {
+    addCustomerEquipment(project.id, equipmentId);
+    toast({ title: "Success", description: "Equipment added." });
   };
 
   const makeSortHandler = <T,>(
@@ -319,6 +304,7 @@ const ProjectDetail = () => {
         case 'year':cmp = (a.year || 0) - (b.year || 0);break;
         case 'serial':cmp = (a.serialNumber || '').localeCompare(b.serialNumber || '');break;
         case 'hours':cmp = (a.hours || 0) - (b.hours || 0);break;
+        case 'ownership':cmp = (a.ownershipStatus || '').localeCompare(b.ownershipStatus || '');break;
       }
       return eqSortDirection === 'asc' ? cmp : -cmp;
     });
@@ -914,13 +900,17 @@ const ProjectDetail = () => {
               No customer equipment recorded for this project.
             </p> :
           (() => {
+            const resolvedEquipment = project.customerEquipment
+              .map(id => getEquipmentById(id))
+              .filter((eq): eq is CustomerEquipment => eq !== undefined);
+
             const searchLower = equipmentSearch.toLowerCase();
             const hasSearch = searchLower.length > 0;
 
-            const filteredEquipment = project.customerEquipment.filter((eq) => {
+            const filteredEquipment = resolvedEquipment.filter((eq) => {
               if (!hasSearch) return true;
               const companyName = project.projectCompanies.find((c) => c.companyId === eq.companyId)?.companyName || '';
-              const searchStr = `${companyName} ${eq.equipmentType} ${eq.make} ${eq.model} ${eq.year || ''} ${eq.serialNumber || ''}`.toLowerCase();
+              const searchStr = `${companyName} ${eq.equipmentType} ${eq.make} ${eq.model} ${eq.year || ''} ${eq.serialNumber || ''} ${eq.ownershipStatus}`.toLowerCase();
               return searchStr.includes(searchLower);
             });
 
@@ -986,7 +976,10 @@ const ProjectDetail = () => {
                                 <TableHead className="text-right cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('hours')}>
                                   <div className="flex items-center justify-end">Hours<SortIcon active={eqSortColumn === 'hours'} direction={eqSortDirection} /></div>
                                 </TableHead>
-                                <TableHead className="w-[80px]"></TableHead>
+                                <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('ownership')}>
+                                  <div className="flex items-center">Ownership<SortIcon active={eqSortColumn === 'ownership'} direction={eqSortDirection} /></div>
+                                </TableHead>
+                                <TableHead className="w-[50px]"></TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -999,14 +992,14 @@ const ProjectDetail = () => {
                                   <TableCell className="font-mono text-sm">{eq.serialNumber || '—'}</TableCell>
                                   <TableCell className="text-right">{eq.hours?.toLocaleString() || '—'}</TableCell>
                                   <TableCell>
-                                    <div className="flex gap-1">
-                                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditEquipment(eq)}>
-                                        <Pencil className="h-4 w-4" />
-                                      </Button>
-                                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {setEquipmentToDelete(eq.id);setShowDeleteEquipmentDialog(true);}}>
-                                        <X className="h-4 w-4" />
-                                      </Button>
-                                    </div>
+                                    <Badge variant={eq.ownershipStatus === 'owned' ? 'default' : 'secondary'}>
+                                      {eq.ownershipStatus === 'owned' ? 'Owned' : 'Rented'}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {setEquipmentToDelete(eq.id);setShowDeleteEquipmentDialog(true);}}>
+                                      <X className="h-4 w-4" />
+                                    </Button>
                                   </TableCell>
                                 </TableRow>
                           )}
@@ -1143,9 +1136,9 @@ const ProjectDetail = () => {
         open={showEquipmentModal}
         onOpenChange={setShowEquipmentModal}
         onSave={handleSaveEquipment}
-        equipment={selectedEquipment}
-        mode={equipmentModalMode}
-        projectCompanies={project.projectCompanies} />
+        projectId={project.id}
+        projectCompanies={project.projectCompanies}
+        existingEquipmentIds={project.customerEquipment} />
       
 
       <AlertDialog open={showDeleteEquipmentDialog} onOpenChange={setShowDeleteEquipmentDialog}>

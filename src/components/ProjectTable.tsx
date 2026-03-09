@@ -8,7 +8,9 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ColumnVisibilitySelector } from '@/components/ColumnVisibilitySelector';
-import { ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { FilterModal } from '@/components/FilterModal';
+import { ActiveFilterBadges } from '@/components/ActiveFilterBadges';
+import { ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { Project } from '@/types';
 
 type SortColumn =
@@ -75,6 +77,7 @@ export const ProjectTable = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   const filteredProjects = getFilteredProjects();
 
@@ -312,15 +315,24 @@ export const ProjectTable = () => {
   };
 
   return (
-    <Card>
-      <div className="flex items-center justify-between px-4 py-3 border-b">
-        <p className="text-sm text-muted-foreground">
+    <Card className="flex flex-col h-full">
+      <div className="flex items-center gap-3 px-4 py-3 border-b shrink-0">
+        <p className="text-sm text-muted-foreground shrink-0">
           {totalProjects} project{totalProjects !== 1 ? 's' : ''} total
         </p>
-        <ColumnVisibilitySelector />
+        <div className="flex-1 min-w-0">
+          <ActiveFilterBadges />
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button variant="outline" size="sm" onClick={() => setShowFilterModal(true)}>
+            <Filter className="h-4 w-4 mr-1.5" />
+            Filters
+          </Button>
+          <ColumnVisibilitySelector />
+        </div>
       </div>
       
-      <div className="relative w-full max-h-[70vh] overflow-auto">
+      <div className="relative w-full flex-1 min-h-0 overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -387,7 +399,7 @@ export const ProjectTable = () => {
       </div>
 
       {/* Pagination Footer */}
-      <div className="flex items-center justify-between px-4 py-3 border-t">
+      <div className="flex items-center justify-between px-4 py-3 border-t shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Rows per page:</span>
           <Select value={String(pageSize)} onValueChange={handlePageSizeChange}>
@@ -433,6 +445,8 @@ export const ProjectTable = () => {
           </div>
         </div>
       </div>
+
+      <FilterModal open={showFilterModal} onOpenChange={setShowFilterModal} />
     </Card>
   );
 };

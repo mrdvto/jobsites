@@ -213,7 +213,7 @@ export const ProjectTable = () => {
     }
   };
 
-  const sortedProjects = [...filteredProjects].sort((a, b) => {
+  const sortedProjects = [...searchedProjects].sort((a, b) => {
     if (!sortColumn || !sortDirection) return 0;
 
     let comparison = 0;

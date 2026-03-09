@@ -12,10 +12,12 @@ import { Activity } from '@/types';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { CalendarIcon, Check, ChevronsUpDown, X } from 'lucide-react';
+import { CalendarIcon, Check, ChevronDown, ChevronUp, ChevronsUpDown, X } from 'lucide-react';
 import { format, isPast } from 'date-fns';
 import { cn } from '@/lib/utils';
 import activityTypesData from '@/data/ActivityTypes.json';
+import campaignsData from '@/data/Campaigns.json';
+import issuesData from '@/data/Issues.json';
 
 const ACTIVITY_TYPES = activityTypesData.content;
 
@@ -44,6 +46,9 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
   const [selectedContactId, setSelectedContactId] = useState<number | ''>('');
   const [companyPopoverOpen, setCompanyPopoverOpen] = useState(false);
   const [contactPopoverOpen, setContactPopoverOpen] = useState(false);
+  const [showMoreFields, setShowMoreFields] = useState(false);
+  const [campaignId, setCampaignId] = useState<string>('');
+  const [issueId, setIssueId] = useState<string>('');
 
   const selectedCompany = projectCompanies.find(c => c.companyId === selectedCompanyId);
   const companyContacts = selectedCompany?.companyContacts ?? [];
@@ -69,6 +74,9 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
         setSelectedCompanyId('');
         setSelectedContactId('');
       }
+      setCampaignId(activity.campaignId?.toString() || '');
+      setIssueId(activity.issueId?.toString() || '');
+      setShowMoreFields(!!(activity.campaignId || activity.issueId));
     } else {
       setSalesRepId('');
       setTypeId('');
@@ -78,6 +86,9 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       setNotes('');
       setSelectedCompanyId('');
       setSelectedContactId('');
+      setCampaignId('');
+      setIssueId('');
+      setShowMoreFields(false);
     }
   }, [activity, mode, open]);
 
@@ -102,6 +113,12 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
     if (!date) return null;
     return isPast(date) ? 'Completed' : 'Outstanding';
   }, [date]);
+
+  const filteredIssues = useMemo(() => {
+    const allIssues = issuesData.content;
+    if (!selectedCompanyId) return allIssues;
+    return allIssues.filter(issue => issue.customerId === selectedCompanyId);
+  }, [selectedCompanyId]);
 
   const handleCompanyChange = (companyId: string) => {
     setSelectedCompanyId(companyId);
@@ -132,7 +149,9 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       description: description.trim(),
       contactName: selectedContact?.name || '',
       notes: notes.trim(),
-      customerId: selectedCompanyId || undefined
+      customerId: selectedCompanyId || undefined,
+      campaignId: campaignId && campaignId !== 'none' ? parseInt(campaignId) : undefined,
+      issueId: issueId && issueId !== 'none' ? parseInt(issueId) : undefined
     };
 
     if (mode === 'create') {
@@ -320,12 +339,11 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
-            <Textarea
+            <Input
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter activity description"
-              rows={3}
             />
           </div>
 
@@ -338,6 +356,51 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
               placeholder="Enter notes"
               rows={2}
             />
+          </div>
+
+          <div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-1 text-xs text-muted-foreground px-0"
+              onClick={() => setShowMoreFields(!showMoreFields)}
+            >
+              {showMoreFields ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+              More fields
+            </Button>
+            {showMoreFields && (
+              <div className="mt-2 space-y-4">
+                <div className="space-y-2">
+                  <Label>Campaign</Label>
+                  <Select value={campaignId} onValueChange={setCampaignId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="None" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      {campaignsData.content.map(c => (
+                        <SelectItem key={c.id} value={c.id.toString()}>{c.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Issue</Label>
+                  <Select value={issueId} onValueChange={setIssueId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="None" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      {filteredIssues.map(issue => (
+                        <SelectItem key={issue.id} value={issue.id.toString()}>{issue.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-2 pt-4">

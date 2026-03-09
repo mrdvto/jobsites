@@ -1,39 +1,60 @@
 
 
-# Remove PAR (Planned Annual Rate) from Projects
+## Plan: Create New Prospect Modal
 
-PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
+### Overview
+Add a "Create New" secondary action button next to the existing "Associate Existing" button in the Companies section. This opens a "Create New Prospect" modal with company details, address fields with country-dependent behavior, and a primary contact record.
 
-## Changes
+### New Component: `CreateProspectModal.tsx`
 
-### 1. `src/types/index.ts`
-- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
-- Remove `showBehindPAR` from `Filters` interface
+**Company Fields:**
+- Company Name (required)
+- Phone Number (required, with input mask for US/CA/AU)
 
-### 2. `src/data/Project.json`
-- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+**Address Fields:**
+- Address Line 1, Address Line 2, Address Line 3 (at least one required)
+- Country (required, searchable dropdown via simulated API - US/CA/AU pinned at top)
+- State/Province (searchable dropdown, required for US/AU, labeled "Province" for CA, populated from simulated API)
+- City (required)
+- ZIP/Postal/Post Code (required, mask varies by country)
 
-### 3. `src/contexts/DataContext.tsx`
-- Remove `showBehindPAR: false` from default filters
-- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
-- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+**Contact Fields:**
+- First Name, Last Name (required)
+- Title (required)
+- Mobile Phone (required, with country mask)
+- Business Phone (optional)
+- Email (required)
 
-### 4. `src/components/FilterBar.tsx`
-- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
+### Input Masks by Country
+| Country | Phone Mask | ZIP Mask |
+|---------|-----------|----------|
+| US | (999) 999-9999 | 99999 or 99999-9999 |
+| Canada | (999) 999-9999 | A9A 9A9 |
+| Australia | 9999 999 999 | 9999 |
+| Other | No mask | No mask |
 
-### 5. `src/components/EditProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove their reset in `useEffect`
-- Remove the PAR validation check
-- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
-- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
+### Simulated API Data
+Create `src/data/Countries.ts` and `src/data/StatesProvinces.ts` with:
+- Countries list (US, CA, AU pinned first, then alphabetical)
+- US states, Canadian provinces, Australian states/territories
 
-### 6. `src/components/CreateProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove PAR validation
-- Remove `plannedAnnualRate` and `parStartDate` from new project object
-- Remove the Planned Annual Rate input and PAR Start Date picker from the form
+### Validation
+- Company phone: required, format validated for US/CA/AU
+- Address: at least one of address1/address2/address3 required
+- State: required only if US or AU; optional but available for CA
+- ZIP: format validated per country
+- Contact: first name, last name, title, mobile phone, email all required
 
-### 7. `src/pages/ProjectDetail.tsx`
-- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+### Files to Create/Modify
+1. **New:** `src/data/Countries.ts` — country list with codes
+2. **New:** `src/data/StatesProvinces.ts` — states/provinces for US, CA, AU
+3. **New:** `src/components/CreateProspectModal.tsx` — the modal component
+4. **Modify:** `src/pages/ProjectDetail.tsx` — add "Create New" button and modal state
+5. **Modify:** `src/contexts/DataContext.tsx` — optionally add company to a global store (or just attach to project)
+
+### Button Placement (following existing pattern)
+Per the existing button hierarchy standard, for Companies "Associate Existing" is primary and "Create New" is secondary (outline variant):
+```text
+[Create New (outline)] [Associate Existing (default)]
+```
 

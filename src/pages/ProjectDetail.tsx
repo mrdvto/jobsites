@@ -26,7 +26,7 @@ import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModa
 import { Input } from '@/components/ui/input';
 import { MultiSelectFilter } from '@/components/MultiSelectFilter';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History } from 'lucide-react';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity, ProjectCompany, CustomerEquipment } from '@/types';
 

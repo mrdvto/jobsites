@@ -30,7 +30,7 @@ interface ActivityModalProps {
   followUpFrom?: Activity;
 }
 
-export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }: ActivityModalProps) => {
+export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, followUpFrom }: ActivityModalProps) => {
   const { users, projects, addActivity, updateActivity } = useData();
   const { toast } = useToast();
 

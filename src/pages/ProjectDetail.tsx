@@ -900,9 +900,6 @@ const ProjectDetail = () => {
               No customer equipment recorded for this project.
             </p> :
           (() => {
-            const searchLower = equipmentSearch.toLowerCase();
-            const hasSearch = searchLower.length > 0;
-
             const resolvedEquipment = project.customerEquipment
               .map(id => getEquipmentById(id))
               .filter((eq): eq is CustomerEquipment => eq !== undefined);

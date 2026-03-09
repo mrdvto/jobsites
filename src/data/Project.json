@@ -579,13 +579,7 @@
                 { "id": 1012, "assigneeId": 260, "activityType": "Meeting", "date": "2025-04-01T00:00:00.000Z", "description": "Initial planning meeting with developer" },
                 { "id": 1013, "assigneeId": 260, "activityType": "Site Visit", "date": "2025-04-10T00:00:00.000Z", "description": "Soil assessment and equipment evaluation" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1174395", "equipmentType": "Backhoe", "make": "Case", "model": "580N", "year": 2020, "serialNumber": "CASE580NJK7", "hours": 3100 },
-                { "id": 2, "companyId": "1174395", "equipmentType": "Excavator", "make": "Volvo", "model": "EC140E", "year": 2022, "serialNumber": "VLVEC140EAB", "hours": 1850 },
-                { "id": 3, "companyId": "1174395", "equipmentType": "Wheel Loader", "make": "Caterpillar", "model": "950GC", "year": 2021, "serialNumber": "CAT950GCWL1", "hours": 2400 },
-                { "id": 4, "companyId": "1035040", "equipmentType": "Boom Lift", "make": "Genie", "model": "S-65", "year": 2022, "serialNumber": "GENS65XC141", "hours": 1200 },
-                { "id": 5, "companyId": "1174395", "equipmentType": "Dozer", "make": "Komatsu", "model": "D39PX", "year": 2020, "serialNumber": "KMTD39PXRR1", "hours": 3600 }
-            ],
+            "customerEquipment": [1025, 1026, 1027, 1028, 1029],
             "externalReference": {
                 "source": "Dodge Data & Analytics",
                 "url": "https://www.construction.com/projects/5001070/willow-creek-residential-subdivision",

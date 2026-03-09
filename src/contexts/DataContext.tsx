@@ -413,6 +413,21 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return project.associatedOpportunities.reduce((sum, opp) => sum + opp.revenue, 0);
   };
 
+  const calculateProjectWonRevenue = (project: Project): number => {
+    return project.associatedOpportunities
+      .filter(ao => ao.stageId === 16)
+      .reduce((sum, ao) => sum + ao.revenue, 0);
+  };
+
+  const calculateProjectPipelineRevenue = (project: Project): number => {
+    return project.associatedOpportunities
+      .filter(ao => {
+        const stage = opportunityStages.find(s => s.stageid === ao.stageId);
+        return stage && (stage.phaseid === 1 || stage.phaseid === 2);
+      })
+      .reduce((sum, ao) => sum + ao.revenue, 0);
+  };
+
   const getCompanyById = (companyId: string): ProjectCompany | undefined => {
     for (const project of projects) {
       const company = project.projectCompanies.find(c => c.companyId === companyId);

@@ -77,6 +77,7 @@ export const ProjectTable = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
+  const [showFilterModal, setShowFilterModal] = useState(false);
 
   const filteredProjects = getFilteredProjects();
 

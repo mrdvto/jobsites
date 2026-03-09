@@ -6,11 +6,12 @@ import { useColumnVisibility, ColumnId } from '@/hooks/useColumnVisibility';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ColumnVisibilitySelector } from '@/components/ColumnVisibilitySelector';
 import { FilterModal } from '@/components/FilterModal';
 import { ActiveFilterBadges } from '@/components/ActiveFilterBadges';
-import { ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight, Filter, Search } from 'lucide-react';
 import { Project } from '@/types';
 
 type SortColumn =

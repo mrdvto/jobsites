@@ -84,8 +84,7 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
     setBidDate(undefined);
     setTargetStartDate(undefined);
     setTargetCompletionDate(undefined);
-    setDodgeProjectName('');
-    setDodgeProjectUrl('');
+    setExternalReference(undefined);
   };
 
   const handleSubmit = (e: React.FormEvent) => {

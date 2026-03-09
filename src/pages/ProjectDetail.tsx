@@ -23,6 +23,7 @@ import { AssociateActivityModal } from '@/components/AssociateActivityModal';
 import { NotesSection } from '@/components/NotesSection';
 import { ProjectCompaniesTable } from '@/components/ProjectCompaniesTable';
 import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';
+import { CreateProspectModal, type ProspectData } from '@/components/CreateProspectModal';
 import { Input } from '@/components/ui/input';
 import { MultiSelectFilter } from '@/components/MultiSelectFilter';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
@@ -36,7 +37,7 @@ type LocationViewType = 'address' | 'coordinates';
 const ProjectDetail = () => {
   const { id } = useParams<{id: string;}>();
   const navigate = useNavigate();
-  const { projects, getSalesRepName, getSalesRepNames, getUserName, getUserNames, opportunities, getStageName, getStage, removeProjectCompany, updateProject, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, deleteCustomerEquipment, getCompanyById, getLookupLabel, getEquipmentById } = useData();
+  const { projects, getSalesRepName, getSalesRepNames, getUserName, getUserNames, opportunities, getStageName, getStage, removeProjectCompany, updateProject, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, deleteCustomerEquipment, getCompanyById, getLookupLabel, getEquipmentById, addProjectCompany } = useData();
   const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);
@@ -63,6 +64,7 @@ const ProjectDetail = () => {
   const [equipmentSearch, setEquipmentSearch] = useState('');
   const [showUom, setShowUom] = useState(() => localStorage.getItem('showEquipmentUom') === 'true');
   const [followUpFromActivity, setFollowUpFromActivity] = useState<Activity | undefined>(undefined);
+  const [showCreateProspectModal, setShowCreateProspectModal] = useState(false);
 
   // Sort state for Opportunities table
   const [oppSortColumn, setOppSortColumn] = useState<'type' | 'description' | 'division' | 'stage' | 'salesRep' | 'estClose' | 'revenue' | null>('stage');
@@ -805,12 +807,21 @@ const ProjectDetail = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Companies</h2>
-            <Button
-              size="sm"
-              onClick={() => setShowAssociateCompanyModal(true)}>
-              <LinkIcon className="h-4 w-4 mr-2" />
-              Associate Existing
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowCreateProspectModal(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create New
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => setShowAssociateCompanyModal(true)}>
+                <LinkIcon className="h-4 w-4 mr-2" />
+                Associate Existing
+              </Button>
+            </div>
           </div>
           {project.projectCompanies.filter((c) => c.roleId !== 'OWNER').length === 0 ?
           <p className="text-center text-muted-foreground py-8">
@@ -1148,6 +1159,27 @@ const ProjectDetail = () => {
         open={showAssociateCompanyModal}
         onOpenChange={setShowAssociateCompanyModal} />
       
+      <CreateProspectModal
+        open={showCreateProspectModal}
+        onOpenChange={setShowCreateProspectModal}
+        onSave={(data: ProspectData) => {
+          const companyId = `PROSPECT-${Date.now()}`;
+          addProjectCompany(project.id, {
+            companyId,
+            companyName: data.companyName,
+            roleId: 'PROSPECT',
+            roleDescription: 'Prospect',
+            isPrimaryContact: false,
+            companyContacts: [{
+              id: 1,
+              name: `${data.contact.firstName} ${data.contact.lastName}`,
+              title: data.contact.title,
+              phone: data.contact.mobilePhone,
+              email: data.contact.email,
+            }],
+          });
+        }}
+      />
 
       <AlertDialog open={showRemoveGCDialog} onOpenChange={setShowRemoveGCDialog}>
         <AlertDialogContent>

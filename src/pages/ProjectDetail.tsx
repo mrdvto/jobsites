@@ -184,14 +184,6 @@ const ProjectDetail = () => {
   };
 
   const handleCreateEquipment = () => {
-    setSelectedEquipment(undefined);
-    setEquipmentModalMode('create');
-    setShowEquipmentModal(true);
-  };
-
-  const handleEditEquipment = (eq: CustomerEquipment) => {
-    setSelectedEquipment(eq);
-    setEquipmentModalMode('edit');
     setShowEquipmentModal(true);
   };
 
@@ -204,14 +196,9 @@ const ProjectDetail = () => {
     }
   };
 
-  const handleSaveEquipment = (data: Omit<CustomerEquipment, 'id'>) => {
-    if (equipmentModalMode === 'edit' && selectedEquipment) {
-      updateCustomerEquipment(project.id, selectedEquipment.id, data);
-      toast({ title: "Success", description: "Equipment updated." });
-    } else {
-      addCustomerEquipment(project.id, data);
-      toast({ title: "Success", description: "Equipment added." });
-    }
+  const handleSaveEquipment = (equipmentId: number) => {
+    addCustomerEquipment(project.id, equipmentId);
+    toast({ title: "Success", description: "Equipment added." });
   };
 
   const makeSortHandler = <T,>(

@@ -46,6 +46,9 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
   const [selectedContactId, setSelectedContactId] = useState<number | ''>('');
   const [companyPopoverOpen, setCompanyPopoverOpen] = useState(false);
   const [contactPopoverOpen, setContactPopoverOpen] = useState(false);
+  const [showMoreFields, setShowMoreFields] = useState(false);
+  const [campaignId, setCampaignId] = useState<string>('');
+  const [issueId, setIssueId] = useState<string>('');
 
   const selectedCompany = projectCompanies.find(c => c.companyId === selectedCompanyId);
   const companyContacts = selectedCompany?.companyContacts ?? [];

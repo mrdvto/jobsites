@@ -443,7 +443,11 @@
                 { "id": 4, "companyId": "1140350", "equipmentType": "Boom Lift", "make": "JLG", "model": "860SJ", "year": 2019, "serialNumber": "JLG860SJWR1", "hours": 3800 },
                 { "id": 5, "companyId": "1035040", "equipmentType": "Forklift", "make": "Caterpillar", "model": "DP50", "year": 2020, "serialNumber": "CATDP50NWJ2", "hours": 5100 },
                 { "id": 6, "companyId": "1067200", "equipmentType": "Compactor", "make": "Bomag", "model": "BW211D", "year": 2021, "serialNumber": "BMGBW211DA1", "hours": 2900 }
-            ]
+            ],
+            "dodgeProject": {
+                "url": "https://www.construction.com/projects/5001050/amazon-fulfillment-center-ord5",
+                "name": "Amazon Fulfillment Center ORD5 - Chicago"
+            }
         },
         {
             "id": 500106,

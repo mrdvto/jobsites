@@ -10,7 +10,7 @@ export interface Country {
 
 const pinnedCountries: Country[] = [
   { code: 'US', name: 'United States', phoneMask: '(999) 999-9999', zipMask: '99999', zipLabel: 'ZIP Code', stateLabel: 'State', stateRequired: true },
-  { code: 'CA', name: 'Canada', phoneMask: '(999) 999-9999', zipMask: 'A9A 9A9', zipLabel: 'Postal Code', stateLabel: 'Province', stateRequired: false },
+  { code: 'CA', name: 'Canada', phoneMask: '(999) 999-9999', zipMask: 'A9A 9A9', zipLabel: 'Postal Code', stateLabel: 'Province', stateRequired: true },
   { code: 'AU', name: 'Australia', phoneMask: '9999 999 999', zipMask: '9999', zipLabel: 'Post Code', stateLabel: 'State', stateRequired: true },
 ];
 

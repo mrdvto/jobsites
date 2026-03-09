@@ -1,39 +1,50 @@
 
 
-# Remove PAR (Planned Annual Rate) from Projects
+## Plan: Filters Modal + Full-Height Table (Option B)
 
-PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
+### Overview
+Move the filter controls into a modal dialog, replace the FilterBar card with a compact toolbar showing a "Filters" button (next to the Columns button) and active filter badges. Make the table fill the remaining viewport height so there's only one scroll context.
 
-## Changes
+### Changes
 
-### 1. `src/types/index.ts`
-- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
-- Remove `showBehindPAR` from `Filters` interface
+**1. New `FilterModal.tsx` component**
+- A Dialog containing the current FilterBar form fields (Assignee, Division, Status, GC, Hide Completed)
+- Opened via a `Filter` icon button placed in the table toolbar next to the Columns button
+- Include a "Clear All" button in the modal footer
 
-### 2. `src/data/Project.json`
-- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+**2. New `ActiveFilterBadges.tsx` component**
+- Renders inline badges summarizing active filters (e.g., "Status: Active, Planning", "Division: G, C", "GC: Smith")
+- Each badge has an X to remove that filter
+- Displayed in the table toolbar row between the project count and the buttons
 
-### 3. `src/contexts/DataContext.tsx`
-- Remove `showBehindPAR: false` from default filters
-- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
-- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+**3. Update `ProjectTable.tsx`**
+- Add the Filters button and ActiveFilterBadges to the existing toolbar (the `div` with project count + ColumnVisibilitySelector)
+- Replace `max-h-[70vh]` with a dynamic calc-based height
 
-### 4. `src/components/FilterBar.tsx`
-- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
+**4. Update `ProjectList.tsx`**
+- Remove `<FilterBar />` and `<KPICard />` from `<main>`
+- Change layout to a flex column filling the viewport: header stays at top, table area grows to fill remaining space
+- Structure becomes:
+```text
+┌─────────────────────────────┐
+│ Header (fixed height)       │
+├─────────────────────────────┤
+│ KPI Card (fixed height)     │
+├─────────────────────────────┤
+│ Table toolbar: count │ badges │ [Filters] [Columns] │
+│ ─────────────────────────── │
+│ Table (flex-1, overflow-y)  │
+│ ─────────────────────────── │
+│ Pagination footer           │
+└─────────────────────────────┘
+```
+- Use `h-screen flex flex-col` on the root, `flex-1 overflow-hidden` on the table card, and `flex-1 overflow-auto` on the table scroll area
 
-### 5. `src/components/EditProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove their reset in `useEffect`
-- Remove the PAR validation check
-- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
-- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
+**5. Remove `FilterBar.tsx`** (or keep as the modal's inner content)
 
-### 6. `src/components/CreateProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove PAR validation
-- Remove `plannedAnnualRate` and `parStartDate` from new project object
-- Remove the Planned Annual Rate input and PAR Start Date picker from the form
-
-### 7. `src/pages/ProjectDetail.tsx`
-- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+### Files touched
+- `src/components/FilterModal.tsx` — new
+- `src/components/ActiveFilterBadges.tsx` — new
+- `src/components/ProjectTable.tsx` — add filter button + badges to toolbar, change height to flex-1
+- `src/pages/ProjectList.tsx` — remove FilterBar, restructure to full-height flex layout
 

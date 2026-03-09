@@ -1062,6 +1062,9 @@ const ProjectDetail = () => {
                                 <TableHead className="text-right cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('smu')}>
                                   <div className="flex items-center justify-end">SMU<SortIcon active={eqSortColumn === 'smu'} direction={eqSortDirection} /></div>
                                 </TableHead>
+                                {showUom && (
+                                  <TableHead>UOM</TableHead>
+                                )}
                                 <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('ownership')}>
                                   <div className="flex items-center">Ownership<SortIcon active={eqSortColumn === 'ownership'} direction={eqSortDirection} /></div>
                                 </TableHead>

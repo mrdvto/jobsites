@@ -437,6 +437,26 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
                       </SelectContent>
                     </Select>
                   </div>
+                  {!followUpFrom && (
+                    <div className="space-y-2">
+                      <Label>Follow-up to</Label>
+                      <Select value={linkedActivityId} onValueChange={setLinkedActivityId}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="None" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          {(project?.activities || [])
+                            .filter(a => !(mode === 'edit' && activity && a.id === activity.id))
+                            .map(a => (
+                              <SelectItem key={a.id} value={a.id.toString()}>
+                                {a.description}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

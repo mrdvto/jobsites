@@ -143,6 +143,7 @@ export const EditProjectModal = ({ project, open, onOpenChange }: EditProjectMod
       bidDate: bidDate ? format(bidDate, 'yyyy-MM-dd') : undefined,
       targetStartDate: targetStartDate ? format(targetStartDate, 'yyyy-MM-dd') : undefined,
       targetCompletionDate: targetCompletionDate ? format(targetCompletionDate, 'yyyy-MM-dd') : undefined,
+      dodgeProject,
     });
 
     toast({ title: "Success", description: "Project updated successfully." });

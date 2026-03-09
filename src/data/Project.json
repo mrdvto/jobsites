@@ -82,13 +82,7 @@
                 { "id": 1002, "assigneeId": 313, "activityType": "Phone Call", "date": "2025-02-05T00:00:00.000Z", "description": "Follow-up call regarding equipment needs" },
                 { "id": 1003, "assigneeId": 305, "activityType": "Meeting", "date": "2025-02-15T00:00:00.000Z", "description": "Quarterly review meeting with Turner Construction" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1019550", "equipmentType": "Excavator", "make": "Caterpillar", "model": "320F", "year": 2019, "serialNumber": "CAT0320FHBN", "hours": 4250 },
-                { "id": 2, "companyId": "1019550", "equipmentType": "Boom Lift", "make": "JLG", "model": "600S", "year": 2021, "serialNumber": "JLG600S9827", "hours": 1120 },
-                { "id": 3, "companyId": "998810", "equipmentType": "Wheel Loader", "make": "Volvo", "model": "L90H", "year": 2021, "serialNumber": "VLV90H8834A", "hours": 2800 },
-                { "id": 4, "companyId": "1019550", "equipmentType": "Skid Steer", "make": "Bobcat", "model": "T770", "year": 2022, "serialNumber": "BCT770KL921", "hours": 950 },
-                { "id": 5, "companyId": "998810", "equipmentType": "Compactor", "make": "Caterpillar", "model": "CS56B", "year": 2020, "serialNumber": "CATCS56BXMR", "hours": 3400 }
-            ],
+            "customerEquipment": [1001, 1002, 1003, 1004, 1005],
             "externalReference": {
                 "source": "Dodge Data & Analytics",
                 "url": "https://www.construction.com/projects/5001010/st-marys-hospital-west-wing-expansion",

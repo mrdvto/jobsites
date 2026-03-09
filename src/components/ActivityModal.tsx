@@ -50,6 +50,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
   const [showMoreFields, setShowMoreFields] = useState(false);
   const [campaignId, setCampaignId] = useState<string>('');
   const [issueId, setIssueId] = useState<string>('');
+  const [linkedActivityId, setLinkedActivityId] = useState<string>('');
 
   const selectedCompany = projectCompanies.find(c => c.companyId === selectedCompanyId);
   const companyContacts = selectedCompany?.companyContacts ?? [];
@@ -77,7 +78,8 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
       }
       setCampaignId(activity.campaignId?.toString() || '');
       setIssueId(activity.issueId?.toString() || '');
-      setShowMoreFields(!!(activity.campaignId || activity.issueId));
+      setLinkedActivityId(activity.previousRelatedActivityId?.toString() || '');
+      setShowMoreFields(!!(activity.campaignId || activity.issueId || activity.previousRelatedActivityId));
     } else if (mode === 'create' && followUpFrom) {
       setSalesRepId(followUpFrom.salesRepId.toString());
       setTypeId(followUpFrom.typeId);
@@ -100,6 +102,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
       }
       setCampaignId('');
       setIssueId('');
+      setLinkedActivityId('');
       setShowMoreFields(false);
     } else {
       setSalesRepId('');
@@ -112,6 +115,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
       setSelectedContactId('');
       setCampaignId('');
       setIssueId('');
+      setLinkedActivityId('');
       setShowMoreFields(false);
     }
   }, [activity, mode, open, followUpFrom]);
@@ -176,7 +180,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
       customerId: selectedCompanyId || undefined,
       campaignId: campaignId && campaignId !== 'none' ? parseInt(campaignId) : undefined,
       issueId: issueId && issueId !== 'none' ? parseInt(issueId) : undefined,
-      previousRelatedActivityId: followUpFrom?.id
+      previousRelatedActivityId: followUpFrom?.id || (linkedActivityId && linkedActivityId !== 'none' ? parseInt(linkedActivityId) : undefined)
     };
 
     if (mode === 'create') {
@@ -433,6 +437,26 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
                       </SelectContent>
                     </Select>
                   </div>
+                  {!followUpFrom && (
+                    <div className="space-y-2">
+                      <Label>Follow-up to</Label>
+                      <Select value={linkedActivityId} onValueChange={setLinkedActivityId}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="None" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          {(project?.activities || [])
+                            .filter(a => !(mode === 'edit' && activity && a.id === activity.id))
+                            .map(a => (
+                              <SelectItem key={a.id} value={a.id.toString()}>
+                                {a.description}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

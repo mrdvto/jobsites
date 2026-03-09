@@ -1,39 +1,32 @@
 
 
-# Remove PAR (Planned Annual Rate) from Projects
+## Plan: Replace Revenue Column with Won Revenue + Pipeline Revenue
 
-PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
+### Overview
+Replace the single "Revenue" column with two separate columns: "Won Revenue" (stage 16) and "Pipeline Revenue" (phases 1/2, excluding closed-negative stages). This reuses the existing `classifyRevenue` logic from `DataContext`.
 
-## Changes
+### Changes
 
-### 1. `src/types/index.ts`
-- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
-- Remove `showBehindPAR` from `Filters` interface
+**1. `src/hooks/useColumnVisibility.ts`**
+- Remove `'revenue'` from `ColumnId` type and `ALL_COLUMN_IDS`
+- Add `'wonRevenue'` and `'pipelineRevenue'`
 
-### 2. `src/data/Project.json`
-- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+**2. `src/contexts/ColumnVisibilityContext.tsx`**
+- Update `DEFAULT_VISIBLE` to replace `'revenue'` with `'wonRevenue'`, `'pipelineRevenue'`
 
-### 3. `src/contexts/DataContext.tsx`
-- Remove `showBehindPAR: false` from default filters
-- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
-- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+**3. `src/contexts/DataContext.tsx`**
+- Add per-project revenue classification helpers: `calculateProjectWonRevenue(project)` and `calculateProjectPipelineRevenue(project)` using the same stage 16 / phase 1-2 logic from `classifyRevenue`
+- Expose both in context
 
-### 4. `src/components/FilterBar.tsx`
-- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
+**4. `src/components/ProjectTable.tsx`**
+- Replace the single `revenue` column def with two column defs: `wonRevenue` and `pipelineRevenue`
+- Update `RenderHelpers` interface, helpers object, and sort cases accordingly
+- Remove old `'revenue'` sort case, add `'wonRevenue'` and `'pipelineRevenue'` sort cases
+- Update `SortColumn` type
 
-### 5. `src/components/EditProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove their reset in `useEffect`
-- Remove the PAR validation check
-- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
-- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
+**5. `src/components/ColumnVisibilitySelector.tsx`**
+- If column labels are defined here, update to show "Won Revenue" and "Pipeline Revenue" instead of "Revenue"
 
-### 6. `src/components/CreateProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove PAR validation
-- Remove `plannedAnnualRate` and `parStartDate` from new project object
-- Remove the Planned Annual Rate input and PAR Start Date picker from the form
-
-### 7. `src/pages/ProjectDetail.tsx`
-- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+### Migration
+Users with `'revenue'` saved in localStorage will have it filtered out (existing `loadFromStorage` already filters against `ALL_COLUMN_IDS`), so they'll just lose that column and can re-add the new ones. The new defaults will apply for fresh users.
 

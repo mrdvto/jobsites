@@ -848,7 +848,7 @@ const ProjectDetail = () => {
               <TableRow key={activity.id}>
                     <TableCell className="font-medium">{getSalesRepName(activity.salesRepId)}</TableCell>
                     <TableCell>
-                      <Badge variant="outline">{getActivityTypeLabel(activity.typeId)}</Badge>
+                      <Badge variant="outline">{({E:'Email',P:'Phone',F:'Face-to-Face',Q:'Quote'} as Record<string,string>)[activity.typeId] || activity.typeId}</Badge>
                     </TableCell>
                     <TableCell className="text-sm">
                       {new Date(activity.date).toLocaleDateString()}

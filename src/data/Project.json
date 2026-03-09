@@ -576,8 +576,8 @@
                 { "id": 3, "content": "School bus route runs through site entrance. Extra caution required during morning and afternoon school hours.", "createdAt": "2025-04-15T08:30:00.000Z", "createdById": 260, "tagIds": ["SAFETY"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1012, "assigneeId": 260, "activityType": "Meeting", "date": "2025-04-01T00:00:00.000Z", "description": "Initial planning meeting with developer" },
-                { "id": 1013, "assigneeId": 260, "activityType": "Site Visit", "date": "2025-04-10T00:00:00.000Z", "description": "Soil assessment and equipment evaluation" }
+                { "id": 1012, "statusId": 2, "salesRepId": 260, "typeId": "F", "date": "2025-04-01T13:00:00.000Z", "description": "Initial planning meeting with developer", "contactName": "Tom Builders", "notes": "Discussed grading timeline and equipment needs for Phase 2." },
+                { "id": 1013, "statusId": 2, "salesRepId": 260, "typeId": "F", "date": "2025-04-10T08:30:00.000Z", "description": "Soil assessment and equipment evaluation", "contactName": "Mark Stevens", "notes": "Heavy clay confirmed. Track equipment recommended.", "previousRelatedActivityId": 1012 }
             ],
             "customerEquipment": [1025, 1026, 1027, 1028, 1029],
             "externalReference": {

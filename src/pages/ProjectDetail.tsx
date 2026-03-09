@@ -903,10 +903,17 @@ const ProjectDetail = () => {
             const searchLower = equipmentSearch.toLowerCase();
             const hasSearch = searchLower.length > 0;
 
-            const filteredEquipment = project.customerEquipment.filter((eq) => {
+            const resolvedEquipment = project.customerEquipment
+              .map(id => getEquipmentById(id))
+              .filter((eq): eq is CustomerEquipment => eq !== undefined);
+
+            const searchLower = equipmentSearch.toLowerCase();
+            const hasSearch = searchLower.length > 0;
+
+            const filteredEquipment = resolvedEquipment.filter((eq) => {
               if (!hasSearch) return true;
               const companyName = project.projectCompanies.find((c) => c.companyId === eq.companyId)?.companyName || '';
-              const searchStr = `${companyName} ${eq.equipmentType} ${eq.make} ${eq.model} ${eq.year || ''} ${eq.serialNumber || ''}`.toLowerCase();
+              const searchStr = `${companyName} ${eq.equipmentType} ${eq.make} ${eq.model} ${eq.year || ''} ${eq.serialNumber || ''} ${eq.ownershipStatus}`.toLowerCase();
               return searchStr.includes(searchLower);
             });
 
@@ -972,7 +979,10 @@ const ProjectDetail = () => {
                                 <TableHead className="text-right cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('hours')}>
                                   <div className="flex items-center justify-end">Hours<SortIcon active={eqSortColumn === 'hours'} direction={eqSortDirection} /></div>
                                 </TableHead>
-                                <TableHead className="w-[80px]"></TableHead>
+                                <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleEqSort('ownership')}>
+                                  <div className="flex items-center">Ownership<SortIcon active={eqSortColumn === 'ownership'} direction={eqSortDirection} /></div>
+                                </TableHead>
+                                <TableHead className="w-[50px]"></TableHead>
                               </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -985,14 +995,14 @@ const ProjectDetail = () => {
                                   <TableCell className="font-mono text-sm">{eq.serialNumber || '—'}</TableCell>
                                   <TableCell className="text-right">{eq.hours?.toLocaleString() || '—'}</TableCell>
                                   <TableCell>
-                                    <div className="flex gap-1">
-                                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEditEquipment(eq)}>
-                                        <Pencil className="h-4 w-4" />
-                                      </Button>
-                                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {setEquipmentToDelete(eq.id);setShowDeleteEquipmentDialog(true);}}>
-                                        <X className="h-4 w-4" />
-                                      </Button>
-                                    </div>
+                                    <Badge variant={eq.ownershipStatus === 'owned' ? 'default' : 'secondary'}>
+                                      {eq.ownershipStatus === 'owned' ? 'Owned' : 'Rented'}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {setEquipmentToDelete(eq.id);setShowDeleteEquipmentDialog(true);}}>
+                                      <X className="h-4 w-4" />
+                                    </Button>
                                   </TableCell>
                                 </TableRow>
                           )}

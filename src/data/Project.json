@@ -615,7 +615,8 @@
                 { "id": 4, "companyId": "1035040", "equipmentType": "Boom Lift", "make": "Genie", "model": "S-65", "year": 2022, "serialNumber": "GENS65XC141", "hours": 1200 },
                 { "id": 5, "companyId": "1174395", "equipmentType": "Dozer", "make": "Komatsu", "model": "D39PX", "year": 2020, "serialNumber": "KMTD39PXRR1", "hours": 3600 }
             ],
-            "dodgeProject": {
+            "externalReference": {
+                "source": "Dodge Data & Analytics",
                 "url": "https://www.construction.com/projects/5001070/willow-creek-residential-subdivision",
                 "name": "Willow Creek Residential Subdivision Phase 2"
             }

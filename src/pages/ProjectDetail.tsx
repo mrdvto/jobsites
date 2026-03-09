@@ -847,6 +847,7 @@ const ProjectDetail = () => {
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('date')}>
                     <div className="flex items-center">Date<SortIcon active={actSortColumn === 'date'} direction={actSortDirection} /></div>
                   </TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('description')}>
                     <div className="flex items-center">Description<SortIcon active={actSortColumn === 'description'} direction={actSortDirection} /></div>
                   </TableHead>
@@ -866,6 +867,17 @@ const ProjectDetail = () => {
                     </TableCell>
                     <TableCell className="text-sm">
                       {new Date(activity.date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className={activity.statusId === 2
+                          ? "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                          : "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-300"
+                        }
+                      >
+                        {activity.statusId === 2 ? 'Completed' : 'Outstanding'}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-sm">
                       <div className="flex items-center gap-1.5">

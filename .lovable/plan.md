@@ -1,39 +1,30 @@
 
 
-# Remove PAR (Planned Annual Rate) from Projects
+## Plan: Fix Opportunities Table at Tablet Resolution
 
-PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
+### Problem
+At tablet width (~834px), the 7-column opportunities table is too cramped. Description text wraps to 3-4 lines, columns are squeezed, and the table is difficult to read.
 
-## Changes
+### Solution
+Make the table responsive by wrapping it in a horizontal scroll container at tablet widths, and hide less-essential columns on smaller screens.
 
-### 1. `src/types/index.ts`
-- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
-- Remove `showBehindPAR` from `Filters` interface
+### Changes
 
-### 2. `src/data/Project.json`
-- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+**`src/pages/ProjectDetail.tsx`**
 
-### 3. `src/contexts/DataContext.tsx`
-- Remove `showBehindPAR: false` from default filters
-- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
-- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+1. **Wrap table in overflow container**: Add `<div className="overflow-x-auto -mx-6 px-6">` around the `<Table>` to allow horizontal scrolling when the table is too wide, rather than crushing columns.
 
-### 4. `src/components/FilterBar.tsx`
-- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
+2. **Hide "Division" and "Sales Rep" columns on tablet**: Use `hidden md:table-cell lg:table-cell` to hide the Division column below `lg` breakpoint, and similarly for Sales Rep. These are the least critical columns — Stage and Revenue are most important.
+   - Division column: `hidden lg:table-cell`
+   - Sales Rep column: `hidden lg:table-cell`
+   - This reduces to 5 columns at tablet (Type, Description, Stage, Est. Close, Est. Revenue)
 
-### 5. `src/components/EditProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove their reset in `useEffect`
-- Remove the PAR validation check
-- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
-- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
+3. **Update footer `colSpan`**: Adjust the footer total row `colSpan` to account for hidden columns (use a responsive approach or reduce to match visible columns).
 
-### 6. `src/components/CreateProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove PAR validation
-- Remove `plannedAnnualRate` and `parStartDate` from new project object
-- Remove the Planned Annual Rate input and PAR Start Date picker from the form
+4. **Header buttons**: Make the "Create New" and "Associate Existing" buttons stack or shrink on smaller screens using `flex-wrap`.
 
-### 7. `src/pages/ProjectDetail.tsx`
-- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+### Result
+- At desktop (1024px+): All 7 columns visible
+- At tablet (768-1024px): 5 columns visible (Type, Description, Stage, Est. Close, Est. Revenue), comfortable spacing
+- Table scrolls horizontally if content still overflows
 

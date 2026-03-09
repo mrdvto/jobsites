@@ -694,44 +694,51 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     logChange(projectId, 'NOTE_DELETED', 'Note', `Note deleted`);
   };
 
-  const addCustomerEquipment = (projectId: number, equipment: Omit<CustomerEquipment, 'id'>) => {
-    setProjects(prev =>
-      prev.map(project => {
-        if (project.id === projectId) {
-          const maxId = Math.max(...(project.customerEquipment || []).map(e => e.id), 0);
-          return { ...project, customerEquipment: [...(project.customerEquipment || []), { ...equipment, id: maxId + 1 }] };
-        }
-        return project;
-      })
-    );
-    logChange(projectId, 'EQUIPMENT_ADDED', 'Equipment', `Equipment "${equipment.make} ${equipment.model}" added`);
-  };
+  const masterEquipment = companyEquipmentData as CustomerEquipment[];
 
-  const updateCustomerEquipment = (projectId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => {
+  const getEquipmentById = useCallback((id: number): CustomerEquipment | undefined => {
+    return masterEquipment.find(e => e.id === id);
+  }, [masterEquipment]);
+
+  const getCompanyEquipment = useCallback((companyId: string): CustomerEquipment[] => {
+    return masterEquipment.filter(e => e.companyId === companyId);
+  }, [masterEquipment]);
+
+  const getEquipmentProjectAssignment = useCallback((equipmentId: number, excludeProjectId?: number): { projectId: number; projectName: string } | null => {
+    for (const p of projects) {
+      if (excludeProjectId !== undefined && p.id === excludeProjectId) continue;
+      if (p.customerEquipment.includes(equipmentId)) {
+        return { projectId: p.id, projectName: p.name };
+      }
+    }
+    return null;
+  }, [projects]);
+
+  const addCustomerEquipment = (projectId: number, equipmentId: number) => {
+    const eq = getEquipmentById(equipmentId);
     setProjects(prev =>
       prev.map(project => {
         if (project.id === projectId) {
-          return { ...project, customerEquipment: (project.customerEquipment || []).map(e => e.id === equipmentId ? { ...e, ...updates } : e) };
+          if (project.customerEquipment.includes(equipmentId)) return project;
+          return { ...project, customerEquipment: [...project.customerEquipment, equipmentId] };
         }
         return project;
       })
     );
-    logChange(projectId, 'EQUIPMENT_UPDATED', 'Equipment', `Equipment updated`);
+    logChange(projectId, 'EQUIPMENT_ADDED', 'Equipment', `Equipment "${eq ? `${eq.make} ${eq.model}` : equipmentId}" added`);
   };
 
   const deleteCustomerEquipment = (projectId: number, equipmentId: number) => {
-    let desc = '';
+    const eq = getEquipmentById(equipmentId);
     setProjects(prev =>
       prev.map(project => {
         if (project.id === projectId) {
-          const eq = (project.customerEquipment || []).find(e => e.id === equipmentId);
-          if (eq) desc = `${eq.make} ${eq.model}`;
-          return { ...project, customerEquipment: (project.customerEquipment || []).filter(e => e.id !== equipmentId) };
+          return { ...project, customerEquipment: project.customerEquipment.filter(id => id !== equipmentId) };
         }
         return project;
       })
     );
-    logChange(projectId, 'EQUIPMENT_DELETED', 'Equipment', `Equipment "${desc}" removed`);
+    logChange(projectId, 'EQUIPMENT_DELETED', 'Equipment', `Equipment "${eq ? `${eq.make} ${eq.model}` : equipmentId}" removed`);
   };
 
   return (

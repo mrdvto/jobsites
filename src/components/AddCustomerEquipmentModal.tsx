@@ -139,7 +139,7 @@ export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, projectI
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button onClick={handleSubmit} disabled={selectedEquipmentId === null}>Add Equipment</Button>
+            <Button onClick={handleSubmit} disabled={selectedEquipmentId === null}>Associate</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

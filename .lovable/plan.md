@@ -1,20 +1,39 @@
 
-## Plan: Fix Sticky Column Headers
 
-### Problem
-The `Table` component in `table.tsx` wraps the `<table>` in its own `<div className="relative w-full overflow-auto">`. This creates a nested scroll context that conflicts with the `max-h-[70vh] overflow-auto` wrapper in `ProjectTable.tsx`. The sticky header sticks relative to the inner wrapper, but scrolling happens on the outer one.
+# Remove PAR (Planned Annual Rate) from Projects
 
-### Solution
-Remove the wrapper div from the base `Table` component and handle the scroll container explicitly in `ProjectTable.tsx`.
+PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
 
-### Changes
+## Changes
 
-**1. `src/components/ui/table.tsx`**
-- Remove the wrapper `<div className="relative w-full overflow-auto">` from the `Table` component
-- Return just the `<table>` element directly
+### 1. `src/types/index.ts`
+- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
+- Remove `showBehindPAR` from `Filters` interface
 
-**2. `src/components/ProjectTable.tsx`**  
-- The existing `<div className="max-h-[70vh] overflow-auto">` wrapper becomes the single scroll container
-- Add `relative w-full` to this wrapper to maintain layout
+### 2. `src/data/Project.json`
+- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
 
-This ensures there's only one scroll container, and the `<thead>` with `sticky top-0` will properly stick to it.
+### 3. `src/contexts/DataContext.tsx`
+- Remove `showBehindPAR: false` from default filters
+- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
+- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+
+### 4. `src/components/FilterBar.tsx`
+- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
+
+### 5. `src/components/EditProjectModal.tsx`
+- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
+- Remove their reset in `useEffect`
+- Remove the PAR validation check
+- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
+- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
+
+### 6. `src/components/CreateProjectModal.tsx`
+- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
+- Remove PAR validation
+- Remove `plannedAnnualRate` and `parStartDate` from new project object
+- Remove the Planned Annual Rate input and PAR Start Date picker from the form
+
+### 7. `src/pages/ProjectDetail.tsx`
+- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+

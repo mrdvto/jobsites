@@ -320,7 +320,7 @@ export const ProjectTable = () => {
         <ColumnVisibilitySelector />
       </div>
       
-      <div className="max-h-[70vh] overflow-auto">
+      <div className="relative w-full max-h-[70vh] overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>

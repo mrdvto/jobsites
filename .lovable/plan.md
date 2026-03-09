@@ -1,39 +1,18 @@
 
 
-# Remove PAR (Planned Annual Rate) from Projects
+## Add "More Fields" Section & Fix Description Input
 
-PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
+### Changes to `src/components/ActivityModal.tsx`
 
-## Changes
+1. **Description → single-line Input**: Replace the `<Textarea rows={3}>` for description (lines 322-329) with a standard `<Input>` component.
 
-### 1. `src/types/index.ts`
-- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
-- Remove `showBehindPAR` from `Filters` interface
+2. **"More fields" collapsible section**: Add a `showMoreFields` boolean state. Render a clickable text button (e.g. `ChevronDown` + "More fields") below the Notes field. When toggled, reveal:
+   - **Campaign** dropdown — a `<Select>` listing all items from `Campaigns.json`, with a "None" option to clear
+   - **Issue** dropdown — a `<Select>` listing issues from `Issues.json`, filtered by `selectedCompanyId` when a company is selected (show all if no company selected), with a "None" option to clear
 
-### 2. `src/data/Project.json`
-- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+3. **State additions**: `campaignId` (number | '') and `issueId` (number | ''). Initialize from `activity.campaignId` / `activity.issueId` in edit mode. Reset on create. Include in `activityData` on submit (only if set).
 
-### 3. `src/contexts/DataContext.tsx`
-- Remove `showBehindPAR: false` from default filters
-- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
-- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+4. **Auto-expand**: When editing an activity that has `campaignId` or `issueId`, auto-set `showMoreFields = true`.
 
-### 4. `src/components/FilterBar.tsx`
-- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
-
-### 5. `src/components/EditProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove their reset in `useEffect`
-- Remove the PAR validation check
-- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
-- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
-
-### 6. `src/components/CreateProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove PAR validation
-- Remove `plannedAnnualRate` and `parStartDate` from new project object
-- Remove the Planned Annual Rate input and PAR Start Date picker from the form
-
-### 7. `src/pages/ProjectDetail.tsx`
-- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+5. **Imports**: Add `campaignsData` from `Campaigns.json`, `issuesData` from `Issues.json`, and `ChevronDown`/`ChevronUp` from lucide-react.
 

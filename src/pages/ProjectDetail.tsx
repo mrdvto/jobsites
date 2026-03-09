@@ -535,6 +535,27 @@ const ProjectDetail = () => {
                   </div>
                 </>
               )}
+
+              {project.dodgeProject && (
+                <>
+                  <Separator />
+                  <div className="flex items-start gap-3">
+                    <ExternalLink className="h-5 w-5 text-muted-foreground mt-0.5" />
+                    <div>
+                      <p className="font-medium">Dodge Project</p>
+                      <a
+                        href={project.dodgeProject.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        {project.dodgeProject.name}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </Card>
 

@@ -357,6 +357,26 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
             </div>
           </div>
 
+          {/* Dodge Project Linkage */}
+          <div className="space-y-4 pb-4 border-b">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold">Dodge Project</h3>
+              {(dodgeProjectName || dodgeProjectUrl) && (
+                <Button type="button" variant="ghost" size="sm" className="h-6 text-xs" onClick={() => { setDodgeProjectName(''); setDodgeProjectUrl(''); }}>Clear</Button>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="create-dodge-name">Dodge Project Name</Label>
+                <Input id="create-dodge-name" value={dodgeProjectName} onChange={(e) => setDodgeProjectName(e.target.value)} placeholder="e.g. St. Mary's West Wing" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="create-dodge-url">Dodge Project URL</Label>
+                <Input id="create-dodge-url" value={dodgeProjectUrl} onChange={(e) => setDodgeProjectUrl(e.target.value)} placeholder="https://dodge.construction.com/..." />
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-4 pt-4 border-t">
             <h3 className="font-semibold flex items-center gap-2"><Building2 className="h-4 w-4" /> Project Owner</h3>
             <div className="space-y-3">

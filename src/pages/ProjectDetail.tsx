@@ -76,7 +76,7 @@ const ProjectDetail = () => {
   const [oppShowOpenOnly, setOppShowOpenOnly] = useState(true);
 
   // Sort state for Activities table
-  const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'description' | null>('date');
+  const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'status' | 'description' | null>('date');
   const [actSortDirection, setActSortDirection] = useState<'asc' | 'desc' | null>('desc');
 
   // Sort state for Equipment table
@@ -295,10 +295,22 @@ const ProjectDetail = () => {
     if (!actSortColumn || !actSortDirection) return 0;
     let cmp = 0;
     switch (actSortColumn) {
-      case 'assignee':cmp = getSalesRepName(a.salesRepId).localeCompare(getSalesRepName(b.salesRepId));break;
-      case 'activityType':cmp = (a.typeId || '').localeCompare(b.typeId || '');break;
-      case 'date':cmp = new Date(a.date).getTime() - new Date(b.date).getTime();break;
-      case 'description':cmp = (a.description || '').localeCompare(b.description || '');break;
+      case 'assignee':
+        cmp = getSalesRepName(a.salesRepId).localeCompare(getSalesRepName(b.salesRepId));
+        break;
+      case 'activityType':
+        cmp = (a.typeId || '').localeCompare(b.typeId || '');
+        break;
+      case 'date':
+        cmp = new Date(a.date).getTime() - new Date(b.date).getTime();
+        break;
+      case 'status':
+        // Group Outstanding vs Completed (Completed is statusId === 2)
+        cmp = Number(a.statusId === 2) - Number(b.statusId === 2);
+        break;
+      case 'description':
+        cmp = (a.description || '').localeCompare(b.description || '');
+        break;
     }
     return actSortDirection === 'asc' ? cmp : -cmp;
   });
@@ -847,7 +859,9 @@ const ProjectDetail = () => {
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('date')}>
                     <div className="flex items-center">Date<SortIcon active={actSortColumn === 'date'} direction={actSortDirection} /></div>
                   </TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('status')}>
+                    <div className="flex items-center">Status<SortIcon active={actSortColumn === 'status'} direction={actSortDirection} /></div>
+                  </TableHead>
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('description')}>
                     <div className="flex items-center">Description<SortIcon active={actSortColumn === 'description'} direction={actSortDirection} /></div>
                   </TableHead>

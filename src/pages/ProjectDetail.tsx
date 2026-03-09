@@ -1080,6 +1080,9 @@ const ProjectDetail = () => {
                                   <TableCell>{eq.year || '—'}</TableCell>
                                   <TableCell className="font-mono text-sm">{eq.serialNumber || '—'}</TableCell>
                                   <TableCell className="text-right">{eq.smu?.toLocaleString() || '—'}</TableCell>
+                                  {showUom && (
+                                    <TableCell>{eq.uom ? getLookupLabel('uomTypes', eq.uom) : '—'}</TableCell>
+                                  )}
                                   <TableCell>
                                     <Badge variant={eq.ownershipStatus === 'owned' ? 'default' : 'secondary'}>
                                       {eq.ownershipStatus === 'owned' ? 'Owned' : 'Rented'}

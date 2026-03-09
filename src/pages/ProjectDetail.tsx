@@ -854,8 +854,12 @@ const ProjectDetail = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedActivities.map((activity) =>
-              <TableRow key={activity.id}>
+              {sortedActivities.map((activity) => {
+                const parentActivity = activity.previousRelatedActivityId
+                  ? project.activities?.find(a => a.id === activity.previousRelatedActivityId)
+                  : undefined;
+                return (
+                <TableRow key={activity.id}>
                     <TableCell className="font-medium">{getSalesRepName(activity.salesRepId)}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{({E:'Email',P:'Phone',F:'Face-to-Face',Q:'Quote'} as Record<string,string>)[activity.typeId] || activity.typeId}</Badge>
@@ -863,15 +867,46 @@ const ProjectDetail = () => {
                     <TableCell className="text-sm">
                       {new Date(activity.date).toLocaleDateString()}
                     </TableCell>
-                    <TableCell className="text-sm">{activity.description}</TableCell>
+                    <TableCell className="text-sm">
+                      <div className="flex items-center gap-1.5">
+                        {parentActivity && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Link2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-xs">Follow-up to: {parentActivity.description}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                        {activity.description}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
+                        {activity.statusId === 2 && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={() => handleFollowUpActivity(activity)}>
+                                  <CornerDownRight className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Follow up</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
                         <Button
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
                       onClick={() => handleEditActivity(activity)}>
-                      
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
@@ -879,13 +914,13 @@ const ProjectDetail = () => {
                       size="icon"
                       className="h-8 w-8"
                       onClick={() => initiateDeleteActivity(activity.id)}>
-                      
                           <X className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>
                   </TableRow>
-              )}
+                );
+              })}
               </TableBody>
             </Table>
           }

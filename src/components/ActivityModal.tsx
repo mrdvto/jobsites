@@ -28,16 +28,25 @@ interface ActivityModalProps {
 }
 
 export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }: ActivityModalProps) => {
-  const { users, addActivity, updateActivity } = useData();
+  const { users, projects, addActivity, updateActivity } = useData();
   const { toast } = useToast();
+
+  const project = projects.find(p => p.id === projectId);
+  const projectCompanies = project?.projectCompanies ?? [];
 
   const [salesRepId, setSalesRepId] = useState<string>('');
   const [typeId, setTypeId] = useState<string>('');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [timeValue, setTimeValue] = useState<string>('12:00');
   const [description, setDescription] = useState('');
-  const [contactName, setContactName] = useState('');
   const [notes, setNotes] = useState('');
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string>('');
+  const [selectedContactId, setSelectedContactId] = useState<number | ''>('');
+  const [companyPopoverOpen, setCompanyPopoverOpen] = useState(false);
+  const [contactPopoverOpen, setContactPopoverOpen] = useState(false);
+
+  const selectedCompany = projectCompanies.find(c => c.companyId === selectedCompanyId);
+  const companyContacts = selectedCompany?.companyContacts ?? [];
 
   useEffect(() => {
     if (activity && mode === 'edit') {
@@ -47,16 +56,28 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       setDate(actDate);
       setTimeValue(actDate ? format(actDate, 'HH:mm') : '12:00');
       setDescription(activity.description);
-      setContactName(activity.contactName || '');
       setNotes(activity.notes || '');
+      // Initialize company/contact from activity
+      if (activity.customerId) {
+        setSelectedCompanyId(activity.customerId);
+        const company = projectCompanies.find(c => c.companyId === activity.customerId);
+        if (company && activity.contactName) {
+          const contact = company.companyContacts.find(c => c.name === activity.contactName);
+          setSelectedContactId(contact?.id ?? '');
+        }
+      } else {
+        setSelectedCompanyId('');
+        setSelectedContactId('');
+      }
     } else {
       setSalesRepId('');
       setTypeId('');
       setDate(undefined);
       setTimeValue('12:00');
       setDescription('');
-      setContactName('');
       setNotes('');
+      setSelectedCompanyId('');
+      setSelectedContactId('');
     }
   }, [activity, mode, open]);
 

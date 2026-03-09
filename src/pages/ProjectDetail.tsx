@@ -26,7 +26,8 @@ import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModa
 import { Input } from '@/components/ui/input';
 import { MultiSelectFilter } from '@/components/MultiSelectFilter';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History, ExternalLink } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History, ExternalLink, CornerDownRight, Link2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity, ProjectCompany, CustomerEquipment } from '@/types';
 
@@ -60,6 +61,7 @@ const ProjectDetail = () => {
   const [showDeleteEquipmentDialog, setShowDeleteEquipmentDialog] = useState(false);
   const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
   const [equipmentSearch, setEquipmentSearch] = useState('');
+  const [followUpFromActivity, setFollowUpFromActivity] = useState<Activity | undefined>(undefined);
 
   // Sort state for Opportunities table
   const [oppSortColumn, setOppSortColumn] = useState<'type' | 'description' | 'division' | 'stage' | 'salesRep' | 'estClose' | 'revenue' | null>('stage');
@@ -156,6 +158,14 @@ const ProjectDetail = () => {
 
   const handleCreateActivity = () => {
     setSelectedActivity(undefined);
+    setFollowUpFromActivity(undefined);
+    setActivityModalMode('create');
+    setShowActivityModal(true);
+  };
+
+  const handleFollowUpActivity = (activity: Activity) => {
+    setSelectedActivity(undefined);
+    setFollowUpFromActivity(activity);
     setActivityModalMode('create');
     setShowActivityModal(true);
   };
@@ -844,8 +854,12 @@ const ProjectDetail = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedActivities.map((activity) =>
-              <TableRow key={activity.id}>
+              {sortedActivities.map((activity) => {
+                const parentActivity = activity.previousRelatedActivityId
+                  ? project.activities?.find(a => a.id === activity.previousRelatedActivityId)
+                  : undefined;
+                return (
+                <TableRow key={activity.id}>
                     <TableCell className="font-medium">{getSalesRepName(activity.salesRepId)}</TableCell>
                     <TableCell>
                       <Badge variant="outline">{({E:'Email',P:'Phone',F:'Face-to-Face',Q:'Quote'} as Record<string,string>)[activity.typeId] || activity.typeId}</Badge>
@@ -853,15 +867,46 @@ const ProjectDetail = () => {
                     <TableCell className="text-sm">
                       {new Date(activity.date).toLocaleDateString()}
                     </TableCell>
-                    <TableCell className="text-sm">{activity.description}</TableCell>
+                    <TableCell className="text-sm">
+                      <div className="flex items-center gap-1.5">
+                        {parentActivity && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Link2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-xs">Follow-up to: {parentActivity.description}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                        {activity.description}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <div className="flex gap-1">
+                        {activity.statusId === 2 && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={() => handleFollowUpActivity(activity)}>
+                                  <CornerDownRight className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Follow up</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
                         <Button
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
                       onClick={() => handleEditActivity(activity)}>
-                      
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
@@ -869,13 +914,13 @@ const ProjectDetail = () => {
                       size="icon"
                       className="h-8 w-8"
                       onClick={() => initiateDeleteActivity(activity.id)}>
-                      
                           <X className="h-4 w-4" />
                         </Button>
                       </div>
                     </TableCell>
                   </TableRow>
-              )}
+                );
+              })}
               </TableBody>
             </Table>
           }
@@ -1108,7 +1153,8 @@ const ProjectDetail = () => {
         onOpenChange={setShowActivityModal}
         projectId={project.id}
         activity={selectedActivity}
-        mode={activityModalMode} />
+        mode={activityModalMode}
+        followUpFrom={followUpFromActivity} />
       
 
       <AlertDialog open={showDeleteActivityDialog} onOpenChange={setShowDeleteActivityDialog}>

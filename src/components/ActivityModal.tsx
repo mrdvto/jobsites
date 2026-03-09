@@ -12,7 +12,7 @@ import { Activity } from '@/types';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { CalendarIcon, Check, ChevronDown, ChevronUp, ChevronsUpDown, X } from 'lucide-react';
+import { CalendarIcon, Check, ChevronDown, ChevronUp, ChevronsUpDown, X, Link2 } from 'lucide-react';
 import { format, isPast } from 'date-fns';
 import { cn } from '@/lib/utils';
 import activityTypesData from '@/data/ActivityTypes.json';
@@ -27,9 +27,10 @@ interface ActivityModalProps {
   projectId: number;
   activity?: Activity;
   mode: 'create' | 'edit';
+  followUpFrom?: Activity;
 }
 
-export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }: ActivityModalProps) => {
+export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, followUpFrom }: ActivityModalProps) => {
   const { users, projects, addActivity, updateActivity } = useData();
   const { toast } = useToast();
 
@@ -77,6 +78,29 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       setCampaignId(activity.campaignId?.toString() || '');
       setIssueId(activity.issueId?.toString() || '');
       setShowMoreFields(!!(activity.campaignId || activity.issueId));
+    } else if (mode === 'create' && followUpFrom) {
+      setSalesRepId(followUpFrom.salesRepId.toString());
+      setTypeId(followUpFrom.typeId);
+      setDate(undefined);
+      setTimeValue('12:00');
+      setDescription('');
+      setNotes('');
+      if (followUpFrom.customerId) {
+        setSelectedCompanyId(followUpFrom.customerId);
+        const company = projectCompanies.find(c => c.companyId === followUpFrom.customerId);
+        if (company && followUpFrom.contactName) {
+          const contact = company.companyContacts.find(c => c.name === followUpFrom.contactName);
+          setSelectedContactId(contact?.id ?? '');
+        } else {
+          setSelectedContactId('');
+        }
+      } else {
+        setSelectedCompanyId('');
+        setSelectedContactId('');
+      }
+      setCampaignId('');
+      setIssueId('');
+      setShowMoreFields(false);
     } else {
       setSalesRepId('');
       setTypeId('');
@@ -90,7 +114,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       setIssueId('');
       setShowMoreFields(false);
     }
-  }, [activity, mode, open]);
+  }, [activity, mode, open, followUpFrom]);
 
   const handleDateSelect = (selectedDay: Date | undefined) => {
     if (!selectedDay) { setDate(undefined); return; }
@@ -151,7 +175,8 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       notes: notes.trim(),
       customerId: selectedCompanyId || undefined,
       campaignId: campaignId && campaignId !== 'none' ? parseInt(campaignId) : undefined,
-      issueId: issueId && issueId !== 'none' ? parseInt(issueId) : undefined
+      issueId: issueId && issueId !== 'none' ? parseInt(issueId) : undefined,
+      previousRelatedActivityId: followUpFrom?.id
     };
 
     if (mode === 'create') {
@@ -172,6 +197,13 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
           <DialogTitle>{mode === 'create' ? 'Create New Activity' : 'Edit Activity'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {followUpFrom && mode === 'create' && (
+            <div className="flex items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-2 text-sm">
+              <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />
+              <span className="text-muted-foreground">Follow-up to:</span>
+              <span className="font-medium truncate">{followUpFrom.description}</span>
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="salesRep">Sales Rep</Label>
             <Select value={salesRepId} onValueChange={setSalesRepId}>

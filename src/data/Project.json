@@ -446,7 +446,8 @@
                 { "id": 5, "companyId": "1035040", "equipmentType": "Forklift", "make": "Caterpillar", "model": "DP50", "year": 2020, "serialNumber": "CATDP50NWJ2", "hours": 5100 },
                 { "id": 6, "companyId": "1067200", "equipmentType": "Compactor", "make": "Bomag", "model": "BW211D", "year": 2021, "serialNumber": "BMGBW211DA1", "hours": 2900 }
             ],
-            "dodgeProject": {
+            "externalReference": {
+                "source": "Dodge Data & Analytics",
                 "url": "https://www.construction.com/projects/5001050/amazon-fulfillment-center-ord5",
                 "name": "Amazon Fulfillment Center ORD5 - Chicago"
             }

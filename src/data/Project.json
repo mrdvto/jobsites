@@ -732,11 +732,7 @@
             "activities": [
                 { "id": 1015, "assigneeId": 313, "activityType": "Email", "date": "2025-03-15T00:00:00.000Z", "description": "Sent equipment catalog and pricing" }
             ],
-            "customerEquipment": [
-                { "id": 1, "companyId": "1174395", "equipmentType": "Excavator", "make": "Volvo", "model": "EC220E", "year": 2021, "serialNumber": "VLVEC220EA1", "hours": 2600 },
-                { "id": 2, "companyId": "1764465", "equipmentType": "Skid Steer", "make": "Bobcat", "model": "S650", "year": 2022, "serialNumber": "BCS650MN431", "hours": 1100 },
-                { "id": 3, "companyId": "1174395", "equipmentType": "Backhoe", "make": "Case", "model": "590SN", "year": 2020, "serialNumber": "CASE590SNA1", "hours": 3200 }
-            ]
+            "customerEquipment": [1033, 1034, 1035]
         },
         {
             "id": 500110,

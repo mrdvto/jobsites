@@ -61,6 +61,7 @@ const ProjectDetail = () => {
   const [showDeleteEquipmentDialog, setShowDeleteEquipmentDialog] = useState(false);
   const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
   const [equipmentSearch, setEquipmentSearch] = useState('');
+  const [showUom, setShowUom] = useState(() => localStorage.getItem('showEquipmentUom') === 'true');
   const [followUpFromActivity, setFollowUpFromActivity] = useState<Activity | undefined>(undefined);
 
   // Sort state for Opportunities table

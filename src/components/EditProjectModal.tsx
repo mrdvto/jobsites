@@ -57,9 +57,8 @@ export const EditProjectModal = ({ project, open, onOpenChange }: EditProjectMod
   const [targetStartOpen, setTargetStartOpen] = useState(false);
   const [targetCompletionOpen, setTargetCompletionOpen] = useState(false);
 
-  // Dodge Project fields
-  const [dodgeProjectName, setDodgeProjectName] = useState(project.dodgeProject?.name || '');
-  const [dodgeProjectUrl, setDodgeProjectUrl] = useState(project.dodgeProject?.url || '');
+  // External Reference
+  const [externalReference, setExternalReference] = useState<{ source: string; name: string; url: string } | undefined>(project.externalReference);
 
   const allCompanies = getAllKnownCompanies();
   const selectedOwnerCompany = ownerCompanyId ? getCompanyById(ownerCompanyId) : undefined;

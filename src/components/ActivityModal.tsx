@@ -149,7 +149,9 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       description: description.trim(),
       contactName: selectedContact?.name || '',
       notes: notes.trim(),
-      customerId: selectedCompanyId || undefined
+      customerId: selectedCompanyId || undefined,
+      campaignId: campaignId ? parseInt(campaignId) : undefined,
+      issueId: issueId ? parseInt(issueId) : undefined
     };
 
     if (mode === 'create') {

@@ -1,39 +1,29 @@
 
 
-# Remove PAR (Planned Annual Rate) from Projects
+## Align Equipment Buttons with Existing Pattern
 
-PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
+The Opportunities, Companies, and Activities sections already use "Associate Existing" (outline/secondary) and "Create New" (primary) buttons. The Equipment section currently has a single "Add Equipment" button. This plan aligns it with the existing pattern and swaps button prominence so "Associate Existing" is primary across all tables.
 
-## Changes
+### Changes
 
-### 1. `src/types/index.ts`
-- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
-- Remove `showBehindPAR` from `Filters` interface
+**`src/pages/ProjectDetail.tsx`** (lines 891-895)
+- Replace the single "Add Equipment" button with two buttons matching the other sections:
+  - **"Associate Existing"** — primary button (default variant), opens the equipment picker modal. Uses `LinkIcon`.
+  - **"Create New"** — secondary button (outline variant), opens the create equipment flow. Uses `Plus` icon.
+- Swap button order/variant for **all four sections** (Opportunities, Companies, Activities, Equipment):
+  - "Associate Existing" becomes `default` variant (primary), listed first
+  - "Create New" becomes `outline` variant (secondary), listed second
 
-### 2. `src/data/Project.json`
-- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+**`src/components/AddCustomerEquipmentModal.tsx`**
+- Rename dialog title from "Add Equipment to Project" to "Associate Existing Equipment"
+- Rename confirm button from "Add Equipment" to "Associate"
 
-### 3. `src/contexts/DataContext.tsx`
-- Remove `showBehindPAR: false` from default filters
-- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
-- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+### Sections affected (button variant swaps)
 
-### 4. `src/components/FilterBar.tsx`
-- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
-
-### 5. `src/components/EditProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove their reset in `useEffect`
-- Remove the PAR validation check
-- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
-- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
-
-### 6. `src/components/CreateProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove PAR validation
-- Remove `plannedAnnualRate` and `parStartDate` from new project object
-- Remove the Planned Annual Rate input and PAR Start Date picker from the form
-
-### 7. `src/pages/ProjectDetail.tsx`
-- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+| Section | Associate Existing | Create New |
+|---|---|---|
+| Opportunities (lines 642-656) | `outline` → `default` | `default` → `outline` |
+| Activities (lines 813-824) | `outline` → `default` | `default` → `outline` |
+| Equipment (lines 891-895) | New button, `default` | Existing → `outline` |
+| Companies (line 787) | `outline` → `default` | N/A (only one button) |
 

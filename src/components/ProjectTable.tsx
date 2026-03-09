@@ -326,7 +326,7 @@ export const ProjectTable = () => {
             <TableRow>
               {/* Project Name — always visible */}
               <TableHead
-                className="cursor-pointer select-none group hover:bg-muted/50"
+                className="cursor-pointer select-none group hover:bg-muted"
                 onClick={() => handleSort('name')}
               >
                 <div className="flex items-center">
@@ -338,7 +338,7 @@ export const ProjectTable = () => {
               {activeColumns.map((col) => (
                 <TableHead
                   key={col.id}
-                  className={`cursor-pointer select-none group hover:bg-muted/50 ${
+                  className={`cursor-pointer select-none group hover:bg-muted ${
                     col.align === 'right' ? 'text-right' : ''
                   }`}
                   onClick={() => handleSort(col.sortKey)}

@@ -78,7 +78,8 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
       }
       setCampaignId(activity.campaignId?.toString() || '');
       setIssueId(activity.issueId?.toString() || '');
-      setShowMoreFields(!!(activity.campaignId || activity.issueId));
+      setLinkedActivityId(activity.previousRelatedActivityId?.toString() || '');
+      setShowMoreFields(!!(activity.campaignId || activity.issueId || activity.previousRelatedActivityId));
     } else if (mode === 'create' && followUpFrom) {
       setSalesRepId(followUpFrom.salesRepId.toString());
       setTypeId(followUpFrom.typeId);

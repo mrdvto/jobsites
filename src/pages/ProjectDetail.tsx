@@ -76,7 +76,7 @@ const ProjectDetail = () => {
   const [oppShowOpenOnly, setOppShowOpenOnly] = useState(true);
 
   // Sort state for Activities table
-  const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'description' | null>('date');
+  const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'status' | 'description' | null>('date');
   const [actSortDirection, setActSortDirection] = useState<'asc' | 'desc' | null>('desc');
 
   // Sort state for Equipment table

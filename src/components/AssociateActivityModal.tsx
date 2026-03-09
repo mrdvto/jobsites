@@ -30,7 +30,7 @@ export const AssociateActivityModal = ({ projectId, currentActivityIds, open, on
 
   const handleAssociate = () => {
     if (selectedActivity) {
-      addActivity(projectId, { assigneeId: selectedActivity.activity.assigneeId, activityType: selectedActivity.activity.activityType, date: selectedActivity.activity.date, description: selectedActivity.activity.description });
+      addActivity(projectId, { statusId: selectedActivity.activity.statusId, salesRepId: selectedActivity.activity.salesRepId, typeId: selectedActivity.activity.typeId, date: selectedActivity.activity.date, description: selectedActivity.activity.description, contactName: selectedActivity.activity.contactName, notes: selectedActivity.activity.notes });
       setSelectedActivity(null); onOpenChange(false);
     }
   };

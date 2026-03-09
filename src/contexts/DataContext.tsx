@@ -51,8 +51,11 @@ interface DataContextType {
   addNote: (projectId: number, noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>) => void;
   updateNote: (projectId: number, noteId: number, updates: Partial<Note>) => void;
   deleteNote: (projectId: number, noteId: number) => void;
-  addCustomerEquipment: (projectId: number, equipment: Omit<CustomerEquipment, 'id'>) => void;
-  updateCustomerEquipment: (projectId: number, equipmentId: number, updates: Partial<CustomerEquipment>) => void;
+  companyEquipment: CustomerEquipment[];
+  getEquipmentById: (id: number) => CustomerEquipment | undefined;
+  getCompanyEquipment: (companyId: string) => CustomerEquipment[];
+  getEquipmentProjectAssignment: (equipmentId: number, excludeProjectId?: number) => { projectId: number; projectName: string } | null;
+  addCustomerEquipment: (projectId: number, equipmentId: number) => void;
   deleteCustomerEquipment: (projectId: number, equipmentId: number) => void;
   setNoteTags: (tags: NoteTag[]) => void;
   getSalesRepName: (id: number) => string;

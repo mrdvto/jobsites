@@ -79,8 +79,12 @@ export const ProjectTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(25);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const filteredProjects = getFilteredProjects();
+  const searchedProjects = searchQuery
+    ? filteredProjects.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : filteredProjects;
 
   const formatDate = (d?: string): string => {
     if (!d) return '—';

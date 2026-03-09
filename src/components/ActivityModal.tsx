@@ -103,10 +103,16 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
     return isPast(date) ? 'Completed' : 'Outstanding';
   }, [date]);
 
+  const handleCompanyChange = (companyId: string) => {
+    setSelectedCompanyId(companyId);
+    setSelectedContactId('');
+    setCompanyPopoverOpen(false);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!salesRepId || !typeId || !date || !description.trim() || !contactName.trim() || !notes.trim()) {
+    if (!salesRepId || !typeId || !date || !description.trim() || !notes.trim()) {
       toast({
         title: "Error",
         description: "Please fill in all required fields.",
@@ -116,6 +122,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
     }
 
     const statusId = isPast(date) ? 2 : 1;
+    const selectedContact = companyContacts.find(c => c.id === selectedContactId);
 
     const activityData = {
       statusId,
@@ -123,8 +130,9 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       typeId,
       date: date.toISOString(),
       description: description.trim(),
-      contactName: contactName.trim(),
-      notes: notes.trim()
+      contactName: selectedContact?.name || '',
+      notes: notes.trim(),
+      customerId: selectedCompanyId || undefined
     };
 
     if (mode === 'create') {

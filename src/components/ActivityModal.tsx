@@ -196,7 +196,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
         <DialogHeader>
           <DialogTitle>{mode === 'create' ? 'Create New Activity' : 'Edit Activity'}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto pr-1">
+        <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto px-1 py-1">
           {followUpFrom && mode === 'create' && (
             <div className="flex items-center gap-2 rounded-md border border-border bg-muted/50 px-3 py-2 text-sm">
               <Link2 className="h-4 w-4 text-muted-foreground shrink-0" />

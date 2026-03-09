@@ -11,7 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Activity } from '@/types';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-react';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { CalendarIcon, Check, ChevronsUpDown, X } from 'lucide-react';
 import { format, isPast } from 'date-fns';
 import { cn } from '@/lib/utils';
 import activityTypesData from '@/data/ActivityTypes.json';
@@ -27,16 +28,25 @@ interface ActivityModalProps {
 }
 
 export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }: ActivityModalProps) => {
-  const { users, addActivity, updateActivity } = useData();
+  const { users, projects, addActivity, updateActivity } = useData();
   const { toast } = useToast();
+
+  const project = projects.find(p => p.id === projectId);
+  const projectCompanies = project?.projectCompanies ?? [];
 
   const [salesRepId, setSalesRepId] = useState<string>('');
   const [typeId, setTypeId] = useState<string>('');
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [timeValue, setTimeValue] = useState<string>('12:00');
   const [description, setDescription] = useState('');
-  const [contactName, setContactName] = useState('');
   const [notes, setNotes] = useState('');
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string>('');
+  const [selectedContactId, setSelectedContactId] = useState<number | ''>('');
+  const [companyPopoverOpen, setCompanyPopoverOpen] = useState(false);
+  const [contactPopoverOpen, setContactPopoverOpen] = useState(false);
+
+  const selectedCompany = projectCompanies.find(c => c.companyId === selectedCompanyId);
+  const companyContacts = selectedCompany?.companyContacts ?? [];
 
   useEffect(() => {
     if (activity && mode === 'edit') {
@@ -46,16 +56,28 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       setDate(actDate);
       setTimeValue(actDate ? format(actDate, 'HH:mm') : '12:00');
       setDescription(activity.description);
-      setContactName(activity.contactName || '');
       setNotes(activity.notes || '');
+      // Initialize company/contact from activity
+      if (activity.customerId) {
+        setSelectedCompanyId(activity.customerId);
+        const company = projectCompanies.find(c => c.companyId === activity.customerId);
+        if (company && activity.contactName) {
+          const contact = company.companyContacts.find(c => c.name === activity.contactName);
+          setSelectedContactId(contact?.id ?? '');
+        }
+      } else {
+        setSelectedCompanyId('');
+        setSelectedContactId('');
+      }
     } else {
       setSalesRepId('');
       setTypeId('');
       setDate(undefined);
       setTimeValue('12:00');
       setDescription('');
-      setContactName('');
       setNotes('');
+      setSelectedCompanyId('');
+      setSelectedContactId('');
     }
   }, [activity, mode, open]);
 
@@ -81,10 +103,16 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
     return isPast(date) ? 'Completed' : 'Outstanding';
   }, [date]);
 
+  const handleCompanyChange = (companyId: string) => {
+    setSelectedCompanyId(companyId);
+    setSelectedContactId('');
+    setCompanyPopoverOpen(false);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!salesRepId || !typeId || !date || !description.trim() || !contactName.trim() || !notes.trim()) {
+    if (!salesRepId || !typeId || !date || !description.trim() || !notes.trim()) {
       toast({
         title: "Error",
         description: "Please fill in all required fields.",
@@ -94,6 +122,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
     }
 
     const statusId = isPast(date) ? 2 : 1;
+    const selectedContact = companyContacts.find(c => c.id === selectedContactId);
 
     const activityData = {
       statusId,
@@ -101,8 +130,9 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
       typeId,
       date: date.toISOString(),
       description: description.trim(),
-      contactName: contactName.trim(),
-      notes: notes.trim()
+      contactName: selectedContact?.name || '',
+      notes: notes.trim(),
+      customerId: selectedCompanyId || undefined
     };
 
     if (mode === 'create') {
@@ -206,14 +236,87 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="contactName">Contact Name</Label>
-            <Input
-              id="contactName"
-              value={contactName}
-              onChange={(e) => setContactName(e.target.value)}
-              placeholder="Enter contact name"
-            />
+            <Label>Company (optional)</Label>
+            <Popover open={companyPopoverOpen} onOpenChange={setCompanyPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className={cn("w-full justify-between font-normal", !selectedCompanyId && "text-muted-foreground")}
+                >
+                  {selectedCompany?.companyName || "Select company..."}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Search companies..." />
+                  <CommandList>
+                    <CommandEmpty>No companies found.</CommandEmpty>
+                    <CommandGroup>
+                      {projectCompanies.map(company => (
+                        <CommandItem
+                          key={company.companyId}
+                          value={company.companyName}
+                          onSelect={() => handleCompanyChange(company.companyId)}
+                        >
+                          <Check className={cn("mr-2 h-4 w-4", selectedCompanyId === company.companyId ? "opacity-100" : "opacity-0")} />
+                          <span>{company.companyName}</span>
+                          <span className="ml-auto text-xs text-muted-foreground">{company.roleDescription}</span>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+            {selectedCompanyId && (
+              <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => { setSelectedCompanyId(''); setSelectedContactId(''); }}>
+                <X className="h-3 w-3 mr-1" /> Clear company
+              </Button>
+            )}
           </div>
+
+          {selectedCompanyId && companyContacts.length > 0 && (
+            <div className="space-y-2">
+              <Label>Contact</Label>
+              <Popover open={contactPopoverOpen} onOpenChange={setContactPopoverOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className={cn("w-full justify-between font-normal", !selectedContactId && "text-muted-foreground")}
+                  >
+                    {selectedContactId ? companyContacts.find(c => c.id === selectedContactId)?.name || "Select contact..." : "Select contact..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search contacts..." />
+                    <CommandList>
+                      <CommandEmpty>No contacts found.</CommandEmpty>
+                      <CommandGroup>
+                        {companyContacts.map(contact => (
+                          <CommandItem
+                            key={contact.id}
+                            value={contact.name}
+                            onSelect={() => { setSelectedContactId(contact.id); setContactPopoverOpen(false); }}
+                          >
+                            <Check className={cn("mr-2 h-4 w-4", selectedContactId === contact.id ? "opacity-100" : "opacity-0")} />
+                            <div>
+                              <div>{contact.name}</div>
+                              {contact.title && <div className="text-xs text-muted-foreground">{contact.title}</div>}
+                            </div>
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>

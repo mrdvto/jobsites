@@ -102,6 +102,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
       }
       setCampaignId('');
       setIssueId('');
+      setLinkedActivityId('');
       setShowMoreFields(false);
     } else {
       setSalesRepId('');

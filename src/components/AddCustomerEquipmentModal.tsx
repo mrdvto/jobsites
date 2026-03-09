@@ -72,7 +72,7 @@ export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, projectI
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[800px] overflow-hidden">
           <DialogHeader>
-            <DialogTitle>Add Equipment to Project</DialogTitle>
+            <DialogTitle>Associate Existing Equipment</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 max-h-[60vh] overflow-y-auto">
             <div className="space-y-2">
@@ -139,7 +139,7 @@ export const AddCustomerEquipmentModal = ({ open, onOpenChange, onSave, projectI
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <Button onClick={handleSubmit} disabled={selectedEquipmentId === null}>Add Equipment</Button>
+            <Button onClick={handleSubmit} disabled={selectedEquipmentId === null}>Associate</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

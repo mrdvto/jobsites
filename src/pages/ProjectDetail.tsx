@@ -640,17 +640,15 @@ const ProjectDetail = () => {
             <h2 className="text-lg font-semibold">Opportunities</h2>
             <div className="flex gap-2">
               <Button
-                variant="outline"
                 size="sm"
                 onClick={() => setShowAssociateModal(true)}>
-                
                 <LinkIcon className="h-4 w-4 mr-2" />
                 Associate Existing
               </Button>
               <Button
+                variant="outline"
                 size="sm"
                 onClick={() => setShowCreateModal(true)}>
-                
                 <Plus className="h-4 w-4 mr-2" />
                 Create New
               </Button>
@@ -785,10 +783,8 @@ const ProjectDetail = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Companies</h2>
             <Button
-              variant="outline"
               size="sm"
               onClick={() => setShowAssociateCompanyModal(true)}>
-              
               <LinkIcon className="h-4 w-4 mr-2" />
               Associate Existing
             </Button>
@@ -811,14 +807,12 @@ const ProjectDetail = () => {
             <h2 className="text-lg font-semibold">Activities</h2>
             <div className="flex gap-2">
               <Button
-                variant="outline"
                 size="sm"
                 onClick={() => setShowAssociateActivityModal(true)}>
-                
                 <LinkIcon className="h-4 w-4 mr-2" />
                 Associate Existing
               </Button>
-              <Button size="sm" onClick={handleCreateActivity}>
+              <Button variant="outline" size="sm" onClick={handleCreateActivity}>
                 <Plus className="h-4 w-4 mr-2" />
                 Create New
               </Button>
@@ -889,10 +883,16 @@ const ProjectDetail = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Customer Equipment</h2>
-            <Button size="sm" onClick={handleCreateEquipment}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Equipment
-            </Button>
+            <div className="flex gap-2">
+              <Button size="sm" onClick={() => setShowEquipmentModal(true)}>
+                <LinkIcon className="h-4 w-4 mr-2" />
+                Associate Existing
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleCreateEquipment}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create New
+              </Button>
+            </div>
           </div>
 
           {!project.customerEquipment || project.customerEquipment.length === 0 ?

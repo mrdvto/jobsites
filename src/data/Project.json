@@ -78,9 +78,9 @@
                 { "id": 4, "content": "Hospital loading dock available for equipment deliveries on Tuesdays and Thursdays only.", "createdAt": "2025-02-01T08:45:00.000Z", "createdById": 313, "tagIds": ["GENERAL"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1001, "assigneeId": 313, "activityType": "Site Visit", "date": "2025-01-20T00:00:00.000Z", "description": "Initial site walkthrough with project manager" },
-                { "id": 1002, "assigneeId": 313, "activityType": "Phone Call", "date": "2025-02-05T00:00:00.000Z", "description": "Follow-up call regarding equipment needs" },
-                { "id": 1003, "assigneeId": 305, "activityType": "Meeting", "date": "2025-02-15T00:00:00.000Z", "description": "Quarterly review meeting with Turner Construction" }
+                { "id": 1001, "statusId": 2, "salesRepId": 313, "typeId": "F", "date": "2025-01-20T09:30:00.000Z", "description": "Initial site walkthrough with project manager", "contactName": "Michael Ross", "notes": "Reviewed crane placement options and staging area layout." },
+                { "id": 1002, "statusId": 2, "salesRepId": 313, "typeId": "P", "date": "2025-02-05T14:00:00.000Z", "description": "Follow-up call regarding equipment needs", "contactName": "Jennifer Walsh", "notes": "Discussed rental vs purchase options for excavator.", "previousRelatedActivityId": 1001 },
+                { "id": 1003, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-02-15T10:00:00.000Z", "description": "Quarterly review meeting with Turner Construction", "contactName": "Michael Ross", "notes": "Reviewed project timeline and upcoming equipment needs.", "campaignId": 1 }
             ],
             "customerEquipment": [1001, 1002, 1003, 1004, 1005],
             "externalReference": {
@@ -166,8 +166,8 @@
                 { "id": 3, "content": "Background checks required for all personnel due to public venue security protocols.", "createdAt": "2025-03-01T14:15:00.000Z", "createdById": 305, "tagIds": ["SECURITY"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1004, "assigneeId": 305, "activityType": "Email", "date": "2025-03-01T00:00:00.000Z", "description": "Sent proposal for excavator purchase" },
-                { "id": 1005, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-03-10T00:00:00.000Z", "description": "Equipment demonstration scheduled" }
+                { "id": 1004, "statusId": 2, "salesRepId": 305, "typeId": "E", "date": "2025-03-01T11:15:00.000Z", "description": "Sent proposal for excavator purchase", "contactName": "Aisha Bartlett", "notes": "Included pricing for CAT 320 and trade-in options." },
+                { "id": 1005, "statusId": 1, "salesRepId": 305, "typeId": "F", "date": "2026-04-10T08:00:00.000Z", "description": "Equipment demonstration scheduled", "contactName": "Brian Sullivan", "notes": "Demo of CAT 320 at Mortenson yard.", "issueId": 3, "customerId": "OWN-RVRFRNT" }
             ],
             "customerEquipment": [1008, 1007, 1009]
         },
@@ -249,7 +249,7 @@
                 { "id": 4, "content": "Emergency vehicle access lane must be maintained at all times during night work operations.", "createdAt": "2025-03-05T21:45:00.000Z", "createdById": 303, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1006, "assigneeId": 303, "activityType": "Phone Call", "date": "2025-02-28T00:00:00.000Z", "description": "Confirmed delivery schedule for paving equipment" }
+                { "id": 1006, "statusId": 2, "salesRepId": 303, "typeId": "P", "date": "2025-02-28T20:30:00.000Z", "description": "Confirmed delivery schedule for paving equipment", "contactName": "Wesley Moss", "notes": "Delivery confirmed for March 3rd at 10 PM." }
             ],
             "customerEquipment": [1010, 1011, 1012],
             "externalReference": {
@@ -327,7 +327,7 @@
                 { "id": 2, "content": "Final safety inspection passed with no incidents recorded during project.", "createdAt": "2024-11-15T17:30:00.000Z", "createdById": 292, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1007, "assigneeId": 292, "activityType": "Site Visit", "date": "2024-11-15T00:00:00.000Z", "description": "Final walkthrough and project closeout" }
+                { "id": 1007, "statusId": 2, "salesRepId": 292, "typeId": "F", "date": "2024-11-15T13:00:00.000Z", "description": "Final walkthrough and project closeout", "contactName": "Michael Trent", "notes": "All equipment returned. Punch list items resolved." }
             ],
             "customerEquipment": [1013, 1014, 1015]
         },
@@ -416,9 +416,9 @@
                 { "id": 5, "content": "Weekly safety meetings held every Monday at 7:00 AM in the main trailer. Attendance is mandatory.", "createdAt": "2025-01-06T07:30:00.000Z", "createdById": 313, "tagIds": ["SAFETY"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1008, "assigneeId": 305, "activityType": "Meeting", "date": "2025-01-10T00:00:00.000Z", "description": "Weekly progress meeting with Amazon construction team" },
-                { "id": 1009, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-01-17T00:00:00.000Z", "description": "Generator installation inspection" },
-                { "id": 1010, "assigneeId": 313, "activityType": "Phone Call", "date": "2025-02-01T00:00:00.000Z", "description": "Discussed additional equipment requirements" }
+                { "id": 1008, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-01-10T07:00:00.000Z", "description": "Weekly progress meeting with Amazon construction team", "contactName": "Greg Harmon", "notes": "Reviewed generator installation timeline.", "campaignId": 3 },
+                { "id": 1009, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-01-17T09:00:00.000Z", "description": "Generator installation inspection", "contactName": "Derek Washington", "notes": "Units placed per spec. Electrical hookup pending.", "issueId": 4, "customerId": "OWN-AMZN" },
+                { "id": 1010, "statusId": 2, "salesRepId": 313, "typeId": "P", "date": "2025-02-01T15:30:00.000Z", "description": "Discussed additional equipment requirements", "contactName": "Priya Patel", "notes": "Amazon requesting additional telescopic handler for Q2." }
             ],
             "customerEquipment": [1016, 1017, 1018, 1019, 1020, 1021],
             "externalReference": {
@@ -503,7 +503,7 @@
                 { "id": 3, "content": "Municipal security protocols in effect. All visitors must sign in at guard station and display visitor badges.", "createdAt": "2025-05-25T14:00:00.000Z", "createdById": 304, "tagIds": ["SECURITY"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1011, "assigneeId": 304, "activityType": "Email", "date": "2025-05-15T00:00:00.000Z", "description": "Sent service contract renewal proposal" }
+                { "id": 1011, "statusId": 2, "salesRepId": 304, "typeId": "E", "date": "2025-05-15T10:00:00.000Z", "description": "Sent service contract renewal proposal", "contactName": "Harold Meyers", "notes": "Proposal covers preventive maintenance for all pump station motors." }
             ],
             "customerEquipment": [1022, 1023, 1024]
         },
@@ -576,8 +576,8 @@
                 { "id": 3, "content": "School bus route runs through site entrance. Extra caution required during morning and afternoon school hours.", "createdAt": "2025-04-15T08:30:00.000Z", "createdById": 260, "tagIds": ["SAFETY"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1012, "assigneeId": 260, "activityType": "Meeting", "date": "2025-04-01T00:00:00.000Z", "description": "Initial planning meeting with developer" },
-                { "id": 1013, "assigneeId": 260, "activityType": "Site Visit", "date": "2025-04-10T00:00:00.000Z", "description": "Soil assessment and equipment evaluation" }
+                { "id": 1012, "statusId": 2, "salesRepId": 260, "typeId": "F", "date": "2025-04-01T13:00:00.000Z", "description": "Initial planning meeting with developer", "contactName": "Tom Builders", "notes": "Discussed grading timeline and equipment needs for Phase 2." },
+                { "id": 1013, "statusId": 2, "salesRepId": 260, "typeId": "F", "date": "2025-04-10T08:30:00.000Z", "description": "Soil assessment and equipment evaluation", "contactName": "Mark Stevens", "notes": "Heavy clay confirmed. Track equipment recommended.", "previousRelatedActivityId": 1012 }
             ],
             "customerEquipment": [1025, 1026, 1027, 1028, 1029],
             "externalReference": {
@@ -657,7 +657,7 @@
                 { "id": 3, "content": "Bridge remains open to traffic during construction. Work zones must be clearly marked with proper signage.", "createdAt": "2025-09-01T14:00:00.000Z", "createdById": 292, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1014, "assigneeId": 292, "activityType": "Phone Call", "date": "2025-08-20T00:00:00.000Z", "description": "Coordinated parts delivery schedule" }
+                { "id": 1014, "statusId": 1, "salesRepId": 292, "typeId": "P", "date": "2026-08-20T11:00:00.000Z", "description": "Coordinated parts delivery schedule", "contactName": "Betsy Owens", "notes": "Parts shipment expected by end of month." }
             ],
             "customerEquipment": [1030, 1031, 1032]
         },
@@ -730,7 +730,7 @@
                 { "id": 2, "content": "University lab safety protocols will apply. All contractors must complete online safety orientation before site access.", "createdAt": "2025-03-20T14:30:00.000Z", "createdById": 313, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1015, "assigneeId": 313, "activityType": "Email", "date": "2025-03-15T00:00:00.000Z", "description": "Sent equipment catalog and pricing" }
+                { "id": 1015, "statusId": 2, "salesRepId": 313, "typeId": "E", "date": "2025-03-15T16:45:00.000Z", "description": "Sent equipment catalog and pricing", "contactName": "Dr. Alan Grant", "notes": "Included compact equipment options suitable for campus setting.", "campaignId": 2 }
             ],
             "customerEquipment": [1033, 1034, 1035]
         },
@@ -815,8 +815,8 @@
                 { "id": 4, "content": "Quarry security is active 24/7. After-hours access requires advance coordination with quarry manager.", "createdAt": "2025-03-05T16:00:00.000Z", "createdById": 305, "tagIds": ["SECURITY"], "attachments": [] }
             ],
             "activities": [
-                { "id": 1016, "assigneeId": 305, "activityType": "Site Visit", "date": "2025-02-20T00:00:00.000Z", "description": "Equipment assessment for overburden removal" },
-                { "id": 1017, "assigneeId": 305, "activityType": "Meeting", "date": "2025-03-05T00:00:00.000Z", "description": "Quarterly review with quarry operations team" }
+                { "id": 1016, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-02-20T08:00:00.000Z", "description": "Equipment assessment for overburden removal", "contactName": "Fred Flint", "notes": "Assessed current fleet. Recommending 390F excavator.", "issueId": 5, "customerId": "OWN-RKSLD" },
+                { "id": 1017, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-03-05T10:00:00.000Z", "description": "Quarterly review with quarry operations team", "contactName": "Frank Thompson", "notes": "Reviewed safety metrics and equipment utilization rates." }
             ],
             "customerEquipment": [1036, 1037, 1038, 1039, 1040, 1041]
         }

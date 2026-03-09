@@ -590,7 +590,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return project;
       })
     );
-    logChange(projectId, 'ACTIVITY_ADDED', 'Activity', `Activity "${activity.activityType}" added`);
+    logChange(projectId, 'ACTIVITY_ADDED', 'Activity', `Activity "${activity.typeId}" added`);
   };
 
   const updateActivity = (projectId: number, activityId: number, updates: Partial<Activity>) => {
@@ -611,7 +611,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       prev.map(project => {
         if (project.id === projectId) {
           const act = project.activities.find(a => a.id === activityId);
-          if (act) desc = act.activityType;
+          if (act) desc = act.typeId;
           return { ...project, activities: project.activities.filter(a => a.id !== activityId) };
         }
         return project;

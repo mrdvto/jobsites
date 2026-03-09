@@ -285,8 +285,8 @@ const ProjectDetail = () => {
     if (!actSortColumn || !actSortDirection) return 0;
     let cmp = 0;
     switch (actSortColumn) {
-      case 'assignee':cmp = getUserName(a.assigneeId).localeCompare(getUserName(b.assigneeId));break;
-      case 'activityType':cmp = (a.activityType || '').localeCompare(b.activityType || '');break;
+      case 'assignee':cmp = getSalesRepName(a.salesRepId).localeCompare(getSalesRepName(b.salesRepId));break;
+      case 'activityType':cmp = (a.typeId || '').localeCompare(b.typeId || '');break;
       case 'date':cmp = new Date(a.date).getTime() - new Date(b.date).getTime();break;
       case 'description':cmp = (a.description || '').localeCompare(b.description || '');break;
     }
@@ -846,9 +846,9 @@ const ProjectDetail = () => {
               <TableBody>
                 {sortedActivities.map((activity) =>
               <TableRow key={activity.id}>
-                    <TableCell className="font-medium">{getUserName(activity.assigneeId)}</TableCell>
+                    <TableCell className="font-medium">{getSalesRepName(activity.salesRepId)}</TableCell>
                     <TableCell>
-                      <Badge variant="outline">{activity.activityType}</Badge>
+                      <Badge variant="outline">{({E:'Email',P:'Phone',F:'Face-to-Face',Q:'Quote'} as Record<string,string>)[activity.typeId] || activity.typeId}</Badge>
                     </TableCell>
                     <TableCell className="text-sm">
                       {new Date(activity.date).toLocaleDateString()}

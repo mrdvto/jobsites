@@ -30,7 +30,7 @@ export const AssociateActivityModal = ({ projectId, currentActivityIds, open, on
 
   const handleAssociate = () => {
     if (selectedActivity) {
-      addActivity(projectId, { assigneeId: selectedActivity.activity.assigneeId, activityType: selectedActivity.activity.activityType, date: selectedActivity.activity.date, description: selectedActivity.activity.description });
+      addActivity(projectId, { statusId: selectedActivity.activity.statusId, salesRepId: selectedActivity.activity.salesRepId, typeId: selectedActivity.activity.typeId, date: selectedActivity.activity.date, description: selectedActivity.activity.description, contactName: selectedActivity.activity.contactName, notes: selectedActivity.activity.notes });
       setSelectedActivity(null); onOpenChange(false);
     }
   };
@@ -50,8 +50,8 @@ export const AssociateActivityModal = ({ projectId, currentActivityIds, open, on
                   <TableRow key={`${sourceProjectId}-${activity.id}`} className="cursor-pointer hover:bg-muted/50" onClick={() => setSelectedActivity({ activity, sourceProjectId })}>
                     <TableCell><input type="radio" checked={selectedActivity?.activity.id === activity.id && selectedActivity?.sourceProjectId === sourceProjectId} onChange={() => setSelectedActivity({ activity, sourceProjectId })} className="cursor-pointer" /></TableCell>
                     <TableCell className="text-sm max-w-[200px] truncate" title={sourceProjectName}>{sourceProjectName}</TableCell>
-                    <TableCell className="font-medium">{getUserName(activity.assigneeId)}</TableCell>
-                    <TableCell><Badge variant="outline">{activity.activityType}</Badge></TableCell>
+                    <TableCell className="font-medium">{getUserName(activity.salesRepId)}</TableCell>
+                    <TableCell><Badge variant="outline">{activity.typeId}</Badge></TableCell>
                     <TableCell className="text-sm">{new Date(activity.date).toLocaleDateString()}</TableCell>
                     <TableCell className="text-sm max-w-[200px] truncate" title={activity.description}>{activity.description}</TableCell>
                   </TableRow>

@@ -26,7 +26,7 @@ import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModa
 import { Input } from '@/components/ui/input';
 import { MultiSelectFilter } from '@/components/MultiSelectFilter';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History } from 'lucide-react';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity, ProjectCompany, CustomerEquipment } from '@/types';
 
@@ -531,6 +531,27 @@ const ProjectDetail = () => {
                           <p className="font-medium">{new Date(project.targetCompletionDate + 'T00:00:00').toLocaleDateString('en-US')}</p>
                         </div>
                       )}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {project.dodgeProject && (
+                <>
+                  <Separator />
+                  <div className="flex items-start gap-3">
+                    <ExternalLink className="h-5 w-5 text-muted-foreground mt-0.5" />
+                    <div>
+                      <p className="font-medium">Dodge Project</p>
+                      <a
+                        href={project.dodgeProject.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        {project.dodgeProject.name}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
                     </div>
                   </div>
                 </>

@@ -135,6 +135,10 @@ export interface Project {
   bidDate?: string;
   targetStartDate?: string;
   targetCompletionDate?: string;
+  dodgeProject?: {
+    url: string;
+    name: string;
+  };
 }
 
 export interface SalesRep {

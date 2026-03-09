@@ -56,7 +56,8 @@ interface ColConfig {
 interface RenderHelpers {
   getUserNames: (ids: number[]) => string;
   getCompanyById: (id: string) => { companyName: string } | undefined;
-  calculateProjectRevenue: (p: Project) => number;
+  calculateProjectWonRevenue: (p: Project) => number;
+  calculateProjectPipelineRevenue: (p: Project) => number;
   getStatusColorClasses: (s: string) => string;
   getLookupLabel: (type: 'primaryStage' | 'primaryProjectType' | 'ownershipType', id: string) => string;
   formatDate: (d?: string) => string;

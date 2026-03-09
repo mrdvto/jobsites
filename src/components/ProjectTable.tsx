@@ -315,15 +315,24 @@ export const ProjectTable = () => {
   };
 
   return (
-    <Card>
-      <div className="flex items-center justify-between px-4 py-3 border-b">
-        <p className="text-sm text-muted-foreground">
+    <Card className="flex flex-col h-full">
+      <div className="flex items-center gap-3 px-4 py-3 border-b shrink-0">
+        <p className="text-sm text-muted-foreground shrink-0">
           {totalProjects} project{totalProjects !== 1 ? 's' : ''} total
         </p>
-        <ColumnVisibilitySelector />
+        <div className="flex-1 min-w-0">
+          <ActiveFilterBadges />
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button variant="outline" size="sm" onClick={() => setShowFilterModal(true)}>
+            <Filter className="h-4 w-4 mr-1.5" />
+            Filters
+          </Button>
+          <ColumnVisibilitySelector />
+        </div>
       </div>
       
-      <div className="relative w-full max-h-[70vh] overflow-auto">
+      <div className="relative w-full flex-1 min-h-0 overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>

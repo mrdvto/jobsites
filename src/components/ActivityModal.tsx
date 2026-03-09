@@ -339,12 +339,11 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
-            <Textarea
+            <Input
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter activity description"
-              rows={3}
             />
           </div>
 

@@ -12,10 +12,12 @@ import { Activity } from '@/types';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { CalendarIcon, Check, ChevronsUpDown, X } from 'lucide-react';
+import { CalendarIcon, Check, ChevronDown, ChevronUp, ChevronsUpDown, X } from 'lucide-react';
 import { format, isPast } from 'date-fns';
 import { cn } from '@/lib/utils';
 import activityTypesData from '@/data/ActivityTypes.json';
+import campaignsData from '@/data/Campaigns.json';
+import issuesData from '@/data/Issues.json';
 
 const ACTIVITY_TYPES = activityTypesData.content;
 

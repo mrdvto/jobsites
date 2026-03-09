@@ -55,6 +55,10 @@ export const CreateProjectModal = ({ open, onOpenChange }: CreateProjectModalPro
   const [targetStartOpen, setTargetStartOpen] = useState(false);
   const [targetCompletionOpen, setTargetCompletionOpen] = useState(false);
 
+  // Dodge Project fields
+  const [dodgeProjectName, setDodgeProjectName] = useState('');
+  const [dodgeProjectUrl, setDodgeProjectUrl] = useState('');
+
   const allCompanies = getAllKnownCompanies();
   const selectedOwnerCompany = ownerCompanyId ? getCompanyById(ownerCompanyId) : undefined;
 

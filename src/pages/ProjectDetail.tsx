@@ -884,13 +884,13 @@ const ProjectDetail = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Customer Equipment</h2>
             <div className="flex gap-2">
-              <Button size="sm" onClick={() => setShowEquipmentModal(true)}>
-                <LinkIcon className="h-4 w-4 mr-2" />
-                Associate Existing
-              </Button>
               <Button variant="outline" size="sm" onClick={handleCreateEquipment}>
                 <Plus className="h-4 w-4 mr-2" />
                 Create New
+              </Button>
+              <Button size="sm" onClick={() => setShowEquipmentModal(true)}>
+                <LinkIcon className="h-4 w-4 mr-2" />
+                Associate Existing
               </Button>
             </div>
           </div>

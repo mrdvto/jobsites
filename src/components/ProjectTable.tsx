@@ -254,8 +254,11 @@ export const ProjectTable = () => {
       case 'status':
         comparison = getStatusOrder(a.statusId) - getStatusOrder(b.statusId);
         break;
-      case 'revenue':
-        comparison = calculateProjectRevenue(a) - calculateProjectRevenue(b);
+      case 'wonRevenue':
+        comparison = calculateProjectWonRevenue(a) - calculateProjectWonRevenue(b);
+        break;
+      case 'pipelineRevenue':
+        comparison = calculateProjectPipelineRevenue(a) - calculateProjectPipelineRevenue(b);
         break;
       case 'valuation':
         comparison = (a.valuation ?? 0) - (b.valuation ?? 0);

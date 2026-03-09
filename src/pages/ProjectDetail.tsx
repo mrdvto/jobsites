@@ -1062,7 +1062,7 @@ const ProjectDetail = () => {
                                   <TableCell>{eq.model}</TableCell>
                                   <TableCell>{eq.year || '—'}</TableCell>
                                   <TableCell className="font-mono text-sm">{eq.serialNumber || '—'}</TableCell>
-                                  <TableCell className="text-right">{eq.hours?.toLocaleString() || '—'}</TableCell>
+                                  <TableCell className="text-right">{eq.smu?.toLocaleString() || '—'}</TableCell>
                                   <TableCell>
                                     <Badge variant={eq.ownershipStatus === 'owned' ? 'default' : 'secondary'}>
                                       {eq.ownershipStatus === 'owned' ? 'Owned' : 'Rented'}

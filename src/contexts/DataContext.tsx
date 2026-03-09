@@ -366,8 +366,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
   };
 
-  const getLookupLabel = (type: 'primaryStage' | 'primaryProjectType' | 'ownershipType', id: string): string => {
-    const list = type === 'primaryStage' ? primaryStages : type === 'primaryProjectType' ? primaryProjectTypes : ownershipTypes;
+  const getLookupLabel = (type: 'primaryStage' | 'primaryProjectType' | 'ownershipType' | 'uomTypes', id: string): string => {
+    const list = type === 'primaryStage' ? primaryStages : type === 'primaryProjectType' ? primaryProjectTypes : type === 'uomTypes' ? uomTypes : ownershipTypes;
     return list.find(item => item.id === id)?.label || id;
   };
 

@@ -4,7 +4,6 @@ import { KPICard } from '@/components/KPICard';
 import { ProjectTable } from '@/components/ProjectTable';
 import { CreateProjectModal } from '@/components/CreateProjectModal';
 import { SettingsPanel } from '@/components/SettingsPanel';
-import { ColumnVisibilitySelector } from '@/components/ColumnVisibilitySelector';
 import { ColumnVisibilityProvider } from '@/contexts/ColumnVisibilityContext';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';

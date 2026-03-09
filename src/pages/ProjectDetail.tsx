@@ -783,10 +783,8 @@ const ProjectDetail = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Companies</h2>
             <Button
-              variant="outline"
               size="sm"
               onClick={() => setShowAssociateCompanyModal(true)}>
-              
               <LinkIcon className="h-4 w-4 mr-2" />
               Associate Existing
             </Button>

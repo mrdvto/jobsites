@@ -114,6 +114,12 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode }:
     return isPast(date) ? 'Completed' : 'Outstanding';
   }, [date]);
 
+  const filteredIssues = useMemo(() => {
+    const allIssues = issuesData.content;
+    if (!selectedCompanyId) return allIssues;
+    return allIssues.filter(issue => issue.customerId === selectedCompanyId);
+  }, [selectedCompanyId]);
+
   const handleCompanyChange = (companyId: string) => {
     setSelectedCompanyId(companyId);
     setSelectedContactId('');

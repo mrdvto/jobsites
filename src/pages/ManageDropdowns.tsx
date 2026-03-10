@@ -222,6 +222,12 @@ const ManageDropdowns = () => {
   };
   const handleConfirmDelete = () => {
     if (deleteConfirm.item && selectedDropdown) {
+      // Prevent deletion of protected General Contractor role
+      if (selectedDropdown === 'subcontractorRole' && deleteConfirm.item.id === 'GC') {
+        toast({ title: 'Protected item', description: 'The General Contractor role cannot be deleted.', variant: 'destructive' });
+        setDeleteConfirm({ open: false, item: null });
+        return;
+      }
       if (isEditing) {
         setEditedValues(prev => prev.filter(v => v.id !== deleteConfirm.item!.id));
       } else {

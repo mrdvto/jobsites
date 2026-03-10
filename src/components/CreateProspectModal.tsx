@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Check, ChevronsUpDown } from 'lucide-react';
@@ -23,7 +23,7 @@ interface CreateProspectModalProps {
 export interface ProspectData {
   companyName: string;
   phone: string;
-  divisionId: string;
+  divisionIds: string[];
   address1: string;
   address2: string;
   address3: string;
@@ -153,7 +153,8 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
   // Company
   const [companyName, setCompanyName] = useState('');
   const [phone, setPhone] = useState('');
-  const [divisionId, setDivisionId] = useState('');
+  const [divisionIds, setDivisionIds] = useState<string[]>([]);
+  const [divisionOpen, setDivisionOpen] = useState(false);
 
   // Address
   const [address1, setAddress1] = useState('');
@@ -234,7 +235,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     if (!submitted) return {};
     const e: Record<string, string> = {};
     if (!companyName.trim()) e.companyName = 'Required';
-    if (!divisionId) e.division = 'Required';
+    if (divisionIds.length === 0) e.division = 'Select at least one division';
     if (!phone.trim()) e.phone = 'Required';
     else if (hasMaskedCountry && !validatePhone(phone, countryCode)) e.phone = 'Invalid format';
     if (!addressValid) e.address = 'At least one address line is required';
@@ -252,10 +253,10 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     else if (!validateEmail(email)) e.email = 'Invalid email';
     if (businessPhone.trim() && hasMaskedCountry && !validatePhone(businessPhone, countryCode)) e.businessPhone = 'Invalid format';
     return e;
-  }, [submitted, companyName, divisionId, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
+  }, [submitted, companyName, divisionIds, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
 
   const resetForm = useCallback(() => {
-    setCompanyName(''); setPhone(''); setDivisionId('');
+    setCompanyName(''); setPhone(''); setDivisionIds([]);
     setAddress1(''); setAddress2(''); setAddress3('');
     setCity(''); setCountryCode(''); setStateCode(''); setZipCode('');
     setFirstName(''); setLastName(''); setTitle('');
@@ -266,7 +267,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
   const handleSubmit = () => {
     setSubmitted(true);
     // Check required fields
-    const hasErrors = !companyName.trim() || !divisionId || !phone.trim() || !addressValid || !city.trim() || !countryCode ||
+    const hasErrors = !companyName.trim() || divisionIds.length === 0 || !phone.trim() || !addressValid || !city.trim() || !countryCode ||
       (isStateRequired && !stateCode) || !zipCode.trim() || !firstName.trim() || !lastName.trim() ||
       !title.trim() || !mobilePhone.trim() || !email.trim() || !validateEmail(email) ||
       (hasMaskedCountry && !validatePhone(phone, countryCode)) ||
@@ -282,7 +283,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     onSave({
       companyName: companyName.trim(),
       phone,
-      divisionId,
+      divisionIds,
       address1: address1.trim(),
       address2: address2.trim(),
       address3: address3.trim(),
@@ -330,17 +331,38 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
               <FieldError error={errors.companyName} />
             </div>
             <div>
-              <Label>Division <span className="text-destructive">*</span></Label>
-              <Select value={divisionId} onValueChange={setDivisionId}>
-                <SelectTrigger className={errors.division ? 'border-destructive' : ''}>
-                  <SelectValue placeholder="Select a division" />
-                </SelectTrigger>
-                <SelectContent>
-                  {DIVISIONS.map(div => (
-                    <SelectItem key={div.code} value={div.code}>{div.code} - {div.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label>Division(s) <span className="text-destructive">*</span></Label>
+              <Popover open={divisionOpen} onOpenChange={setDivisionOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className={cn("w-full justify-between font-normal h-10", errors.division && "border-destructive")}>
+                    <span className={cn(divisionIds.length === 0 && "text-muted-foreground")}>
+                      {divisionIds.length === 0
+                        ? "Select divisions"
+                        : divisionIds.length <= 3
+                          ? divisionIds.join(', ')
+                          : `${divisionIds.length} selected`}
+                    </span>
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-2" align="start">
+                  <div className="space-y-0.5">
+                    {DIVISIONS.map(div => (
+                      <label key={div.code} className="flex items-center gap-2 px-2 py-1.5 rounded-sm text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                        <Checkbox
+                          checked={divisionIds.includes(div.code)}
+                          onCheckedChange={(checked) => {
+                            setDivisionIds(prev =>
+                              checked ? [...prev, div.code] : prev.filter(c => c !== div.code)
+                            );
+                          }}
+                        />
+                        <span>{div.code} - {div.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
               <FieldError error={errors.division} />
             </div>
             <div>

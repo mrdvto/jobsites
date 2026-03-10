@@ -14,7 +14,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { OpportunityDetailModal } from '@/components/OpportunityDetailModal';
 import { AssociateOpportunityModal } from '@/components/AssociateOpportunityModal';
 import { CreateOpportunityModal } from '@/components/CreateOpportunityModal';
-import { AddGCModal } from '@/components/AddGCModal';
+
 import { AssociateCompanyModal } from '@/components/AssociateCompanyModal';
 import { EditProjectModal } from '@/components/EditProjectModal';
 import { EditGCModal } from '@/components/EditGCModal';

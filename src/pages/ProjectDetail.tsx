@@ -1173,6 +1173,7 @@ const ProjectDetail = () => {
             roleId: 'PROSPECT',
             roleDescription: 'Prospect',
             isPrimaryContact: false,
+            divisionIds: data.divisionIds,
             companyContacts: [{
               id: 1,
               name: `${data.contact.firstName} ${data.contact.lastName}`,

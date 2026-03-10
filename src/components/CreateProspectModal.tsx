@@ -331,17 +331,38 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
               <FieldError error={errors.companyName} />
             </div>
             <div>
-              <Label>Division <span className="text-destructive">*</span></Label>
-              <Select value={divisionId} onValueChange={setDivisionId}>
-                <SelectTrigger className={errors.division ? 'border-destructive' : ''}>
-                  <SelectValue placeholder="Select a division" />
-                </SelectTrigger>
-                <SelectContent>
-                  {DIVISIONS.map(div => (
-                    <SelectItem key={div.code} value={div.code}>{div.code} - {div.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label>Division(s) <span className="text-destructive">*</span></Label>
+              <Popover open={divisionOpen} onOpenChange={setDivisionOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className={cn("w-full justify-between font-normal h-10", errors.division && "border-destructive")}>
+                    <span className={cn(divisionIds.length === 0 && "text-muted-foreground")}>
+                      {divisionIds.length === 0
+                        ? "Select divisions"
+                        : divisionIds.length <= 3
+                          ? divisionIds.join(', ')
+                          : `${divisionIds.length} selected`}
+                    </span>
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-2" align="start">
+                  <div className="space-y-0.5">
+                    {DIVISIONS.map(div => (
+                      <label key={div.code} className="flex items-center gap-2 px-2 py-1.5 rounded-sm text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground">
+                        <Checkbox
+                          checked={divisionIds.includes(div.code)}
+                          onCheckedChange={(checked) => {
+                            setDivisionIds(prev =>
+                              checked ? [...prev, div.code] : prev.filter(c => c !== div.code)
+                            );
+                          }}
+                        />
+                        <span>{div.code} - {div.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
               <FieldError error={errors.division} />
             </div>
             <div>

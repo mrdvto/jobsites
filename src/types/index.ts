@@ -81,6 +81,7 @@ export interface ProjectCompany {
   roleDescription: string;
   isPrimaryContact: boolean;
   companyContacts: CompanyContact[];
+  divisionIds?: string[];
   primaryContactIndex?: number;
   // Legacy field - will be migrated
   companyContact?: {

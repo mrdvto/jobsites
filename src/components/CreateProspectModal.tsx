@@ -153,7 +153,8 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
   // Company
   const [companyName, setCompanyName] = useState('');
   const [phone, setPhone] = useState('');
-  const [divisionId, setDivisionId] = useState('');
+  const [divisionIds, setDivisionIds] = useState<string[]>([]);
+  const [divisionOpen, setDivisionOpen] = useState(false);
 
   // Address
   const [address1, setAddress1] = useState('');

@@ -1,39 +1,34 @@
 
 
-# Remove PAR (Planned Annual Rate) from Projects
+## Plan: Multi-Division Prospects + Division Display
 
-PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
+### Problem
+A prospect company can belong to multiple divisions, but the current model only stores a single `divisionId`. Additionally, division info is not displayed anywhere in the project detail view.
 
-## Changes
+### Changes
 
-### 1. `src/types/index.ts`
-- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
-- Remove `showBehindPAR` from `Filters` interface
+**1. Update `ProspectData` interface (`src/components/CreateProspectModal.tsx`)**
+- Rename `divisionId: string` to `divisionIds: string[]`
 
-### 2. `src/data/Project.json`
-- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+**2. Update Create Prospect Modal UI (`src/components/CreateProspectModal.tsx`)**
+- Replace the single `Select` dropdown with a multi-select using checkboxes (similar pattern to `MultiSelectFilter` component already in the codebase)
+- Use a `Popover` with checkboxes listing all 7 divisions. Display selected count or names on the trigger button.
+- Update validation: at least one division must be selected
+- Update `resetForm` to clear to `[]`
+- Update `handleSubmit` and `onSave` payload
 
-### 3. `src/contexts/DataContext.tsx`
-- Remove `showBehindPAR: false` from default filters
-- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
-- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+**3. Update `ProjectCompany` type (`src/types/index.ts`)**
+- Add optional `divisionIds?: string[]` field to `ProjectCompany`
 
-### 4. `src/components/FilterBar.tsx`
-- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
+**4. Store divisions when creating prospect (`src/pages/ProjectDetail.tsx`)**
+- In the `onSave` handler for `CreateProspectModal`, pass `data.divisionIds` into the `addProjectCompany` call
 
-### 5. `src/components/EditProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove their reset in `useEffect`
-- Remove the PAR validation check
-- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
-- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
+**5. Display divisions in Companies table (`src/components/ProjectCompaniesTable.tsx`)**
+- Add a "Divisions" column to the table header (after Role)
+- Render division badges for each company using `DIVISIONS` lookup for display names
+- Only show badges if `divisionIds` exists and is non-empty; otherwise show "—"
 
-### 6. `src/components/CreateProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove PAR validation
-- Remove `plannedAnnualRate` and `parStartDate` from new project object
-- Remove the Planned Annual Rate input and PAR Start Date picker from the form
-
-### 7. `src/pages/ProjectDetail.tsx`
-- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+### UI Details
+- The multi-select will use a Popover with checkboxes (matching existing patterns in the app), showing division codes as badges when selected
+- The Companies table gets a new narrow column showing division badges like `G`, `C`, `P`
 

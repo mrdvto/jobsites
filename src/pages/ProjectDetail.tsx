@@ -1123,14 +1123,6 @@ const ProjectDetail = () => {
         onOpenChange={setShowEditModal} />
       
 
-      {primaryGC &&
-      <EditGCModal
-        projectId={project.id}
-        currentGC={primaryGC}
-        open={showEditGCModal}
-        onOpenChange={setShowEditGCModal} />
-
-      }
 
       <ActivityModal
         open={showActivityModal}

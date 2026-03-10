@@ -253,7 +253,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     else if (!validateEmail(email)) e.email = 'Invalid email';
     if (businessPhone.trim() && hasMaskedCountry && !validatePhone(businessPhone, countryCode)) e.businessPhone = 'Invalid format';
     return e;
-  }, [submitted, companyName, divisionId, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
+  }, [submitted, companyName, divisionIds, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
 
   const resetForm = useCallback(() => {
     setCompanyName(''); setPhone(''); setDivisionId('');

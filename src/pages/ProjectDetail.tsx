@@ -553,97 +553,26 @@ const ProjectDetail = () => {
                   </div>
                 </>
               }
+              <Separator />
+
+              <div className="flex items-start gap-3">
+                <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <div className="flex-1">
+                  <p className="font-medium">Assignment</p>
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm mt-1">
+                    <div>
+                      <span className="text-muted-foreground">Assignee{project.assigneeIds.length > 1 ? 's' : ''}</span>
+                      <p className="font-medium">{getUserNames(project.assigneeIds)}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Current Opportunities</span>
+                      <p className="font-medium">{project.associatedOpportunities.length}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </Card>
-
-          <div className="space-y-6">
-            <Card className="p-6">
-              <h3 className="font-semibold mb-3">Assignment</h3>
-              <div className="space-y-3 text-sm">
-                <div>
-                <span className="text-muted-foreground">Assignee{project.assigneeIds.length > 1 ? 's' : ''}</span>
-                  <p className="font-medium">{getUserNames(project.assigneeIds)}</p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Current Opportunities</span>
-                  <p className="font-medium">{project.associatedOpportunities.length}</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
-                  <h3 className="font-semibold">General Contractor</h3>
-                </div>
-                {primaryGC &&
-                <div className="flex gap-1">
-                    <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => setShowEditGCModal(true)}>
-                    
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => setShowRemoveGCDialog(true)}>
-                    
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                }
-              </div>
-              {primaryGC ?
-              (() => {
-                const gcPrimaryContact = primaryGC.companyContacts?.[primaryGC.primaryContactIndex || 0];
-                const gcContactCount = primaryGC.companyContacts?.length || 0;
-                return (
-                  <div className="space-y-2 text-sm">
-                      <p className="font-medium">{primaryGC.companyName}</p>
-                      {gcPrimaryContact &&
-                    <>
-                          <p className="text-muted-foreground">{gcPrimaryContact.name}</p>
-                          {gcPrimaryContact.title && <p className="text-muted-foreground">{gcPrimaryContact.title}</p>}
-                          <div className="pt-2 space-y-1">
-                            {gcPrimaryContact.phone &&
-                        <div className="flex items-center gap-1 text-muted-foreground">
-                                <Phone className="h-3 w-3" />
-                                <span>{gcPrimaryContact.phone}</span>
-                              </div>
-                        }
-                            <div className="flex items-center gap-1 text-muted-foreground">
-                              <Mail className="h-3 w-3" />
-                              <a href={`mailto:${gcPrimaryContact.email}`} className="text-primary hover:underline">
-                                {gcPrimaryContact.email}
-                              </a>
-                            </div>
-                          </div>
-                          {gcContactCount > 1 &&
-                      <p className="text-xs text-muted-foreground pt-1">
-                              + {gcContactCount - 1} more contact{gcContactCount > 2 ? 's' : ''}
-                            </p>
-                      }
-                        </>
-                    }
-                    </div>);
-
-              })() :
-
-              <div className="space-y-3">
-                  <p className="text-sm text-muted-foreground">No general contractor assigned</p>
-                  <Button size="sm" onClick={() => setShowAddGCModal(true)}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add GC
-                  </Button>
-                </div>
-              }
-            </Card>
-          </div>
         </div>
 
         <Card className="p-6">

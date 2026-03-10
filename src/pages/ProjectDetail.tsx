@@ -44,8 +44,6 @@ const ProjectDetail = () => {
   const [showOpportunityDetail, setShowOpportunityDetail] = useState(false);
   const [showAssociateModal, setShowAssociateModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showAddGCModal, setShowAddGCModal] = useState(false);
-  const [showRemoveGCDialog, setShowRemoveGCDialog] = useState(false);
   const [showAssociateCompanyModal, setShowAssociateCompanyModal] = useState(false);
   const [showRemoveCompanyDialog, setShowRemoveCompanyDialog] = useState(false);
   const [companyToRemove, setCompanyToRemove] = useState<string | null>(null);

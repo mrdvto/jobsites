@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ManageCompanyContactsModal } from './ManageCompanyContactsModal';
 import { ChevronRight, ChevronDown, Star, Pencil, X, Phone, Mail, Users, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
-import { DIVISIONS } from '@/contexts/DataContext';
+
 import { cn } from '@/lib/utils';
 
 interface ProjectCompaniesTableProps {
@@ -87,7 +87,7 @@ export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }:
             <TableHead className="w-[40px]"></TableHead>
             <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('company')}><div className="flex items-center">Company<SortIcon column="company" /></div></TableHead>
             <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('role')}><div className="flex items-center">Role<SortIcon column="role" /></div></TableHead>
-            <TableHead>Divisions</TableHead>
+            
             <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('contacts')}><div className="flex items-center">Contacts<SortIcon column="contacts" /></div></TableHead>
             <TableHead className="w-[120px]"></TableHead>
           </TableRow>
@@ -107,15 +107,6 @@ export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }:
                     </TableCell>
                     <TableCell className="font-medium">{company.companyName}</TableCell>
                     <TableCell><Badge variant={company.roleId === 'GC' ? 'default' : 'secondary'}>{company.roleDescription}</Badge></TableCell>
-                    <TableCell>
-                      {company.divisionIds && company.divisionIds.length > 0 ? (
-                        <div className="flex flex-wrap gap-1">
-                          {company.divisionIds.map(code => (
-                            <Badge key={code} variant="outline" className="text-xs">{code}</Badge>
-                          ))}
-                        </div>
-                      ) : <span className="text-muted-foreground">—</span>}
-                    </TableCell>
                     <TableCell><div className="flex items-center gap-2"><Users className="h-4 w-4 text-muted-foreground" /><span className="text-sm">{contactCount} {contactCount === 1 ? 'person' : 'people'}</span></div></TableCell>
                     <TableCell>
                       <div className="flex gap-1 justify-end">
@@ -125,7 +116,7 @@ export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }:
                     </TableCell>
                   </TableRow>
                   <CollapsibleContent asChild>
-                    <tr><td colSpan={6} className="p-0">
+                    <tr><td colSpan={5} className="p-0">
                       <div className="bg-muted/30 border-b px-6 py-4">
                         <div className="grid gap-3">
                           {contacts.map((contact, contactIdx) => (

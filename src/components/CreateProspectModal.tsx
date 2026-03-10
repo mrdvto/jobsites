@@ -23,7 +23,7 @@ interface CreateProspectModalProps {
 export interface ProspectData {
   companyName: string;
   phone: string;
-  divisionId: string;
+  divisionIds: string[];
   address1: string;
   address2: string;
   address3: string;

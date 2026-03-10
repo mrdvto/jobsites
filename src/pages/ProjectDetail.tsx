@@ -48,7 +48,7 @@ const ProjectDetail = () => {
   const [showRemoveCompanyDialog, setShowRemoveCompanyDialog] = useState(false);
   const [companyToRemove, setCompanyToRemove] = useState<string | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showEditGCModal, setShowEditGCModal] = useState(false);
+  
   const [locationViewType, setLocationViewType] = useState<LocationViewType>('address');
   const [showActivityModal, setShowActivityModal] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);

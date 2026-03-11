@@ -549,7 +549,7 @@ const ProjectDetail = () => {
               <>
                   <Separator />
                   <div>
-                    <p className="font-medium mb-3">Project Details</p>
+                    <p className="font-medium mb-3 flex items-center gap-2"><ClipboardList className="h-5 w-5 text-muted-foreground shrink-0" />Project Details</p>
                     <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
                       {project.valuation != null &&
                     <div>

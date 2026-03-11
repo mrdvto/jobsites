@@ -474,6 +474,16 @@ const ProjectDetail = () => {
 
               <Separator />
 
+              <div className="flex items-start gap-3">
+                <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <div>
+                  <p className="font-medium">Assignee{project.assigneeIds.length > 1 ? 's' : ''}</p>
+                  <p className="text-sm text-muted-foreground">{getUserNames(project.assigneeIds)}</p>
+                </div>
+              </div>
+
+              <Separator />
+
               <div>
                 <p className="font-medium mb-2">Description</p>
                 <p className="text-sm text-muted-foreground">{project.description}</p>

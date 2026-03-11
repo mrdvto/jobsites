@@ -908,7 +908,7 @@ const ProjectDetail = () => {
                         {activity.statusId === 2 ? 'Completed' : 'Outstanding'}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm">
+                    <TableCell className="hidden lg:table-cell text-sm">
                       <div className="flex items-center gap-1.5">
                         {parentActivity && (
                           <TooltipProvider>

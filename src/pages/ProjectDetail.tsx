@@ -424,7 +424,7 @@ const ProjectDetail = () => {
               </div>
 
               {/* Column 2: Project Owner */}
-              <div className="flex items-start gap-3">
+              <div className="rounded-lg border bg-muted/20 p-4 flex items-start gap-3">
                 <Building2 className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium">Project Owner</p>

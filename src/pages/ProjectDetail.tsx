@@ -510,7 +510,9 @@ const ProjectDetail = () => {
                   </div>
                 </div>
 
-                <div>
+                <div className="flex items-start gap-3">
+                  <FileText className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
+                  <div className="flex-1 min-w-0">
                   <p className="font-medium mb-2">Description</p>
                   {(() => {
                     const desc = project.description || '';

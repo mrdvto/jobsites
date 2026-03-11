@@ -964,6 +964,7 @@ const ProjectDetail = () => {
               })}
               </TableBody>
             </Table>
+          </div>
           }
         </Card>
 

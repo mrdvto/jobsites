@@ -375,7 +375,7 @@ const ProjectDetail = () => {
               </Button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Column 1: Location */}
               <div className="rounded-lg border bg-muted/20 p-4 flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />

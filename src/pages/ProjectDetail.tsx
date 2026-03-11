@@ -606,7 +606,7 @@ const ProjectDetail = () => {
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <h2 className="text-lg font-semibold">Opportunities</h2>
+            <h2 className="text-lg font-semibold">Leads / Opportunities</h2>
             <div className="flex gap-2 flex-wrap">
               <Button
                 variant="outline"

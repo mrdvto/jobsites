@@ -63,6 +63,7 @@ const ProjectDetail = () => {
   const [showUom, setShowUom] = useState(() => localStorage.getItem('showEquipmentUom') === 'true');
   const [followUpFromActivity, setFollowUpFromActivity] = useState<Activity | undefined>(undefined);
   const [showCreateProspectModal, setShowCreateProspectModal] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
 
   // Sort state for Opportunities table
   const [oppSortColumn, setOppSortColumn] = useState<'type' | 'description' | 'division' | 'stage' | 'salesRep' | 'estClose' | 'revenue' | null>('stage');

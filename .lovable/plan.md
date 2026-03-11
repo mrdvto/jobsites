@@ -1,24 +1,39 @@
 
 
-## Move Assignees Up, Add Revenue Section, Relabel to "Leads / Opportunities"
+# Remove PAR (Planned Annual Rate) from Projects
 
-### Changes to `src/pages/ProjectDetail.tsx`
+PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
 
-**1. Move Assignees into the Project Information section**
-- Add an Assignees field after the Project Owner block (after line 473, before Description), showing with User icon, label "Assignees", and names via `getUserNames()`.
+## Changes
 
-**2. Replace the "Assignment" section (lines 556-573) with a "Revenue" section**
-- Use `DollarSign` icon from lucide-react, label "Revenue"
-- Display a 2x2 grid with:
-  - **Open Leads / Opportunities**: count where stage's phaseid is 1 or 2
-  - **Total Leads / Opportunities**: `project.associatedOpportunities.length`
-  - **Pipeline Revenue**: sum of `revenue` from opps in phaseid 1 or 2
-  - **Won Revenue**: sum of `revenue` from opps with stageId === 16
-- Format currency values with `$` and `toLocaleString()`
+### 1. `src/types/index.ts`
+- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
+- Remove `showBehindPAR` from `Filters` interface
 
-**3. Relabel "Opportunities" → "Leads / Opportunities" throughout the page**
-- Section heading (line 580): "Leads / Opportunities"
-- Empty state text (line 600): "No leads or opportunities associated..."
-- "Current Opportunities" label in the revenue section → use new metric labels
-- Import `DollarSign` from lucide-react
+### 2. `src/data/Project.json`
+- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+
+### 3. `src/contexts/DataContext.tsx`
+- Remove `showBehindPAR: false` from default filters
+- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
+- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+
+### 4. `src/components/FilterBar.tsx`
+- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
+
+### 5. `src/components/EditProjectModal.tsx`
+- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
+- Remove their reset in `useEffect`
+- Remove the PAR validation check
+- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
+- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
+
+### 6. `src/components/CreateProjectModal.tsx`
+- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
+- Remove PAR validation
+- Remove `plannedAnnualRate` and `parStartDate` from new project object
+- Remove the Planned Annual Rate input and PAR Start Date picker from the form
+
+### 7. `src/pages/ProjectDetail.tsx`
+- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
 

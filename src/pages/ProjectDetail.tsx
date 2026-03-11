@@ -28,7 +28,7 @@ import { Input } from '@/components/ui/input';
 import { MultiSelectFilter } from '@/components/MultiSelectFilter';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History, ExternalLink, CornerDownRight, Link2 } from 'lucide-react';
+import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History, ExternalLink, CornerDownRight, Link2, DollarSign } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity, ProjectCompany, CustomerEquipment } from '@/types';
 
@@ -474,6 +474,16 @@ const ProjectDetail = () => {
 
               <Separator />
 
+              <div className="flex items-start gap-3">
+                <User className="h-5 w-5 text-muted-foreground mt-0.5" />
+                <div>
+                  <p className="font-medium">Assignee{project.assigneeIds.length > 1 ? 's' : ''}</p>
+                  <p className="text-sm text-muted-foreground">{getUserNames(project.assigneeIds)}</p>
+                </div>
+              </div>
+
+              <Separator />
+
               <div>
                 <p className="font-medium mb-2">Description</p>
                 <p className="text-sm text-muted-foreground">{project.description}</p>
@@ -555,29 +565,48 @@ const ProjectDetail = () => {
               }
               <Separator />
 
-              <div className="flex items-start gap-3">
-                <User className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-medium">Assignment</p>
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm mt-1">
-                    <div>
-                      <span className="text-muted-foreground">Assignee{project.assigneeIds.length > 1 ? 's' : ''}</span>
-                      <p className="font-medium">{getUserNames(project.assigneeIds)}</p>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Current Opportunities</span>
-                      <p className="font-medium">{project.associatedOpportunities.length}</p>
+              {(() => {
+                const projectOpps = project.associatedOpportunities;
+                const openOpps = projectOpps.filter(ao => {
+                  const stage = getStage(ao.stageId);
+                  return stage && (stage.phaseid === 1 || stage.phaseid === 2);
+                });
+                const pipelineRevenue = openOpps.reduce((sum, ao) => sum + (ao.revenue || 0), 0);
+                const wonRevenue = projectOpps.reduce((sum, ao) => ao.stageId === 16 ? sum + (ao.revenue || 0) : sum, 0);
+                return (
+                  <div className="flex items-start gap-3">
+                    <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
+                    <div className="flex-1">
+                      <p className="font-medium">Revenue</p>
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm mt-1">
+                        <div>
+                          <span className="text-muted-foreground">Open Leads / Opportunities</span>
+                          <p className="font-medium">{openOpps.length}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Total Leads / Opportunities</span>
+                          <p className="font-medium">{projectOpps.length}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Pipeline Revenue</span>
+                          <p className="font-medium">${Math.round(pipelineRevenue).toLocaleString('en-US')}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Won Revenue</span>
+                          <p className="font-medium">${Math.round(wonRevenue).toLocaleString('en-US')}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                );
+              })()}
             </div>
           </Card>
         </div>
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <h2 className="text-lg font-semibold">Opportunities</h2>
+            <h2 className="text-lg font-semibold">Leads / Opportunities</h2>
             <div className="flex gap-2 flex-wrap">
               <Button
                 variant="outline"
@@ -597,7 +626,7 @@ const ProjectDetail = () => {
 
           {project.associatedOpportunities.length === 0 ?
           <p className="text-center text-muted-foreground py-8">
-              No opportunities associated with this project yet.
+              No leads or opportunities associated with this project yet.
             </p> :
 
           <>

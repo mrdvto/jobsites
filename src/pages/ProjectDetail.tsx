@@ -632,11 +632,11 @@ const ProjectDetail = () => {
                       <p className="font-medium">Revenue</p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-2 text-sm mt-1">
                         <div>
-                          <span className="text-muted-foreground">Open Leads / Opportunities</span>
+                          <span className="text-muted-foreground">Open Leads & Opportunities</span>
                           <p className="font-medium">{openOpps.length}</p>
                         </div>
                         <div>
-                          <span className="text-muted-foreground">Total Leads / Opportunities</span>
+                          <span className="text-muted-foreground">Total Leads & Opportunities</span>
                           <p className="font-medium">{projectOpps.length}</p>
                         </div>
                         <div>
@@ -658,7 +658,7 @@ const ProjectDetail = () => {
 
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <h2 className="text-lg font-semibold">Leads / Opportunities</h2>
+            <h2 className="text-lg font-semibold">Leads & Opportunities</h2>
             <div className="flex gap-2 flex-wrap">
               <Button
                 variant="outline"

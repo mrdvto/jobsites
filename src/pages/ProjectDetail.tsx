@@ -632,7 +632,7 @@ const ProjectDetail = () => {
                       <p className="font-medium">Revenue</p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-2 text-sm mt-1">
                         <div>
-                          <span className="text-muted-foreground">Open Leads / Opportunities</span>
+                          <span className="text-muted-foreground">Open Leads & Opportunities</span>
                           <p className="font-medium">{openOpps.length}</p>
                         </div>
                         <div>

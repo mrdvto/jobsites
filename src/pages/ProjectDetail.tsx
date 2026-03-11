@@ -479,7 +479,7 @@ const ProjectDetail = () => {
               </div>
 
               {/* Column 3: Assignees + Description stacked */}
-              <div className="space-y-4">
+              <div className="rounded-lg border bg-muted/20 p-4 space-y-4">
                 <div className="flex items-start gap-3">
                   <User className="h-5 w-5 text-muted-foreground mt-0.5 shrink-0" />
                   <div className="min-w-0">

@@ -565,22 +565,41 @@ const ProjectDetail = () => {
               }
               <Separator />
 
-              <div className="flex items-start gap-3">
-                <User className="h-5 w-5 text-muted-foreground mt-0.5" />
-                <div className="flex-1">
-                  <p className="font-medium">Assignment</p>
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm mt-1">
-                    <div>
-                      <span className="text-muted-foreground">Assignee{project.assigneeIds.length > 1 ? 's' : ''}</span>
-                      <p className="font-medium">{getUserNames(project.assigneeIds)}</p>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Current Opportunities</span>
-                      <p className="font-medium">{project.associatedOpportunities.length}</p>
+              {(() => {
+                const projectOpps = project.associatedOpportunities;
+                const openOpps = projectOpps.filter(ao => {
+                  const stage = getStage(ao.stageId);
+                  return stage && (stage.phaseid === 1 || stage.phaseid === 2);
+                });
+                const pipelineRevenue = openOpps.reduce((sum, ao) => sum + (ao.revenue || 0), 0);
+                const wonRevenue = projectOpps.reduce((sum, ao) => ao.stageId === 16 ? sum + (ao.revenue || 0) : sum, 0);
+                return (
+                  <div className="flex items-start gap-3">
+                    <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
+                    <div className="flex-1">
+                      <p className="font-medium">Revenue</p>
+                      <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm mt-1">
+                        <div>
+                          <span className="text-muted-foreground">Open Leads / Opportunities</span>
+                          <p className="font-medium">{openOpps.length}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Total Leads / Opportunities</span>
+                          <p className="font-medium">{projectOpps.length}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Pipeline Revenue</span>
+                          <p className="font-medium">${Math.round(pipelineRevenue).toLocaleString('en-US')}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Won Revenue</span>
+                          <p className="font-medium">${Math.round(wonRevenue).toLocaleString('en-US')}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                );
+              })()}
             </div>
           </Card>
         </div>

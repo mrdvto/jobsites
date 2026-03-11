@@ -626,7 +626,7 @@ const ProjectDetail = () => {
 
           {project.associatedOpportunities.length === 0 ?
           <p className="text-center text-muted-foreground py-8">
-              No opportunities associated with this project yet.
+              No leads or opportunities associated with this project yet.
             </p> :
 
           <>

@@ -861,6 +861,7 @@ const ProjectDetail = () => {
               No activities recorded for this project yet.
             </p> :
 
+          <div className="overflow-x-auto -mx-6 px-6">
           <Table>
               <TableHeader>
                 <TableRow>

@@ -54,6 +54,7 @@ interface DataContextType {
   companyEquipment: CustomerEquipment[];
   getEquipmentById: (id: number) => CustomerEquipment | undefined;
   getCompanyEquipment: (companyId: string) => CustomerEquipment[];
+  addEquipmentToMaster: (equipment: CustomerEquipment) => void;
   getEquipmentProjectAssignment: (equipmentId: number, excludeProjectId?: number) => { projectId: number; projectName: string } | null;
   addCustomerEquipment: (projectId: number, equipmentId: number) => void;
   deleteCustomerEquipment: (projectId: number, equipmentId: number) => void;

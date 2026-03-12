@@ -1,39 +1,28 @@
 
 
-# Remove PAR (Planned Annual Rate) from Projects
+## Fix: New Equipment Not Appearing in Table
 
-PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
+**Root cause:** The `createEquipmentApi` stub returns a mock ID that gets added to the project's `customerEquipment` array. However, the equipment table resolves IDs via `getEquipmentById`, which searches the static `masterEquipment` list from `CompanyEquipment.json`. The new equipment record is never added to that list, so it resolves to `undefined` and gets filtered out.
 
-## Changes
+**Fix:**
 
-### 1. `src/types/index.ts`
-- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
-- Remove `showBehindPAR` from `Filters` interface
+### 1. `src/contexts/DataContext.tsx`
+- Change `masterEquipment` from a static `const` to a `useState` initialized from the JSON data.
+- Add a new `addEquipmentToMaster(equipment: CustomerEquipment)` function that appends to this state.
+- Expose `addEquipmentToMaster` in the context value.
 
-### 2. `src/data/Project.json`
-- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+### 2. `src/components/CreateEquipmentModal.tsx`
+- After `createEquipmentApi` returns the mock ID, build a full `CustomerEquipment` object from the form data.
+- Pass the full equipment object back via `onSave` (change signature from `(id: number)` to `(equipment: CustomerEquipment)`).
 
-### 3. `src/contexts/DataContext.tsx`
-- Remove `showBehindPAR: false` from default filters
-- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
-- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+### 3. `src/pages/ProjectDetail.tsx`
+- In `handleSaveNewEquipment`, call the new `addEquipmentToMaster(equipment)` to register the record in the master list, then call `addCustomerEquipment(project.id, equipment.id)` to associate it with the project.
 
-### 4. `src/components/FilterBar.tsx`
-- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
+This ensures the equipment table can resolve the new ID immediately.
 
-### 5. `src/components/EditProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove their reset in `useEffect`
-- Remove the PAR validation check
-- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
-- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
-
-### 6. `src/components/CreateProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove PAR validation
-- Remove `plannedAnnualRate` and `parStartDate` from new project object
-- Remove the Planned Annual Rate input and PAR Start Date picker from the form
-
-### 7. `src/pages/ProjectDetail.tsx`
-- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+| File | Change |
+|------|--------|
+| `src/contexts/DataContext.tsx` | Make equipment list stateful; add `addEquipmentToMaster` |
+| `src/components/CreateEquipmentModal.tsx` | Return full equipment object from `onSave` |
+| `src/pages/ProjectDetail.tsx` | Call `addEquipmentToMaster` before associating |
 

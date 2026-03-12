@@ -197,7 +197,12 @@ const ProjectDetail = () => {
   };
 
   const handleCreateEquipment = () => {
-    setShowEquipmentModal(true);
+    setShowCreateEquipmentModal(true);
+  };
+
+  const handleSaveNewEquipment = (equipmentId: number) => {
+    addCustomerEquipment(project.id, equipmentId);
+    toast({ title: 'Success', description: 'Equipment created and added to project.' });
   };
 
   const handleDeleteEquipment = () => {

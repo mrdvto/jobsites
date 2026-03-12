@@ -297,8 +297,8 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        { "id": 1, "name": "Michael Trent", "title": "Landscape Architect", "phone": "217-555-0221", "email": "michael.trent@christywebber.com" },
-                        { "id": 2, "name": "Nancy Rivera", "title": "Project Manager", "phone": "217-555-0222", "email": "n.rivera@christywebber.com" }
+                        { "id": 1, "name": "Michael Trent", "title": "Landscape Architect", "phone": "217-555-0221", "email": "michael.trent@christywebber.com", "divisionIds": ["C"] },
+                        { "id": 2, "name": "Nancy Rivera", "title": "Project Manager", "phone": "217-555-0222", "email": "n.rivera@christywebber.com", "divisionIds": ["C", "G"] }
                     ],
                     "primaryContactIndex": 0
                 },

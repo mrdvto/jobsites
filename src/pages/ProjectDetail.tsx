@@ -45,6 +45,7 @@ const ProjectDetail = () => {
   const [showAssociateModal, setShowAssociateModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showAssociateCompanyModal, setShowAssociateCompanyModal] = useState(false);
+  const [showCustomerNumber, setShowCustomerNumber] = useState(false);
   const [showRemoveCompanyDialog, setShowRemoveCompanyDialog] = useState(false);
   const [companyToRemove, setCompanyToRemove] = useState<string | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);

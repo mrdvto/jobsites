@@ -54,6 +54,7 @@ interface DataContextType {
   companyEquipment: CustomerEquipment[];
   getEquipmentById: (id: number) => CustomerEquipment | undefined;
   getCompanyEquipment: (companyId: string) => CustomerEquipment[];
+  addEquipmentToMaster: (equipment: CustomerEquipment) => void;
   getEquipmentProjectAssignment: (equipmentId: number, excludeProjectId?: number) => { projectId: number; projectName: string } | null;
   addCustomerEquipment: (projectId: number, equipmentId: number) => void;
   deleteCustomerEquipment: (projectId: number, equipmentId: number) => void;
@@ -761,7 +762,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     logChange(projectId, 'NOTE_DELETED', 'Note', `Note deleted`);
   };
 
-  const masterEquipment = companyEquipmentData as CustomerEquipment[];
+  const [masterEquipment, setMasterEquipment] = useState<CustomerEquipment[]>(companyEquipmentData as CustomerEquipment[]);
+
+  const addEquipmentToMaster = useCallback((equipment: CustomerEquipment) => {
+    setMasterEquipment(prev => [...prev, equipment]);
+  }, []);
 
   const getEquipmentById = useCallback((id: number): CustomerEquipment | undefined => {
     return masterEquipment.find(e => e.id === id);
@@ -841,6 +846,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         getCompanyEquipment,
         getEquipmentProjectAssignment,
         addCustomerEquipment,
+        addEquipmentToMaster,
         deleteCustomerEquipment,
         setNoteTags,
         getSalesRepName,

@@ -11,7 +11,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Calendar as CalendarIcon, Check, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { ProjectCompany } from '@/types';
+import { ProjectCompany, CustomerEquipment } from '@/types';
 
 // ── API Stubs ──
 
@@ -293,7 +293,7 @@ function SearchableSelect({
 interface CreateEquipmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (equipmentId: number) => void;
+  onSave: (equipment: CustomerEquipment) => void;
   projectId: number;
   projectCompanies: ProjectCompany[];
 }
@@ -452,7 +452,20 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, pr
 
       const newId = await createEquipmentApi(payload);
       await associateEquipmentToProjectApi(projectId, newId);
-      onSave(newId);
+
+      const selectedMake = makes.find(m => m.value === make);
+      const newEquipment: CustomerEquipment = {
+        id: newId,
+        companyId,
+        equipmentType: fpcs.find(f => f.value === fpc)?.description || fpc,
+        make: selectedMake?.description || make,
+        model,
+        year: parseInt(yearOfManufacture),
+        serialNumber,
+        ...(smu && { smu: parseFloat(smu) }),
+        ownershipStatus: 'owned',
+      };
+      onSave(newEquipment);
       handleClose(false);
     } finally {
       setSubmitting(false);

@@ -216,8 +216,8 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        { "id": 1, "name": "Wesley Moss", "title": "Site Foreman", "phone": "309-555-0821", "email": "wesley.moss@gallagherasphalt.com" },
-                        { "id": 2, "name": "Patricia Lane", "title": "Project Manager", "phone": "309-555-0822", "email": "p.lane@gallagherasphalt.com" }
+                        { "id": 1, "name": "Wesley Moss", "title": "Site Foreman", "phone": "309-555-0821", "email": "wesley.moss@gallagherasphalt.com", "divisionIds": ["P"] },
+                        { "id": 2, "name": "Patricia Lane", "title": "Project Manager", "phone": "309-555-0822", "email": "p.lane@gallagherasphalt.com", "divisionIds": ["P", "G"] }
                     ],
                     "primaryContactIndex": 0
                 },

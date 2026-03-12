@@ -200,8 +200,9 @@ const ProjectDetail = () => {
     setShowCreateEquipmentModal(true);
   };
 
-  const handleSaveNewEquipment = (equipmentId: number) => {
-    addCustomerEquipment(project.id, equipmentId);
+  const handleSaveNewEquipment = (equipment: CustomerEquipment) => {
+    addEquipmentToMaster(equipment);
+    addCustomerEquipment(project.id, equipment.id);
     toast({ title: 'Success', description: 'Equipment created and added to project.' });
   };
 

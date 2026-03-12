@@ -452,7 +452,20 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, pr
 
       const newId = await createEquipmentApi(payload);
       await associateEquipmentToProjectApi(projectId, newId);
-      onSave(newId);
+
+      const selectedMake = makes.find(m => m.value === make);
+      const newEquipment: CustomerEquipment = {
+        id: newId,
+        companyId,
+        equipmentType: fpcs.find(f => f.value === fpc)?.description || fpc,
+        make: selectedMake?.description || make,
+        model,
+        year: parseInt(yearOfManufacture),
+        serialNumber,
+        ...(smu && { smu: parseFloat(smu) }),
+        ownershipStatus: 'owned',
+      };
+      onSave(newEquipment);
       handleClose(false);
     } finally {
       setSubmitting(false);

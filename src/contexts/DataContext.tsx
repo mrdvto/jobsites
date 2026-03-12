@@ -762,7 +762,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     logChange(projectId, 'NOTE_DELETED', 'Note', `Note deleted`);
   };
 
-  const masterEquipment = companyEquipmentData as CustomerEquipment[];
+  const [masterEquipment, setMasterEquipment] = useState<CustomerEquipment[]>(companyEquipmentData as CustomerEquipment[]);
+
+  const addEquipmentToMaster = useCallback((equipment: CustomerEquipment) => {
+    setMasterEquipment(prev => [...prev, equipment]);
+  }, []);
 
   const getEquipmentById = useCallback((id: number): CustomerEquipment | undefined => {
     return masterEquipment.find(e => e.id === id);

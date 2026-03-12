@@ -5,14 +5,35 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { Check, ChevronsUpDown, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { DIVISIONS } from '@/contexts/DataContext';
 import { countries, pinnedCountryCodes, getCountryByCode, type Country } from '@/data/Countries';
 import { fetchStatesProvinces, hasStatesProvinces, type StateProvince } from '@/data/StatesProvinces';
+
+const ROLE_OPTIONS = [
+  { id: 'GC', label: 'General Contractor' },
+  { id: 'SUB-EXC', label: 'Subcontractor - Excavation' },
+  { id: 'SUB-PAV', label: 'Subcontractor - Paving' },
+  { id: 'SUB-ELEC', label: 'Subcontractor - Electrical' },
+  { id: 'SUB-MECH', label: 'Subcontractor - Mechanical' },
+  { id: 'SUB-SPEC', label: 'Subcontractor - Specialized' },
+  { id: 'SUB-STEEL', label: 'Subcontractor - Steel' },
+];
+
+// TODO: Replace with actual API call
+const createCompanyApi = async (data: ProspectData): Promise<string> => {
+  console.log('[API STUB] Creating company:', data);
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+  const companyId = `PROSPECT-${Date.now()}`;
+  console.log('[API STUB] Company created with ID:', companyId);
+  return companyId;
+};
 
 interface CreateProspectModalProps {
   open: boolean;
@@ -24,6 +45,7 @@ export interface ProspectData {
   companyName: string;
   phone: string;
   divisionIds: string[];
+  roleIds: string[];
   address1: string;
   address2: string;
   address3: string;
@@ -104,6 +126,8 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
   const [phone, setPhone] = useState('');
   const [divisionIds, setDivisionIds] = useState<string[]>([]);
   const [divisionOpen, setDivisionOpen] = useState(false);
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [rolesOpen, setRolesOpen] = useState(false);
 
   // Address
   const [address1, setAddress1] = useState('');
@@ -204,8 +228,16 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     return e;
   }, [submitted, companyName, divisionIds, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
 
+  const toggleRole = useCallback((roleId: string) => {
+    setSelectedRoles(prev => prev.includes(roleId) ? prev.filter(r => r !== roleId) : [...prev, roleId]);
+  }, []);
+
+  const removeRole = useCallback((roleId: string) => {
+    setSelectedRoles(prev => prev.filter(r => r !== roleId));
+  }, []);
+
   const resetForm = useCallback(() => {
-    setCompanyName(''); setPhone(''); setDivisionIds([]);
+    setCompanyName(''); setPhone(''); setDivisionIds([]); setSelectedRoles([]);
     setAddress1(''); setAddress2(''); setAddress3('');
     setCity(''); setCountryCode(''); setStateCode(''); setZipCode('');
     setFirstName(''); setLastName(''); setTitle('');
@@ -229,10 +261,11 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
       return;
     }
 
-    onSave({
+    const companyData: ProspectData = {
       companyName: companyName.trim(),
       phone,
       divisionIds,
+      roleIds: selectedRoles,
       address1: address1.trim(),
       address2: address2.trim(),
       address3: address3.trim(),
@@ -248,7 +281,14 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
         businessPhone,
         email: email.trim(),
       },
+    };
+
+    // Call API stub to create company in backend
+    createCompanyApi(companyData).then((companyId) => {
+      console.log('[API STUB] Company persisted, proceeding with local state update. ID:', companyId);
     });
+
+    onSave(companyData);
     resetForm();
     onOpenChange(false);
     toast({ title: 'Success', description: 'Prospect created successfully.' });
@@ -313,6 +353,50 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
                 </PopoverContent>
               </Popover>
               <FieldError error={errors.division} />
+            </div>
+            <div>
+              <Label>Role(s)</Label>
+              <Popover open={rolesOpen} onOpenChange={setRolesOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full justify-between font-normal h-10">
+                    <span className={cn(selectedRoles.length === 0 && "text-muted-foreground")}>
+                      {selectedRoles.length === 0 ? "Select roles (optional)" : `${selectedRoles.length} selected`}
+                    </span>
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search roles..." />
+                    <CommandList>
+                      <CommandEmpty>No role found.</CommandEmpty>
+                      <CommandGroup>
+                        {ROLE_OPTIONS.map((role) => (
+                          <CommandItem key={role.id} value={role.label} onSelect={() => toggleRole(role.id)}>
+                            <Check className={cn("mr-2 h-4 w-4", selectedRoles.includes(role.id) ? "opacity-100" : "opacity-0")} />
+                            {role.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {selectedRoles.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {selectedRoles.map(roleId => {
+                    const role = ROLE_OPTIONS.find(r => r.id === roleId);
+                    return (
+                      <Badge key={roleId} variant={roleId === 'GC' ? 'default' : 'secondary'} className="text-xs gap-1">
+                        {role?.label || roleId}
+                        <button type="button" onClick={() => removeRole(roleId)} className="ml-0.5 hover:text-destructive">
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <div>
               <Label>Phone Number <span className="text-destructive">*</span></Label>

@@ -96,7 +96,7 @@ export const ManageCompanyContactsModal = ({ company, allCompanyContacts, open, 
   const handleSave = () => {
     if (contacts.length === 0) { toast({ title: "No Contacts", description: "At least one contact is required.", variant: "destructive" }); return; }
     if (companyRoleIds.length === 0) { toast({ title: "No Roles", description: "At least one role is required.", variant: "destructive" }); return; }
-    const roleDescriptions = companyRoleIds.map(id => ROLE_OPTIONS.find(r => r.id === id)?.label || id);
+    const roleDescriptions = companyRoleIds.map(id => getRoleLabel(id));
     onSave({
       ...company,
       companyContacts: contacts,

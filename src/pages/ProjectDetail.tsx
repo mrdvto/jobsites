@@ -36,6 +36,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History, ExternalLink, CornerDownRight, Link2, DollarSign, FileText, ClipboardList } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity, ProjectCompany, CustomerEquipment } from '@/types';
+import { Filter } from 'lucide-react';
 
 type LocationViewType = 'address' | 'coordinates';
 

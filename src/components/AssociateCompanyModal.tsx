@@ -81,7 +81,6 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
     setSelectedContactIds([]);
     setPrimaryContactId(null);
     setComboboxOpen(false);
-    setRolesOpen(false);
     setSearchQuery('');
   };
 

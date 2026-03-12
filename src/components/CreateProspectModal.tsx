@@ -230,7 +230,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
   const handleSubmit = () => {
     setSubmitted(true);
     // Check required fields
-    const hasErrors = !companyName.trim() || divisionIds.length === 0 || !phone.trim() || !addressValid || !city.trim() || !countryCode ||
+    const hasErrors = !companyName.trim() || divisionIds.length === 0 || selectedRoles.length === 0 || !phone.trim() || !addressValid || !city.trim() || !countryCode ||
       (isStateRequired && !stateCode) || !zipCode.trim() || !firstName.trim() || !lastName.trim() ||
       !title.trim() || !mobilePhone.trim() || !email.trim() || !validateEmail(email) ||
       (hasMaskedCountry && !validatePhone(phone, countryCode)) ||

@@ -66,6 +66,7 @@ const ProjectDetail = () => {
   const [activityToDelete, setActivityToDelete] = useState<number | null>(null);
   
   const [showEquipmentModal, setShowEquipmentModal] = useState(false);
+  const [showCreateEquipmentModal, setShowCreateEquipmentModal] = useState(false);
   const [showDeleteEquipmentDialog, setShowDeleteEquipmentDialog] = useState(false);
   const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
   const [equipmentSearch, setEquipmentSearch] = useState('');

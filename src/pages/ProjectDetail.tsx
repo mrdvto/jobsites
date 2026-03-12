@@ -895,6 +895,15 @@ const ProjectDetail = () => {
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('assignee')}>
                     <div className="flex items-center">Assignee<SortIcon active={actSortColumn === 'assignee'} direction={actSortDirection} /></div>
                   </TableHead>
+                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('company')}>
+                    <div className="flex items-center">Company<SortIcon active={actSortColumn === 'company'} direction={actSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('contact')}>
+                    <div className="flex items-center">Contact<SortIcon active={actSortColumn === 'contact'} direction={actSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('role')}>
+                    <div className="flex items-center">Role<SortIcon active={actSortColumn === 'role'} direction={actSortDirection} /></div>
+                  </TableHead>
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('activityType')}>
                     <div className="flex items-center">Activity Type<SortIcon active={actSortColumn === 'activityType'} direction={actSortDirection} /></div>
                   </TableHead>

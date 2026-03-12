@@ -24,7 +24,7 @@ import { useActivityColumnVisibility, ACTIVITY_COLUMN_LABELS } from '@/hooks/use
 import type { ActivityColumnId } from '@/hooks/useActivityColumnVisibility';
 import { ActivityFilterModal, type ActivityFilters, DEFAULT_ACTIVITY_FILTERS } from '@/components/ActivityFilterModal';
 import { ActivityFilterBadges } from '@/components/ActivityFilterBadges';
-import { AssociateActivityModal } from '@/components/AssociateActivityModal';
+
 import { NotesSection } from '@/components/NotesSection';
 import { ProjectCompaniesTable } from '@/components/ProjectCompaniesTable';
 import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';

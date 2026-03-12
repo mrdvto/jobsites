@@ -206,6 +206,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     if (isStateRequired && !stateCode) e.state = 'Required';
     if (!zipCode.trim()) e.zip = 'Required';
     else if (hasMaskedCountry && !validateZip(zipCode, countryCode)) e.zip = 'Invalid format';
+    if (selectedRoles.length === 0) e.roles = 'Select at least one role';
     if (!firstName.trim()) e.firstName = 'Required';
     if (!lastName.trim()) e.lastName = 'Required';
     if (!title.trim()) e.title = 'Required';
@@ -215,7 +216,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     else if (!validateEmail(email)) e.email = 'Invalid email';
     if (businessPhone.trim() && hasMaskedCountry && !validatePhone(businessPhone, countryCode)) e.businessPhone = 'Invalid format';
     return e;
-  }, [submitted, companyName, divisionIds, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
+  }, [submitted, companyName, divisionIds, selectedRoles, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
 
   const resetForm = useCallback(() => {
     setCompanyName(''); setPhone(''); setDivisionIds([]); setSelectedRoles([]);
@@ -229,7 +230,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
   const handleSubmit = () => {
     setSubmitted(true);
     // Check required fields
-    const hasErrors = !companyName.trim() || divisionIds.length === 0 || !phone.trim() || !addressValid || !city.trim() || !countryCode ||
+    const hasErrors = !companyName.trim() || divisionIds.length === 0 || selectedRoles.length === 0 || !phone.trim() || !addressValid || !city.trim() || !countryCode ||
       (isStateRequired && !stateCode) || !zipCode.trim() || !firstName.trim() || !lastName.trim() ||
       !title.trim() || !mobilePhone.trim() || !email.trim() || !validateEmail(email) ||
       (hasMaskedCountry && !validatePhone(phone, countryCode)) ||
@@ -336,12 +337,14 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
               <FieldError error={errors.division} />
             </div>
             <div>
-              <Label>Role(s)</Label>
+              <Label>Role(s) <span className="text-destructive">*</span></Label>
               <RoleMultiSelect
                 selectedRoles={selectedRoles}
                 onRolesChange={setSelectedRoles}
-                placeholder="Select roles (optional)"
+                placeholder="Select role(s)..."
+                required
               />
+              <FieldError error={errors.roles} />
             </div>
             <div>
               <Label>Phone Number <span className="text-destructive">*</span></Label>

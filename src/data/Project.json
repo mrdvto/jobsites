@@ -613,8 +613,8 @@
                     "roleDescription": "Property Owner",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 1, "name": "Margaret Sinclair", "title": "Chief Engineer", "phone": "309-555-4433", "email": "eng@cityblm.org" },
-                        { "id": 2, "name": "Dennis Cole", "title": "Bridge Program Manager", "phone": "309-555-4434", "email": "dcole@cityblm.org" }
+                        { "id": 1, "name": "Margaret Sinclair", "title": "Chief Engineer", "phone": "309-555-4433", "email": "eng@cityblm.org", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Dennis Cole", "title": "Bridge Program Manager", "phone": "309-555-4434", "email": "dcole@cityblm.org", "divisionIds": ["G", "R"] }
                     ],
                     "primaryContactIndex": 0
                 },

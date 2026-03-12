@@ -1,16 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { Calendar as CalendarIcon, ChevronDown, ChevronUp } from 'lucide-react';
+import { Calendar as CalendarIcon, Check, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { ProjectCompany } from '@/types';
 
 // ── API Stubs ──
 
@@ -205,15 +206,96 @@ const createEquipmentApi = async (data: Record<string, unknown>): Promise<number
   return Math.floor(Math.random() * 10000) + 5000;
 };
 
+// ── Searchable Combobox ──
+
+interface SearchableSelectProps {
+  options: LookupOption[];
+  value: string;
+  onValueChange: (value: string) => void;
+  placeholder: string;
+  disabledPlaceholder?: string;
+  disabled?: boolean;
+  hasError?: boolean;
+  formatLabel?: (opt: LookupOption) => string;
+}
+
+function SearchableSelect({
+  options,
+  value,
+  onValueChange,
+  placeholder,
+  disabledPlaceholder,
+  disabled = false,
+  hasError = false,
+  formatLabel,
+}: SearchableSelectProps) {
+  const [open, setOpen] = useState(false);
+
+  const getLabel = (opt: LookupOption) =>
+    formatLabel ? formatLabel(opt) : `${opt.value} - ${opt.description}`;
+
+  const selectedOption = options.find(o => o.value === value);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          disabled={disabled}
+          className={cn(
+            'w-full justify-between font-normal',
+            !value && 'text-muted-foreground',
+            hasError && 'border-destructive',
+          )}
+        >
+          <span className="truncate">
+            {selectedOption ? getLabel(selectedOption) : (disabled && disabledPlaceholder ? disabledPlaceholder : placeholder)}
+          </span>
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+        <Command>
+          <CommandInput placeholder={`Search...`} />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup>
+              {options.map(opt => (
+                <CommandItem
+                  key={opt.value}
+                  value={`${opt.value} ${opt.description}`}
+                  onSelect={() => {
+                    onValueChange(opt.value === value ? '' : opt.value);
+                    setOpen(false);
+                  }}
+                >
+                  <Check className={cn('mr-2 h-4 w-4', value === opt.value ? 'opacity-100' : 'opacity-0')} />
+                  {getLabel(opt)}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 // ── Component ──
 
 interface CreateEquipmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (equipmentId: number) => void;
+  projectCompanies: ProjectCompany[];
 }
 
-export function CreateEquipmentModal({ open, onOpenChange, onSave }: CreateEquipmentModalProps) {
+export function CreateEquipmentModal({ open, onOpenChange, onSave, projectCompanies }: CreateEquipmentModalProps) {
+  // Company (first required field)
+  const [companyId, setCompanyId] = useState('');
+
   // Required fields
   const [make, setMake] = useState('');
   const [fpc, setFpc] = useState('');
@@ -252,6 +334,12 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave }: CreateEquip
   const [additionalOpen, setAdditionalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+
+  // Company options from project companies
+  const companyOptions: LookupOption[] = useMemo(
+    () => (projectCompanies || []).map(c => ({ value: c.companyId, description: c.companyName })),
+    [projectCompanies],
+  );
 
   // Load static lookups on open
   useEffect(() => {
@@ -305,7 +393,7 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave }: CreateEquip
   }, [industryGroup]);
 
   const resetForm = () => {
-    setMake(''); setFpc(''); setCompatibilityCode(''); setModel('');
+    setCompanyId(''); setMake(''); setFpc(''); setCompatibilityCode(''); setModel('');
     setSerialNumber(''); setYearOfManufacture(''); setTerritory('in');
     setEquipmentNumber(''); setSmu(''); setSmuDate(undefined);
     setIndustryGroup(''); setIndustryCode(''); setPrincipalWorkCode('');
@@ -322,6 +410,7 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave }: CreateEquip
 
   const handleSubmit = async () => {
     const newErrors: Record<string, boolean> = {};
+    if (!companyId) newErrors.companyId = true;
     if (!make) newErrors.make = true;
     if (!fpc) newErrors.fpc = true;
     if (!compatibilityCode) newErrors.compatibilityCode = true;
@@ -338,7 +427,7 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave }: CreateEquip
 
     try {
       const payload: Record<string, unknown> = {
-        make, fpc, compatibilityCode, model, serialNumber,
+        companyId, make, fpc, compatibilityCode, model, serialNumber,
         yearOfManufacture: parseInt(yearOfManufacture),
         territory: territory === 'in' ? 'In Territory' : 'Out of Territory',
         ...(equipmentNumber && { equipmentNumber }),
@@ -394,51 +483,59 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave }: CreateEquip
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* Company — first required field, full width */}
+          <div className="space-y-2">
+            <Label>Company <span className="text-destructive">*</span></Label>
+            <SearchableSelect
+              options={companyOptions}
+              value={companyId}
+              onValueChange={setCompanyId}
+              placeholder="Select company"
+              hasError={errors.companyId}
+              formatLabel={(opt) => opt.description}
+            />
+          </div>
+
           {/* Required Fields */}
           <div className="grid grid-cols-2 gap-4">
             {/* Make */}
             <div className="space-y-2">
               <Label>Make <span className="text-destructive">*</span></Label>
-              <Select value={make} onValueChange={setMake}>
-                <SelectTrigger className={cn(errors.make && 'border-destructive')}>
-                  <SelectValue placeholder="Select make" />
-                </SelectTrigger>
-                <SelectContent>
-                  {makes.map(m => (
-                    <SelectItem key={m.value} value={m.value}>{m.value} - {m.description}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                options={makes}
+                value={make}
+                onValueChange={setMake}
+                placeholder="Select make"
+                hasError={errors.make}
+              />
             </div>
 
             {/* FPC */}
             <div className="space-y-2">
               <Label>Family Product Code <span className="text-destructive">*</span></Label>
-              <Select value={fpc} onValueChange={setFpc} disabled={!make}>
-                <SelectTrigger className={cn(errors.fpc && 'border-destructive')}>
-                  <SelectValue placeholder={make ? 'Select FPC' : 'Select make first'} />
-                </SelectTrigger>
-                <SelectContent>
-                  {fpcs.map(f => (
-                    <SelectItem key={f.value} value={f.value}>{f.value} - {f.description}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                options={fpcs}
+                value={fpc}
+                onValueChange={setFpc}
+                placeholder="Select FPC"
+                disabledPlaceholder="Select make first"
+                disabled={!make}
+                hasError={errors.fpc}
+              />
             </div>
 
             {/* Compatibility Code */}
             <div className="space-y-2">
               <Label>Compatibility Code <span className="text-destructive">*</span></Label>
-              <Select value={compatibilityCode} onValueChange={setCompatibilityCode} disabled={!fpc}>
-                <SelectTrigger className={cn(errors.compatibilityCode && 'border-destructive')}>
-                  <SelectValue placeholder={fpc ? 'Select code' : 'Select FPC first'} />
-                </SelectTrigger>
-                <SelectContent>
-                  {compCodes.map(c => (
-                    <SelectItem key={c.value} value={c.value}>{c.value} - {c.description}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SearchableSelect
+                options={compCodes}
+                value={compatibilityCode}
+                onValueChange={setCompatibilityCode}
+                placeholder="Select code"
+                disabledPlaceholder="Select FPC first"
+                disabled={!fpc}
+                hasError={errors.compatibilityCode}
+              />
             </div>
 
             {/* Model */}
@@ -513,61 +610,49 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave }: CreateEquip
                 {/* Industry Group */}
                 <div className="space-y-2">
                   <Label>Industry Group</Label>
-                  <Select value={industryGroup} onValueChange={setIndustryGroup}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select industry group" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {industryGroups.map(g => (
-                        <SelectItem key={g.value} value={g.value}>{g.description}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SearchableSelect
+                    options={industryGroups}
+                    value={industryGroup}
+                    onValueChange={setIndustryGroup}
+                    placeholder="Select industry group"
+                    formatLabel={(opt) => opt.description}
+                  />
                 </div>
 
                 {/* Industry Code */}
                 <div className="space-y-2">
                   <Label>Industry Code</Label>
-                  <Select value={industryCode} onValueChange={setIndustryCode} disabled={!industryGroup}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={industryGroup ? 'Select industry code' : 'Select group first'} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {industryCodes.map(c => (
-                        <SelectItem key={c.value} value={c.value}>{c.value} - {c.description}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SearchableSelect
+                    options={industryCodes}
+                    value={industryCode}
+                    onValueChange={setIndustryCode}
+                    placeholder="Select industry code"
+                    disabledPlaceholder="Select group first"
+                    disabled={!industryGroup}
+                  />
                 </div>
 
                 {/* Principal Work Code */}
                 <div className="space-y-2">
                   <Label>Principal Work Code</Label>
-                  <Select value={principalWorkCode} onValueChange={setPrincipalWorkCode}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select work code" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {principalWorkCodes.map(c => (
-                        <SelectItem key={c.value} value={c.value}>{c.value} - {c.description}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SearchableSelect
+                    options={principalWorkCodes}
+                    value={principalWorkCode}
+                    onValueChange={setPrincipalWorkCode}
+                    placeholder="Select work code"
+                  />
                 </div>
 
                 {/* Application Code */}
                 <div className="space-y-2">
                   <Label>Application Code</Label>
-                  <Select value={applicationCode} onValueChange={setApplicationCode}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select application" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {applicationCodes.map(c => (
-                        <SelectItem key={c.value} value={c.value}>{c.description}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SearchableSelect
+                    options={applicationCodes}
+                    value={applicationCode}
+                    onValueChange={setApplicationCode}
+                    placeholder="Select application"
+                    formatLabel={(opt) => opt.description}
+                  />
                 </div>
 
                 {/* Annual Use Hours */}
@@ -579,16 +664,12 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave }: CreateEquip
                 {/* Engine Make */}
                 <div className="space-y-2">
                   <Label>Engine Make</Label>
-                  <Select value={engineMake} onValueChange={setEngineMake}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select engine make" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {engineMakes.map(m => (
-                        <SelectItem key={m.value} value={m.value}>{m.value} - {m.description}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SearchableSelect
+                    options={engineMakes}
+                    value={engineMake}
+                    onValueChange={setEngineMake}
+                    placeholder="Select engine make"
+                  />
                 </div>
 
                 {/* Engine Model */}

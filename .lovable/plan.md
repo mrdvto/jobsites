@@ -1,39 +1,25 @@
 
 
-# Remove PAR (Planned Annual Rate) from Projects
+## Add Company/Contact/Role Columns to Activities List
 
-PAR consists of three concepts: `plannedAnnualRate`, `parStartDate`, and `showBehindPAR` filter. All must be removed across 6 files + 1 data file.
+The ActivityModal already supports selecting a company and contact. The changes needed are adding three new columns to the activities table in `ProjectDetail.tsx` and ensuring sort support.
 
-## Changes
+### Changes
 
-### 1. `src/types/index.ts`
-- Remove `plannedAnnualRate` and `parStartDate` from `Project` interface
-- Remove `showBehindPAR` from `Filters` interface
+**1. `src/pages/ProjectDetail.tsx`**
 
-### 2. `src/data/Project.json`
-- Remove `plannedAnnualRate` and `parStartDate` fields from all project records
+Add three new sortable columns to the activities table between "Assignee" and "Activity Type":
+- **Company** — Look up `activity.customerId` in `project.projectCompanies` to display the company name. Hidden on small screens (`hidden lg:table-cell`).
+- **Contact** — Display `activity.contactName`. Hidden on small screens.
+- **Role** — Show the company's role badges (using `roleIds`/`roleDescriptions` or fallback to `roleId`). Hidden on small screens.
 
-### 3. `src/contexts/DataContext.tsx`
-- Remove `showBehindPAR: false` from default filters
-- Remove the `showBehindPAR` filter logic (lines ~312-315 that check `plannedAnnualRate`)
-- Remove changelog entry referencing `plannedAnnualRate` (id 18)
+Add sort cases for `company`, `contact`, and `role` in the `sortedActivities` logic, comparing by company name, contact name, and joined role descriptions respectively.
 
-### 4. `src/components/FilterBar.tsx`
-- Remove the "Behind on PAR only" switch (the entire PAR filter div, lines ~42-45)
+Update the `actSortColumn` type to include the new column keys.
 
-### 5. `src/components/EditProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove their reset in `useEffect`
-- Remove the PAR validation check
-- Remove `plannedAnnualRate` and `parStartDate` from the `updateProject` call
-- Remove the Planned Annual Rate input field and PAR Start Date picker from the form
+### Files
 
-### 6. `src/components/CreateProjectModal.tsx`
-- Remove `plannedAnnualRate` state, `parStartDate` state, and `parStartDateOpen` state
-- Remove PAR validation
-- Remove `plannedAnnualRate` and `parStartDate` from new project object
-- Remove the Planned Annual Rate input and PAR Start Date picker from the form
-
-### 7. `src/pages/ProjectDetail.tsx`
-- Remove the "Planned Annual Rate" and "PAR Start Date" display fields (~lines 474-481)
+| File | Action |
+|------|--------|
+| `src/pages/ProjectDetail.tsx` | Add Company, Contact, Role columns + sort logic |
 

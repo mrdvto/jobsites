@@ -309,6 +309,8 @@
                     "companyName": "Granite Excavation & Demolition",
                     "roleId": "SUB-EXC",
                     "roleDescription": "Subcontractor - Excavation",
+                    "roleIds": ["SUB-EXC", "SUB-SPEC"],
+                    "roleDescriptions": ["Subcontractor - Excavation", "Subcontractor - Specialized"],
                     "isPrimaryContact": false,
                     "companyContacts": [
                         { "id": 3, "name": "Carlos Mendez", "title": "Equipment Operator Lead", "phone": "312-555-0194", "email": "c.mendez@graniteexcavation.com", "divisionIds": ["G"] },

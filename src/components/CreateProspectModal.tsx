@@ -337,12 +337,14 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
               <FieldError error={errors.division} />
             </div>
             <div>
-              <Label>Role(s)</Label>
+              <Label>Role(s) <span className="text-destructive">*</span></Label>
               <RoleMultiSelect
                 selectedRoles={selectedRoles}
                 onRolesChange={setSelectedRoles}
-                placeholder="Select roles (optional)"
+                placeholder="Select role(s)..."
+                required
               />
+              <FieldError error={errors.roles} />
             </div>
             <div>
               <Label>Phone Number <span className="text-destructive">*</span></Label>

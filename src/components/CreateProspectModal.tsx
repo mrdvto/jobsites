@@ -261,7 +261,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
       return;
     }
 
-    const companyData = {
+    const companyData: ProspectData = {
       companyName: companyName.trim(),
       phone,
       divisionIds,
@@ -281,7 +281,14 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
         businessPhone,
         email: email.trim(),
       },
+    };
+
+    // Call API stub to create company in backend
+    createCompanyApi(companyData).then((companyId) => {
+      console.log('[API STUB] Company persisted, proceeding with local state update. ID:', companyId);
     });
+
+    onSave(companyData);
     resetForm();
     onOpenChange(false);
     toast({ title: 'Success', description: 'Prospect created successfully.' });

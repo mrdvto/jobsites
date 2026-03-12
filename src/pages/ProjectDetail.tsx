@@ -1383,6 +1383,11 @@ const ProjectDetail = () => {
         projectId={project.id}
         projectCompanies={project.projectCompanies}
         existingEquipmentIds={project.customerEquipment} />
+
+      <CreateEquipmentModal
+        open={showCreateEquipmentModal}
+        onOpenChange={setShowCreateEquipmentModal}
+        onSave={handleSaveNewEquipment} />
       
 
       <AlertDialog open={showDeleteEquipmentDialog} onOpenChange={setShowDeleteEquipmentDialog}>

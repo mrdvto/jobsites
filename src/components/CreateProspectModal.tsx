@@ -117,7 +117,6 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
   const [divisionIds, setDivisionIds] = useState<string[]>([]);
   const [divisionOpen, setDivisionOpen] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-  const [rolesOpen, setRolesOpen] = useState(false);
 
   // Address
   const [address1, setAddress1] = useState('');

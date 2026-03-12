@@ -206,6 +206,7 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     if (isStateRequired && !stateCode) e.state = 'Required';
     if (!zipCode.trim()) e.zip = 'Required';
     else if (hasMaskedCountry && !validateZip(zipCode, countryCode)) e.zip = 'Invalid format';
+    if (selectedRoles.length === 0) e.roles = 'Select at least one role';
     if (!firstName.trim()) e.firstName = 'Required';
     if (!lastName.trim()) e.lastName = 'Required';
     if (!title.trim()) e.title = 'Required';

@@ -13,6 +13,7 @@ interface ProjectCompaniesTableProps {
   projectId: number;
   companies: ProjectCompany[];
   onRemoveCompany: (companyName: string) => void;
+  showCustomerNumber: boolean;
 }
 
 const isProspect = (companyId: string) => companyId.startsWith('$');

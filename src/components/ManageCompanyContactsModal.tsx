@@ -217,6 +217,7 @@ export const ManageCompanyContactsModal = ({ company, allCompanyContacts, open, 
                       <DivisionBadges divisionIds={contact.divisionIds} />
                     </div>
                     <div className="text-sm text-muted-foreground space-y-0.5">{contact.phone && <p>{contact.phone}</p>}<a href={`mailto:${contact.email}`} className="text-primary hover:underline block">{contact.email}</a></div>
+                    <MailCodeBadges codes={contact.mailCodes} />
                   </div>
                   <div className="flex items-center gap-1">
                     {index !== primaryIndex && <Button variant="ghost" size="sm" onClick={() => handleSetPrimary(index)} className="text-xs"><Star className="h-3 w-3 mr-1" /> Set Primary</Button>}

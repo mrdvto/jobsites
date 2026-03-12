@@ -130,8 +130,12 @@ const migrateProjectCompanies = (companies: any[]): ProjectCompany[] => {
   if (!companies || companies.length === 0) return [];
   
   return companies.map(company => {
+    // Ensure roleIds/roleDescriptions are populated
+    const roleIds = company.roleIds || [company.roleId];
+    const roleDescriptions = company.roleDescriptions || [company.roleDescription];
+
     if (company.companyContacts && Array.isArray(company.companyContacts)) {
-      return company as ProjectCompany;
+      return { ...company, roleIds, roleDescriptions } as ProjectCompany;
     }
     
     const contacts: CompanyContact[] = [];
@@ -150,6 +154,8 @@ const migrateProjectCompanies = (companies: any[]): ProjectCompany[] => {
       companyName: company.companyName,
       roleId: company.roleId,
       roleDescription: company.roleDescription,
+      roleIds,
+      roleDescriptions,
       isPrimaryContact: company.isPrimaryContact,
       companyContacts: contacts,
       primaryContactIndex: 0,

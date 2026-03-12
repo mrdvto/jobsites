@@ -309,9 +309,9 @@
                     "roleDescription": "Subcontractor - Excavation",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 3, "name": "Carlos Mendez", "title": "Equipment Operator Lead", "phone": "312-555-0194", "email": "c.mendez@graniteexcavation.com" },
-                        { "id": 4, "name": "Tanya Brooks", "title": "Safety Coordinator", "phone": "312-555-0195", "email": "t.brooks@graniteexcavation.com" },
-                        { "id": 5, "name": "William Park", "title": "Project Estimator", "phone": "312-555-0196", "email": "w.park@graniteexcavation.com" }
+                        { "id": 3, "name": "Carlos Mendez", "title": "Equipment Operator Lead", "phone": "312-555-0194", "email": "c.mendez@graniteexcavation.com", "divisionIds": ["G"] },
+                        { "id": 4, "name": "Tanya Brooks", "title": "Safety Coordinator", "phone": "312-555-0195", "email": "t.brooks@graniteexcavation.com", "divisionIds": ["G", "R"] },
+                        { "id": 5, "name": "William Park", "title": "Project Estimator", "phone": "312-555-0196", "email": "w.park@graniteexcavation.com", "divisionIds": ["G"] }
                     ],
                     "primaryContactIndex": 0
                 }

@@ -838,7 +838,8 @@ const ProjectDetail = () => {
           <ProjectCompaniesTable
             projectId={project.id}
             companies={project.projectCompanies.filter((c) => c.roleId !== 'OWNER')}
-            onRemoveCompany={initiateRemoveCompany} />
+            onRemoveCompany={initiateRemoveCompany}
+            showCustomerNumber={showCustomerNumber} />
 
           }
         </Card>

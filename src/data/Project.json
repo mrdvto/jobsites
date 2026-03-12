@@ -688,8 +688,8 @@
                     "roleDescription": "Property Owner",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 1, "name": "Dr. Alan Grant", "title": "University Liaison", "phone": "217-555-3993", "email": "agrant@university.edu" },
-                        { "id": 2, "name": "Susan Cho", "title": "Director of Capital Programs", "phone": "217-555-3994", "email": "scho@university.edu" }
+                        { "id": 1, "name": "Dr. Alan Grant", "title": "University Liaison", "phone": "217-555-3993", "email": "agrant@university.edu", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Susan Cho", "title": "Director of Capital Programs", "phone": "217-555-3994", "email": "scho@university.edu", "divisionIds": ["G", "S"] }
                     ],
                     "primaryContactIndex": 0
                 },

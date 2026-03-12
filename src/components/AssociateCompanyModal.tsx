@@ -121,7 +121,7 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
     // Mark primary contact
     const finalContacts = contactsToInclude.map((c: any) => ({ ...c }));
 
-    addProjectCompany(projectId, {
+    const companyData: any = {
       companyId: company.companyId || `ASSOC-${Date.now()}`,
       companyName: company.companyName,
       roleId: selectedRoles[0],
@@ -130,10 +130,11 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
       roleDescriptions,
       isPrimaryContact: primaryContactId !== null,
       companyContacts: finalContacts,
-    } as any);
+    };
     if (primaryContactId !== null) {
-      // primaryContactIndex will be set via the data context's any-typed param
+      companyData.primaryContactIndex = finalContacts.findIndex((c: any) => c.id === primaryContactId);
     }
+    addProjectCompany(projectId, companyData);
     toast({ title: "Success", description: `${company.companyName} associated as ${roleDescriptions.join(', ')}.` });
     resetForm();
     onOpenChange(false);

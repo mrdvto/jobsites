@@ -285,8 +285,8 @@
                     "roleDescription": "Property Owner",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 1, "name": "Karen Fields", "title": "Property Manager", "phone": "630-555-1234", "email": "kfields@centennialre.com" },
-                        { "id": 2, "name": "James Whitfield", "title": "VP of Facilities", "phone": "630-555-1235", "email": "jwhitfield@centennialre.com" }
+                        { "id": 1, "name": "Karen Fields", "title": "Property Manager", "phone": "630-555-1234", "email": "kfields@centennialre.com", "divisionIds": ["C"] },
+                        { "id": 2, "name": "James Whitfield", "title": "VP of Facilities", "phone": "630-555-1235", "email": "jwhitfield@centennialre.com", "divisionIds": ["C", "G"] }
                     ],
                     "primaryContactIndex": 0
                 },

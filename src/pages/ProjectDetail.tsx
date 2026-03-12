@@ -28,6 +28,7 @@ import { ActivityFilterBadges } from '@/components/ActivityFilterBadges';
 import { NotesSection } from '@/components/NotesSection';
 import { ProjectCompaniesTable } from '@/components/ProjectCompaniesTable';
 import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';
+import { CreateEquipmentModal } from '@/components/CreateEquipmentModal';
 import { CreateProspectModal, type ProspectData } from '@/components/CreateProspectModal';
 import { getRoleLabel } from '@/components/RoleMultiSelect';
 import { Input } from '@/components/ui/input';

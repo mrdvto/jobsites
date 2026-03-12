@@ -846,6 +846,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         getCompanyEquipment,
         getEquipmentProjectAssignment,
         addCustomerEquipment,
+        addEquipmentToMaster,
         deleteCustomerEquipment,
         setNoteTags,
         getSalesRepName,

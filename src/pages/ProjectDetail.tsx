@@ -45,7 +45,7 @@ type LocationViewType = 'address' | 'coordinates';
 const ProjectDetail = () => {
   const { id } = useParams<{id: string;}>();
   const navigate = useNavigate();
-  const { projects, getSalesRepName, getSalesRepNames, getUserName, getUserNames, opportunities, getStageName, getStage, removeProjectCompany, updateProject, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, deleteCustomerEquipment, getCompanyById, getLookupLabel, getEquipmentById, addProjectCompany } = useData();
+  const { projects, getSalesRepName, getSalesRepNames, getUserName, getUserNames, opportunities, getStageName, getStage, removeProjectCompany, updateProject, deleteActivity, noteTags, addNote, updateNote, deleteNote, addCustomerEquipment, deleteCustomerEquipment, getCompanyById, getLookupLabel, getEquipmentById, addProjectCompany, addEquipmentToMaster } = useData();
   const { statusColors, getStatusColorClasses } = useStatusColors();
   const { toast } = useToast();
   const [selectedOpportunity, setSelectedOpportunity] = useState<any>(null);

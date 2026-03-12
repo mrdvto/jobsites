@@ -293,7 +293,7 @@ function SearchableSelect({
 interface CreateEquipmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (equipmentId: number) => void;
+  onSave: (equipment: CustomerEquipment) => void;
   projectId: number;
   projectCompanies: ProjectCompany[];
 }

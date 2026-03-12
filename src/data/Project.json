@@ -204,8 +204,8 @@
                     "roleDescription": "Property Owner",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 1, "name": "Richard Hale", "title": "District Engineer", "phone": "217-555-0000", "email": "dist3@idot.gov" },
-                        { "id": 2, "name": "Patricia Nguyen", "title": "Project Liaison", "phone": "217-555-0001", "email": "p.nguyen@idot.gov" }
+                        { "id": 1, "name": "Richard Hale", "title": "District Engineer", "phone": "217-555-0000", "email": "dist3@idot.gov", "divisionIds": ["P"] },
+                        { "id": 2, "name": "Patricia Nguyen", "title": "Project Liaison", "phone": "217-555-0001", "email": "p.nguyen@idot.gov", "divisionIds": ["P", "G"] }
                     ],
                     "primaryContactIndex": 0
                 },

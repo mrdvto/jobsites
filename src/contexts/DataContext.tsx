@@ -471,7 +471,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
       if (filters.generalContractor) {
         const hasMatchingGC = project.projectCompanies.some(
-          company => company.roleId === 'GC' && company.companyName.toLowerCase().includes(filters.generalContractor.toLowerCase())
+          company => {
+            const roles = company.roleIds || [company.roleId];
+            return roles.includes('GC') && company.companyName.toLowerCase().includes(filters.generalContractor.toLowerCase());
+          }
         );
         if (!hasMatchingGC) return false;
       }

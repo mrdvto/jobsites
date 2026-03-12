@@ -980,7 +980,7 @@
                     "roleDescription": "Property Owner",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 1, "name": "Thomas Keane", "title": "District Engineer", "phone": "815-555-3300", "email": "tkeane@illinois.gov" }
+                        { "id": 1, "name": "Thomas Keane", "title": "District Engineer", "phone": "815-555-3300", "email": "tkeane@illinois.gov", "divisionIds": ["G", "P"] }
                     ],
                     "primaryContactIndex": 0
                 },

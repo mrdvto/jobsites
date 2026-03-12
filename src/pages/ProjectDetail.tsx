@@ -809,7 +809,11 @@ const ProjectDetail = () => {
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Companies</h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="show-customer-number" className="text-xs text-muted-foreground cursor-pointer">Customer #</Label>
+                <Switch id="show-customer-number" checked={showCustomerNumber} onCheckedChange={setShowCustomerNumber} />
+              </div>
               <Button
                 variant="outline"
                 size="sm"

@@ -1287,11 +1287,27 @@ const ProjectDetail = () => {
         onOpenChange={setShowCreateProspectModal}
         onSave={(data: ProspectData) => {
           const companyId = `PROSPECT-${Date.now()}`;
+          const roleIds = data.roleIds.length > 0 ? data.roleIds : ['PROSPECT'];
+          const roleDescriptions = roleIds.map(id => {
+            const found = [
+              { id: 'GC', label: 'General Contractor' },
+              { id: 'SUB-EXC', label: 'Subcontractor - Excavation' },
+              { id: 'SUB-PAV', label: 'Subcontractor - Paving' },
+              { id: 'SUB-ELEC', label: 'Subcontractor - Electrical' },
+              { id: 'SUB-MECH', label: 'Subcontractor - Mechanical' },
+              { id: 'SUB-SPEC', label: 'Subcontractor - Specialized' },
+              { id: 'SUB-STEEL', label: 'Subcontractor - Steel' },
+              { id: 'PROSPECT', label: 'Prospect' },
+            ].find(r => r.id === id);
+            return found?.label || id;
+          });
           addProjectCompany(project.id, {
             companyId,
             companyName: data.companyName,
-            roleId: 'PROSPECT',
-            roleDescription: 'Prospect',
+            roleId: roleIds[0],
+            roleDescription: roleDescriptions[0],
+            roleIds,
+            roleDescriptions,
             isPrimaryContact: false,
             divisionIds: data.divisionIds,
             companyContacts: [{

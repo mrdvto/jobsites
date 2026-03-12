@@ -5,15 +5,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { CompanyContact, ProjectCompany } from '@/types';
-import { Star, Pencil, Trash2, Plus, X, Check, UserPlus } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Star, Pencil, Trash2, Plus, X, Check, UserPlus, ChevronDown, ChevronRight, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useData } from '@/contexts/DataContext';
 import { DIVISIONS, getDivisionName } from '@/contexts/DataContext';
 import { CreateContactForm } from './CreateContactForm';
-
+import mailCodesData from '@/data/MailCodes.json';
 interface ManageCompanyContactsModalProps {
   company: ProjectCompany;
   allCompanyContacts: CompanyContact[];

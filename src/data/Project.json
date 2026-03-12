@@ -135,9 +135,9 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        { "id": 1, "name": "Aisha Bartlett", "title": "Procurement Manager", "phone": "815-555-0332", "email": "aisha.bartlett@mortenson.com" },
-                        { "id": 2, "name": "Brian Sullivan", "title": "Project Executive", "phone": "815-555-0333", "email": "b.sullivan@mortenson.com" },
-                        { "id": 3, "name": "Christine Ng", "title": "Field Engineer", "phone": "815-555-0334", "email": "c.ng@mortenson.com" }
+                        { "id": 1, "name": "Aisha Bartlett", "title": "Procurement Manager", "phone": "815-555-0332", "email": "aisha.bartlett@mortenson.com", "divisionIds": ["G", "C"] },
+                        { "id": 2, "name": "Brian Sullivan", "title": "Project Executive", "phone": "815-555-0333", "email": "b.sullivan@mortenson.com", "divisionIds": ["G"] },
+                        { "id": 3, "name": "Christine Ng", "title": "Field Engineer", "phone": "815-555-0334", "email": "c.ng@mortenson.com", "divisionIds": ["G", "P"] }
                     ],
                     "primaryContactIndex": 0
                 },

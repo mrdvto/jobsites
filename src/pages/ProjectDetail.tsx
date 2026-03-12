@@ -302,6 +302,21 @@ const ProjectDetail = () => {
       case 'description':
         cmp = (a.description || '').localeCompare(b.description || '');
         break;
+      case 'company': {
+        const compA = project.projectCompanies?.find(c => c.companyId === a.customerId)?.companyName || '';
+        const compB = project.projectCompanies?.find(c => c.companyId === b.customerId)?.companyName || '';
+        cmp = compA.localeCompare(compB);
+        break;
+      }
+      case 'contact':
+        cmp = (a.contactName || '').localeCompare(b.contactName || '');
+        break;
+      case 'role': {
+        const roleA = (project.projectCompanies?.find(c => c.companyId === a.customerId)?.roleDescriptions || []).join(', ');
+        const roleB = (project.projectCompanies?.find(c => c.companyId === b.customerId)?.roleDescriptions || []).join(', ');
+        cmp = roleA.localeCompare(roleB);
+        break;
+      }
     }
     return actSortDirection === 'asc' ? cmp : -cmp;
   });

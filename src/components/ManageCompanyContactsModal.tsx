@@ -155,6 +155,56 @@ export const ManageCompanyContactsModal = ({ company, allCompanyContacts, open, 
                       ))}
                     </div>
                   </div>
+                  {/* Additional Fields - Mail Codes */}
+                  <Collapsible>
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" size="sm" className="w-full justify-start text-xs text-muted-foreground hover:text-foreground px-0">
+                        <ChevronRight className="h-3.5 w-3.5 mr-1.5 collapsible-chevron" />
+                        Additional Fields
+                        {editForm.mailCodes.length > 0 && (
+                          <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">{editForm.mailCodes.length}</Badge>
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-2 pt-2">
+                      <Label className="text-xs">Mail Codes</Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" size="sm" className="w-full justify-between h-8 text-xs font-normal">
+                            {editForm.mailCodes.length === 0 ? 'Select mail codes...' : `${editForm.mailCodes.length} selected`}
+                            <ChevronsUpDown className="h-3.5 w-3.5 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[350px] p-0" align="start">
+                          <Command>
+                            <CommandInput placeholder="Search mail codes..." className="h-8" />
+                            <CommandList>
+                              <CommandEmpty>No mail codes found.</CommandEmpty>
+                              <CommandGroup className="max-h-[200px] overflow-y-auto">
+                                {mailCodesData.map(mc => (
+                                  <CommandItem key={mc.code} value={`${mc.code} ${mc.description}`} onSelect={() => toggleEditMailCode(mc.code)} className="text-xs">
+                                    <Checkbox checked={editForm.mailCodes.includes(mc.code)} className="mr-2 h-3.5 w-3.5" />
+                                    <span className="font-mono font-medium mr-2">{mc.code}</span>
+                                    <span className="text-muted-foreground truncate">{mc.description}</span>
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      {editForm.mailCodes.length > 0 && (
+                        <div className="flex gap-1 flex-wrap">
+                          {editForm.mailCodes.map(code => (
+                            <Badge key={code} variant="secondary" className="text-[10px] px-1.5 py-0.5 gap-1">
+                              <span className="font-mono">{code}</span>
+                              <button onClick={() => toggleEditMailCode(code)} className="ml-0.5 hover:text-destructive"><X className="h-3 w-3" /></button>
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </CollapsibleContent>
+                  </Collapsible>
                   <div className="flex justify-end gap-2"><Button variant="ghost" size="sm" onClick={handleCancelEdit}><X className="h-4 w-4 mr-1" /> Cancel</Button><Button size="sm" onClick={() => handleSaveEdit(contact.id)}><Check className="h-4 w-4 mr-1" /> Save</Button></div>
                 </div>
               ) : (

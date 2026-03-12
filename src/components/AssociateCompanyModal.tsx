@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -27,6 +28,8 @@ const ROLE_OPTIONS = [
   { id: 'ARCHITECT', label: 'Architect' }, { id: 'ENGINEER', label: 'Engineer' }, { id: 'OTHER', label: 'Other' },
 ];
 
+const isProspect = (companyId: string) => companyId.startsWith('$');
+
 export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, onOpenChange }: AssociateCompanyModalProps) => {
   const { projects, addProjectCompany } = useData();
   const { toast } = useToast();
@@ -34,6 +37,7 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
   const [selectedRole, setSelectedRole] = useState('');
   const [isPrimaryContact, setIsPrimaryContact] = useState(false);
   const [comboboxOpen, setComboboxOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const availableCompanies = useMemo(() => {
     const companiesMap = new Map();
@@ -44,6 +48,12 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
     });
     return Array.from(companiesMap.values()).sort((a: any, b: any) => a.companyName.localeCompare(b.companyName));
   }, [projects, currentCompanyNames]);
+
+  const filteredCompanies = useMemo(() => {
+    if (searchQuery.length < 2) return [];
+    const query = searchQuery.toLowerCase();
+    return availableCompanies.filter((c: any) => c.companyName.toLowerCase().includes(query)).slice(0, 20);
+  }, [availableCompanies, searchQuery]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +67,7 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
       companyContacts: allContacts.length > 0 ? allContacts : [{ id: 1, name: 'Contact Required', phone: '', email: '' }]
     });
     toast({ title: "Success", description: `${company.companyName} associated as ${roleOption.label}.` });
-    setSelectedCompany(''); setSelectedRole(''); setIsPrimaryContact(false); setComboboxOpen(false); onOpenChange(false);
+    setSelectedCompany(''); setSelectedRole(''); setIsPrimaryContact(false); setComboboxOpen(false); setSearchQuery(''); onOpenChange(false);
   };
 
   return (
@@ -75,13 +85,26 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
                   <Popover open={comboboxOpen} onOpenChange={setComboboxOpen}>
                     <PopoverTrigger asChild><Button id="company" variant="outline" role="combobox" aria-expanded={comboboxOpen} className="w-full justify-between">{selectedCompany || "Select a company..."}<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" /></Button></PopoverTrigger>
                     <PopoverContent className="w-[--radix-popover-trigger-width] p-0 bg-popover z-50">
-                      <Command><CommandInput placeholder="Search companies..." /><CommandList><CommandEmpty>No company found.</CommandEmpty><CommandGroup>
-                        {availableCompanies.map((company: any) => (
-                          <CommandItem key={company.companyName} value={company.companyName} onSelect={(v) => { setSelectedCompany(v === selectedCompany ? "" : v); setComboboxOpen(false); }}>
-                            <Check className={cn("mr-2 h-4 w-4", selectedCompany === company.companyName ? "opacity-100" : "opacity-0")} />{company.companyName}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup></CommandList></Command>
+                      <Command shouldFilter={false}>
+                        <CommandInput placeholder="Search companies..." value={searchQuery} onValueChange={setSearchQuery} />
+                        <CommandList>
+                          {searchQuery.length < 2 ? (
+                            <div className="py-6 text-center text-sm text-muted-foreground">Type at least 2 characters to search...</div>
+                          ) : filteredCompanies.length === 0 ? (
+                            <CommandEmpty>No company found.</CommandEmpty>
+                          ) : (
+                            <CommandGroup>
+                              {filteredCompanies.map((company: any) => (
+                                <CommandItem key={company.companyName} value={company.companyName} onSelect={(v) => { setSelectedCompany(v === selectedCompany ? "" : v); setComboboxOpen(false); }}>
+                                  <Check className={cn("mr-2 h-4 w-4", selectedCompany === company.companyName ? "opacity-100" : "opacity-0")} />
+                                  <span className="flex-1">{company.companyName}</span>
+                                  {isProspect(company.companyId || '') && <Badge className="bg-amber-500/15 text-amber-700 border-amber-300 text-[10px] px-1.5 py-0 ml-2">Prospect</Badge>}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          )}
+                        </CommandList>
+                      </Command>
                     </PopoverContent>
                   </Popover>
                 </div>

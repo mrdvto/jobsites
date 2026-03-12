@@ -6,8 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ManageCompanyContactsModal } from './ManageCompanyContactsModal';
-import { ChevronRight, ChevronDown, Star, Pencil, X, Phone, Mail, Users, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
-
+import { ChevronRight, ChevronDown, Star, Pencil, X, Phone, Mail, Users, ArrowUpDown, ArrowUp, ArrowDown, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ProjectCompaniesTableProps {
@@ -16,12 +15,15 @@ interface ProjectCompaniesTableProps {
   onRemoveCompany: (companyName: string) => void;
 }
 
+const isProspect = (companyId: string) => companyId.startsWith('$');
+
 export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }: ProjectCompaniesTableProps) => {
   const { updateProjectCompany, projects } = useData();
   const [expandedCompanies, setExpandedCompanies] = useState<Set<string>>(new Set());
   const [editingCompany, setEditingCompany] = useState<ProjectCompany | null>(null);
-  const [sortColumn, setSortColumn] = useState<'company' | 'role' | 'contacts' | null>(null);
+  const [sortColumn, setSortColumn] = useState<'company' | 'role' | 'contacts' | 'customerNumber' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [showCustomerNumber, setShowCustomerNumber] = useState(false);
 
   const getAllCompanyContacts = (companyName: string) => {
     const contactsMap = new Map<string, typeof companies[0]['companyContacts'][0]>();
@@ -51,14 +53,14 @@ export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }:
     }
   };
 
-  const handleSort = (column: 'company' | 'role' | 'contacts') => {
+  const handleSort = (column: typeof sortColumn) => {
     if (sortColumn === column) {
       if (sortDirection === 'asc') setSortDirection('desc');
       else { setSortDirection(null); setSortColumn(null); }
     } else { setSortColumn(column); setSortDirection('asc'); }
   };
 
-  const SortIcon = ({ column }: { column: 'company' | 'role' | 'contacts' }) => {
+  const SortIcon = ({ column }: { column: typeof sortColumn }) => {
     if (sortColumn !== column) return <ArrowUpDown className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-50 transition-opacity" />;
     if (sortDirection === 'asc') return <ArrowUp className="h-4 w-4 ml-1" />;
     return <ArrowDown className="h-4 w-4 ml-1" />;
@@ -71,9 +73,12 @@ export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }:
       case 'company': cmp = a.companyName.localeCompare(b.companyName); break;
       case 'role': cmp = (a.roleDescription || '').localeCompare(b.roleDescription || ''); break;
       case 'contacts': cmp = (a.companyContacts?.length || 0) - (b.companyContacts?.length || 0); break;
+      case 'customerNumber': cmp = (a.companyId || '').localeCompare(b.companyId || ''); break;
     }
     return sortDirection === 'asc' ? cmp : -cmp;
   });
+
+  const colSpanCount = showCustomerNumber ? 6 : 5;
 
   if (companies.length === 0) {
     return <p className="text-center text-muted-foreground py-8">No companies associated with this project yet.</p>;
@@ -81,13 +86,21 @@ export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }:
 
   return (
     <>
+      <div className="flex justify-end mb-2">
+        <Button variant="ghost" size="sm" onClick={() => setShowCustomerNumber(!showCustomerNumber)} className="text-xs gap-1.5">
+          {showCustomerNumber ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+          Customer #
+        </Button>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[40px]"></TableHead>
             <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('company')}><div className="flex items-center">Company<SortIcon column="company" /></div></TableHead>
             <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('role')}><div className="flex items-center">Role<SortIcon column="role" /></div></TableHead>
-            
+            {showCustomerNumber && (
+              <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('customerNumber')}><div className="flex items-center">Customer #<SortIcon column="customerNumber" /></div></TableHead>
+            )}
             <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('contacts')}><div className="flex items-center">Contacts<SortIcon column="contacts" /></div></TableHead>
             <TableHead className="w-[120px]"></TableHead>
           </TableRow>
@@ -98,6 +111,7 @@ export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }:
             const contacts = company.companyContacts || [];
             const primaryContact = contacts[company.primaryContactIndex || 0];
             const contactCount = contacts.length;
+            const prospect = isProspect(company.companyId || '');
             return (
               <Collapsible key={idx} asChild open={isExpanded} onOpenChange={() => toggleExpanded(company.companyName)}>
                 <>
@@ -105,8 +119,16 @@ export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }:
                     <TableCell className="p-2">
                       <CollapsibleTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8">{isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}</Button></CollapsibleTrigger>
                     </TableCell>
-                    <TableCell className="font-medium">{company.companyName}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        {company.companyName}
+                        {prospect && <Badge className="bg-amber-500/15 text-amber-700 border-amber-300 hover:bg-amber-500/25 text-[10px] px-1.5 py-0">Prospect</Badge>}
+                      </div>
+                    </TableCell>
                     <TableCell><Badge variant={company.roleId === 'GC' ? 'default' : 'secondary'}>{company.roleDescription}</Badge></TableCell>
+                    {showCustomerNumber && (
+                      <TableCell className="text-sm text-muted-foreground font-mono">{company.companyId}</TableCell>
+                    )}
                     <TableCell><div className="flex items-center gap-2"><Users className="h-4 w-4 text-muted-foreground" /><span className="text-sm">{contactCount} {contactCount === 1 ? 'person' : 'people'}</span></div></TableCell>
                     <TableCell>
                       <div className="flex gap-1 justify-end">
@@ -116,7 +138,7 @@ export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany }:
                     </TableCell>
                   </TableRow>
                   <CollapsibleContent asChild>
-                    <tr><td colSpan={5} className="p-0">
+                    <tr><td colSpan={colSpanCount} className="p-0">
                       <div className="bg-muted/30 border-b px-6 py-4">
                         <div className="grid gap-3">
                           {contacts.map((contact, contactIdx) => (

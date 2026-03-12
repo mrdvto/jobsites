@@ -217,14 +217,6 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     return e;
   }, [submitted, companyName, divisionIds, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
 
-  const toggleRole = useCallback((roleId: string) => {
-    setSelectedRoles(prev => prev.includes(roleId) ? prev.filter(r => r !== roleId) : [...prev, roleId]);
-  }, []);
-
-  const removeRole = useCallback((roleId: string) => {
-    setSelectedRoles(prev => prev.filter(r => r !== roleId));
-  }, []);
-
   const resetForm = useCallback(() => {
     setCompanyName(''); setPhone(''); setDivisionIds([]); setSelectedRoles([]);
     setAddress1(''); setAddress2(''); setAddress3('');

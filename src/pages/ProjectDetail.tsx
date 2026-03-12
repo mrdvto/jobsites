@@ -19,6 +19,9 @@ import { AssociateCompanyModal } from '@/components/AssociateCompanyModal';
 import { EditProjectModal } from '@/components/EditProjectModal';
 
 import { ActivityModal } from '@/components/ActivityModal';
+import { ActivityColumnSelector } from '@/components/ActivityColumnSelector';
+import { useActivityColumnVisibility, ACTIVITY_COLUMN_LABELS } from '@/hooks/useActivityColumnVisibility';
+import type { ActivityColumnId } from '@/hooks/useActivityColumnVisibility';
 import { AssociateActivityModal } from '@/components/AssociateActivityModal';
 import { NotesSection } from '@/components/NotesSection';
 import { ProjectCompaniesTable } from '@/components/ProjectCompaniesTable';
@@ -80,6 +83,7 @@ const ProjectDetail = () => {
 
   // Sort state for Activities table
   const [actSortColumn, setActSortColumn] = useState<'assignee' | 'company' | 'contact' | 'role' | 'activityType' | 'date' | 'status' | 'description' | null>('date');
+  const actColVis = useActivityColumnVisibility();
   const [actSortDirection, setActSortDirection] = useState<'asc' | 'desc' | null>('desc');
 
   // Sort state for Equipment table
@@ -866,9 +870,15 @@ const ProjectDetail = () => {
         </Card>
 
         <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Activities</h2>
             <div className="flex gap-2">
+              <ActivityColumnSelector
+                visibleColumns={actColVis.visibleColumns}
+                toggleColumn={actColVis.toggleColumn}
+                isVisible={actColVis.isVisible}
+                moveColumn={actColVis.moveColumn}
+              />
               <Button
                 variant="outline"
                 size="sm"
@@ -892,30 +902,18 @@ const ProjectDetail = () => {
           <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('assignee')}>
-                    <div className="flex items-center">Assignee<SortIcon active={actSortColumn === 'assignee'} direction={actSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('company')}>
-                    <div className="flex items-center">Company<SortIcon active={actSortColumn === 'company'} direction={actSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('contact')}>
-                    <div className="flex items-center">Contact<SortIcon active={actSortColumn === 'contact'} direction={actSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('role')}>
-                    <div className="flex items-center">Role<SortIcon active={actSortColumn === 'role'} direction={actSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('activityType')}>
-                    <div className="flex items-center">Activity Type<SortIcon active={actSortColumn === 'activityType'} direction={actSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('date')}>
-                    <div className="flex items-center">Date<SortIcon active={actSortColumn === 'date'} direction={actSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('status')}>
-                    <div className="flex items-center">Status<SortIcon active={actSortColumn === 'status'} direction={actSortDirection} /></div>
-                  </TableHead>
-                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('description')}>
-                    <div className="flex items-center">Description<SortIcon active={actSortColumn === 'description'} direction={actSortDirection} /></div>
-                  </TableHead>
+                  {actColVis.visibleColumns.map(colId => (
+                    <TableHead
+                      key={colId}
+                      className="cursor-pointer select-none group hover:bg-muted/50"
+                      onClick={() => handleActSort(colId)}
+                    >
+                      <div className="flex items-center">
+                        {ACTIVITY_COLUMN_LABELS[colId]}
+                        <SortIcon active={actSortColumn === colId} direction={actSortDirection} />
+                      </div>
+                    </TableHead>
+                  ))}
                   <TableHead className="w-[80px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -924,61 +922,76 @@ const ProjectDetail = () => {
                 const parentActivity = activity.previousRelatedActivityId
                   ? project.activities?.find(a => a.id === activity.previousRelatedActivityId)
                   : undefined;
+                const actCompany = project.projectCompanies?.find(c => c.companyId === activity.customerId);
+
+                const renderCell = (colId: ActivityColumnId) => {
+                  switch (colId) {
+                    case 'assignee':
+                      return <TableCell key={colId} className="font-medium">{getSalesRepName(activity.salesRepId)}</TableCell>;
+                    case 'company':
+                      return <TableCell key={colId} className="text-sm">{actCompany?.companyName || '—'}</TableCell>;
+                    case 'contact':
+                      return <TableCell key={colId} className="text-sm">{activity.contactName || '—'}</TableCell>;
+                    case 'role':
+                      return (
+                        <TableCell key={colId}>
+                          {actCompany ? (
+                            <div className="flex flex-wrap gap-1">
+                              {(actCompany.roleDescriptions || [actCompany.roleDescription]).filter(Boolean).map((role, i) => (
+                                <Badge key={i} variant="outline" className="text-xs">{role}</Badge>
+                              ))}
+                            </div>
+                          ) : '—'}
+                        </TableCell>
+                      );
+                    case 'activityType':
+                      return (
+                        <TableCell key={colId}>
+                          <Badge variant="outline">{({E:'Email',P:'Phone',F:'Face-to-Face',Q:'Quote'} as Record<string,string>)[activity.typeId] || activity.typeId}</Badge>
+                        </TableCell>
+                      );
+                    case 'date':
+                      return <TableCell key={colId} className="text-sm">{new Date(activity.date).toLocaleDateString()}</TableCell>;
+                    case 'status':
+                      return (
+                        <TableCell key={colId}>
+                          <Badge
+                            variant="outline"
+                            className={activity.statusId === 2
+                              ? "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
+                              : "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-300"
+                            }
+                          >
+                            {activity.statusId === 2 ? 'Completed' : 'Outstanding'}
+                          </Badge>
+                        </TableCell>
+                      );
+                    case 'description':
+                      return (
+                        <TableCell key={colId} className="text-sm">
+                          <div className="flex items-center gap-1.5">
+                            {parentActivity && (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Link2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="text-xs">Follow-up to: {parentActivity.description}</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            )}
+                            {activity.description}
+                          </div>
+                        </TableCell>
+                      );
+                  }
+                };
+
                 return (
                 <TableRow key={activity.id}>
-                    <TableCell className="font-medium">{getSalesRepName(activity.salesRepId)}</TableCell>
-                    {(() => {
-                      const actCompany = project.projectCompanies?.find(c => c.companyId === activity.customerId);
-                      return (
-                        <>
-                          <TableCell className="hidden lg:table-cell text-sm">{actCompany?.companyName || '—'}</TableCell>
-                          <TableCell className="hidden lg:table-cell text-sm">{activity.contactName || '—'}</TableCell>
-                          <TableCell className="hidden lg:table-cell">
-                            {actCompany ? (
-                              <div className="flex flex-wrap gap-1">
-                                {(actCompany.roleDescriptions || [actCompany.roleDescription]).filter(Boolean).map((role, i) => (
-                                  <Badge key={i} variant="outline" className="text-xs">{role}</Badge>
-                                ))}
-                              </div>
-                            ) : '—'}
-                          </TableCell>
-                        </>
-                      );
-                    })()}
-                    <TableCell>
-                      <Badge variant="outline">{({E:'Email',P:'Phone',F:'Face-to-Face',Q:'Quote'} as Record<string,string>)[activity.typeId] || activity.typeId}</Badge>
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {new Date(activity.date).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={activity.statusId === 2
-                          ? "border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-700 dark:bg-emerald-950 dark:text-emerald-300"
-                          : "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-300"
-                        }
-                      >
-                        {activity.statusId === 2 ? 'Completed' : 'Outstanding'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="hidden lg:table-cell text-sm">
-                      <div className="flex items-center gap-1.5">
-                        {parentActivity && (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Link2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p className="text-xs">Follow-up to: {parentActivity.description}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                        {activity.description}
-                      </div>
-                    </TableCell>
+                    {actColVis.visibleColumns.map(renderCell)}
                     <TableCell>
                       <div className="flex gap-1">
                         {activity.statusId === 2 && (

@@ -903,6 +903,33 @@ const ProjectDetail = () => {
             <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Activities</h2>
             <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5"
+                onClick={() => setShowActFilterModal(true)}
+              >
+                <Filter className="h-4 w-4" />
+                Filters
+                {(() => {
+                  const count = [
+                    actFilters.assigneeIds.length > 0,
+                    actFilters.companyIds.length > 0,
+                    actFilters.contactNames.length > 0,
+                    actFilters.roleIds.length > 0,
+                    actFilters.typeIds.length > 0,
+                    actFilters.statuses.length > 0,
+                    actFilters.dateFrom !== undefined,
+                    actFilters.dateTo !== undefined,
+                    actFilters.hideCompleted,
+                  ].filter(Boolean).length;
+                  return count > 0 ? (
+                    <span className="ml-0.5 rounded bg-primary px-1.5 py-0.5 text-[10px] font-semibold leading-none text-primary-foreground">
+                      {count}
+                    </span>
+                  ) : null;
+                })()}
+              </Button>
               <ActivityColumnSelector
                 visibleColumns={actColVis.visibleColumns}
                 toggleColumn={actColVis.toggleColumn}
@@ -922,6 +949,13 @@ const ProjectDetail = () => {
               </Button>
             </div>
           </div>
+
+          <ActivityFilterBadges
+            filters={actFilters}
+            setFilters={setActFilters}
+            projectCompanies={project.projectCompanies || []}
+            getSalesRepName={getSalesRepName}
+          />
 
           {!project.activities || project.activities.length === 0 ?
           <p className="text-center text-muted-foreground py-8">

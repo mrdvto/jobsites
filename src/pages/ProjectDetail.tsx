@@ -22,6 +22,8 @@ import { ActivityModal } from '@/components/ActivityModal';
 import { ActivityColumnSelector } from '@/components/ActivityColumnSelector';
 import { useActivityColumnVisibility, ACTIVITY_COLUMN_LABELS } from '@/hooks/useActivityColumnVisibility';
 import type { ActivityColumnId } from '@/hooks/useActivityColumnVisibility';
+import { ActivityFilterModal, type ActivityFilters, DEFAULT_ACTIVITY_FILTERS } from '@/components/ActivityFilterModal';
+import { ActivityFilterBadges } from '@/components/ActivityFilterBadges';
 import { AssociateActivityModal } from '@/components/AssociateActivityModal';
 import { NotesSection } from '@/components/NotesSection';
 import { ProjectCompaniesTable } from '@/components/ProjectCompaniesTable';
@@ -34,6 +36,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { ArrowLeft, MapPin, User, Phone, Mail, Building2, Plus, Link as LinkIcon, X, Pencil, Calendar, Wrench, Search, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, History, ExternalLink, CornerDownRight, Link2, DollarSign, FileText, ClipboardList } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Activity, ProjectCompany, CustomerEquipment } from '@/types';
+import { Filter } from 'lucide-react';
 
 type LocationViewType = 'address' | 'coordinates';
 
@@ -85,6 +88,8 @@ const ProjectDetail = () => {
   const [actSortColumn, setActSortColumn] = useState<'assignee' | 'company' | 'contact' | 'role' | 'activityType' | 'date' | 'status' | 'description' | null>('date');
   const actColVis = useActivityColumnVisibility();
   const [actSortDirection, setActSortDirection] = useState<'asc' | 'desc' | null>('desc');
+  const [actFilters, setActFilters] = useState<ActivityFilters>(DEFAULT_ACTIVITY_FILTERS);
+  const [showActFilterModal, setShowActFilterModal] = useState(false);
 
   // Sort state for Equipment table
   const [eqSortColumn, setEqSortColumn] = useState<'type' | 'make' | 'model' | 'year' | 'serial' | 'smu' | 'ownership' | null>(null);
@@ -286,7 +291,32 @@ const ProjectDetail = () => {
     return oppSortDirection === 'asc' ? cmp : -cmp;
   });
 
-  const sortedActivities = [...(project.activities || [])].sort((a, b) => {
+  const filteredActivities = (project.activities || []).filter(activity => {
+    if (actFilters.assigneeIds.length > 0 && !actFilters.assigneeIds.includes(activity.salesRepId.toString())) return false;
+    if (actFilters.companyIds.length > 0 && (!activity.customerId || !actFilters.companyIds.includes(activity.customerId))) return false;
+    if (actFilters.contactNames.length > 0 && (!activity.contactName || !actFilters.contactNames.includes(activity.contactName))) return false;
+    if (actFilters.roleIds.length > 0) {
+      const company = project.projectCompanies?.find(c => c.companyId === activity.customerId);
+      if (!company) return false;
+      const companyRoles = company.roleIds || [company.roleId];
+      if (!actFilters.roleIds.some(r => companyRoles.includes(r))) return false;
+    }
+    if (actFilters.typeIds.length > 0 && !actFilters.typeIds.includes(activity.typeId)) return false;
+    if (actFilters.statuses.length > 0) {
+      const status = activity.statusId === 2 ? 'completed' : 'outstanding';
+      if (!actFilters.statuses.includes(status)) return false;
+    }
+    if (actFilters.dateFrom && new Date(activity.date) < actFilters.dateFrom) return false;
+    if (actFilters.dateTo) {
+      const end = new Date(actFilters.dateTo);
+      end.setHours(23, 59, 59, 999);
+      if (new Date(activity.date) > end) return false;
+    }
+    if (actFilters.hideCompleted && activity.statusId === 2) return false;
+    return true;
+  });
+
+  const sortedActivities = [...filteredActivities].sort((a, b) => {
     if (!actSortColumn || !actSortDirection) return 0;
     let cmp = 0;
     switch (actSortColumn) {
@@ -873,6 +903,33 @@ const ProjectDetail = () => {
             <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Activities</h2>
             <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5"
+                onClick={() => setShowActFilterModal(true)}
+              >
+                <Filter className="h-4 w-4" />
+                Filters
+                {(() => {
+                  const count = [
+                    actFilters.assigneeIds.length > 0,
+                    actFilters.companyIds.length > 0,
+                    actFilters.contactNames.length > 0,
+                    actFilters.roleIds.length > 0,
+                    actFilters.typeIds.length > 0,
+                    actFilters.statuses.length > 0,
+                    actFilters.dateFrom !== undefined,
+                    actFilters.dateTo !== undefined,
+                    actFilters.hideCompleted,
+                  ].filter(Boolean).length;
+                  return count > 0 ? (
+                    <span className="ml-0.5 rounded bg-primary px-1.5 py-0.5 text-[10px] font-semibold leading-none text-primary-foreground">
+                      {count}
+                    </span>
+                  ) : null;
+                })()}
+              </Button>
               <ActivityColumnSelector
                 visibleColumns={actColVis.visibleColumns}
                 toggleColumn={actColVis.toggleColumn}
@@ -892,6 +949,13 @@ const ProjectDetail = () => {
               </Button>
             </div>
           </div>
+
+          <ActivityFilterBadges
+            filters={actFilters}
+            setFilters={setActFilters}
+            projectCompanies={project.projectCompanies || []}
+            getSalesRepName={getSalesRepName}
+          />
 
           {!project.activities || project.activities.length === 0 ?
           <p className="text-center text-muted-foreground py-8">
@@ -1300,7 +1364,17 @@ const ProjectDetail = () => {
         currentActivityIds={project.activities?.map((a) => a.id) || []}
         open={showAssociateActivityModal}
         onOpenChange={setShowAssociateActivityModal} />
-      
+
+      <ActivityFilterModal
+        open={showActFilterModal}
+        onOpenChange={setShowActFilterModal}
+        filters={actFilters}
+        setFilters={setActFilters}
+        activities={project.activities || []}
+        projectCompanies={project.projectCompanies || []}
+        getSalesRepName={getSalesRepName}
+      />
+
 
       <AddCustomerEquipmentModal
         open={showEquipmentModal}

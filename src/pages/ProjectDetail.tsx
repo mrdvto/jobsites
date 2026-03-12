@@ -79,7 +79,7 @@ const ProjectDetail = () => {
   const [oppShowOpenOnly, setOppShowOpenOnly] = useState(true);
 
   // Sort state for Activities table
-  const [actSortColumn, setActSortColumn] = useState<'assignee' | 'activityType' | 'date' | 'status' | 'description' | null>('date');
+  const [actSortColumn, setActSortColumn] = useState<'assignee' | 'company' | 'contact' | 'role' | 'activityType' | 'date' | 'status' | 'description' | null>('date');
   const [actSortDirection, setActSortDirection] = useState<'asc' | 'desc' | null>('desc');
 
   // Sort state for Equipment table
@@ -302,6 +302,21 @@ const ProjectDetail = () => {
       case 'description':
         cmp = (a.description || '').localeCompare(b.description || '');
         break;
+      case 'company': {
+        const compA = project.projectCompanies?.find(c => c.companyId === a.customerId)?.companyName || '';
+        const compB = project.projectCompanies?.find(c => c.companyId === b.customerId)?.companyName || '';
+        cmp = compA.localeCompare(compB);
+        break;
+      }
+      case 'contact':
+        cmp = (a.contactName || '').localeCompare(b.contactName || '');
+        break;
+      case 'role': {
+        const roleA = (project.projectCompanies?.find(c => c.companyId === a.customerId)?.roleDescriptions || []).join(', ');
+        const roleB = (project.projectCompanies?.find(c => c.companyId === b.customerId)?.roleDescriptions || []).join(', ');
+        cmp = roleA.localeCompare(roleB);
+        break;
+      }
     }
     return actSortDirection === 'asc' ? cmp : -cmp;
   });
@@ -880,6 +895,15 @@ const ProjectDetail = () => {
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('assignee')}>
                     <div className="flex items-center">Assignee<SortIcon active={actSortColumn === 'assignee'} direction={actSortDirection} /></div>
                   </TableHead>
+                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('company')}>
+                    <div className="flex items-center">Company<SortIcon active={actSortColumn === 'company'} direction={actSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('contact')}>
+                    <div className="flex items-center">Contact<SortIcon active={actSortColumn === 'contact'} direction={actSortDirection} /></div>
+                  </TableHead>
+                  <TableHead className="hidden lg:table-cell cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('role')}>
+                    <div className="flex items-center">Role<SortIcon active={actSortColumn === 'role'} direction={actSortDirection} /></div>
+                  </TableHead>
                   <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleActSort('activityType')}>
                     <div className="flex items-center">Activity Type<SortIcon active={actSortColumn === 'activityType'} direction={actSortDirection} /></div>
                   </TableHead>
@@ -903,6 +927,24 @@ const ProjectDetail = () => {
                 return (
                 <TableRow key={activity.id}>
                     <TableCell className="font-medium">{getSalesRepName(activity.salesRepId)}</TableCell>
+                    {(() => {
+                      const actCompany = project.projectCompanies?.find(c => c.companyId === activity.customerId);
+                      return (
+                        <>
+                          <TableCell className="hidden lg:table-cell text-sm">{actCompany?.companyName || '—'}</TableCell>
+                          <TableCell className="hidden lg:table-cell text-sm">{activity.contactName || '—'}</TableCell>
+                          <TableCell className="hidden lg:table-cell">
+                            {actCompany ? (
+                              <div className="flex flex-wrap gap-1">
+                                {(actCompany.roleDescriptions || [actCompany.roleDescription]).filter(Boolean).map((role, i) => (
+                                  <Badge key={i} variant="outline" className="text-xs">{role}</Badge>
+                                ))}
+                              </div>
+                            ) : '—'}
+                          </TableCell>
+                        </>
+                      );
+                    })()}
                     <TableCell>
                       <Badge variant="outline">{({E:'Email',P:'Phone',F:'Face-to-Face',Q:'Quote'} as Record<string,string>)[activity.typeId] || activity.typeId}</Badge>
                     </TableCell>

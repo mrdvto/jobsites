@@ -20,18 +20,6 @@ import { CreateContactForm } from './CreateContactForm';
 import mailCodesData from '@/data/MailCodes.json';
 
 
-const ROLE_OPTIONS = [
-  { id: 'GC', label: 'General Contractor' },
-  { id: 'SUB_PLUMBING', label: 'Plumbing Subcontractor' }, { id: 'SUB_ELECTRICAL', label: 'Electrical Subcontractor' },
-  { id: 'SUB_HVAC', label: 'HVAC Subcontractor' }, { id: 'SUB_CONCRETE', label: 'Concrete Subcontractor' },
-  { id: 'SUB_FRAMING', label: 'Framing Subcontractor' }, { id: 'SUB_ROOFING', label: 'Roofing Subcontractor' },
-  { id: 'SUB_DRYWALL', label: 'Drywall Subcontractor' }, { id: 'SUB_PAINTING', label: 'Painting Subcontractor' },
-  { id: 'SUB_FLOORING', label: 'Flooring Subcontractor' }, { id: 'SUPPLIER', label: 'Supplier' },
-  { id: 'SUB-EXC', label: 'Subcontractor - Excavation' }, { id: 'SUB-PAV', label: 'Subcontractor - Paving' },
-  { id: 'SUB-ELEC', label: 'Subcontractor - Electrical' }, { id: 'SUB-MECH', label: 'Subcontractor - Mechanical' },
-  { id: 'SUB-SPEC', label: 'Subcontractor - Specialized' }, { id: 'SUB-STEEL', label: 'Subcontractor - Steel' },
-  { id: 'ARCHITECT', label: 'Architect' }, { id: 'ENGINEER', label: 'Engineer' }, { id: 'OTHER', label: 'Other' },
-];
 interface ManageCompanyContactsModalProps {
   company: ProjectCompany;
   allCompanyContacts: CompanyContact[];

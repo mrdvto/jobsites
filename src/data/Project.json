@@ -991,7 +991,7 @@
                     "roleDescription": "General Contractor",
                     "isPrimaryContact": true,
                     "companyContacts": [
-                        { "id": 1, "name": "Steve Novak", "title": "Bridge Division PM", "phone": "815-555-3310", "email": "s.novak@mortenson.com" }
+                        { "id": 1, "name": "Steve Novak", "title": "Bridge Division PM", "phone": "815-555-3310", "email": "s.novak@mortenson.com", "divisionIds": ["G"] }
                     ],
                     "primaryContactIndex": 0
                 }

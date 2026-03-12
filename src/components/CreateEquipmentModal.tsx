@@ -294,10 +294,11 @@ interface CreateEquipmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (equipmentId: number) => void;
+  projectId: number;
   projectCompanies: ProjectCompany[];
 }
 
-export function CreateEquipmentModal({ open, onOpenChange, onSave, projectCompanies }: CreateEquipmentModalProps) {
+export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, projectCompanies }: CreateEquipmentModalProps) {
   // Company (first required field)
   const [companyId, setCompanyId] = useState('');
 

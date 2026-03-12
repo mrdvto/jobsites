@@ -123,8 +123,8 @@
                     "roleDescription": "Property Owner",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 1, "name": "David Ortiz", "title": "Facilities Director", "phone": "312-555-9988", "email": "dortiz@riverfrontstadium.com" },
-                        { "id": 2, "name": "Maria Chen", "title": "Operations Manager", "phone": "312-555-9989", "email": "mchen@riverfrontstadium.com" }
+                        { "id": 1, "name": "David Ortiz", "title": "Facilities Director", "phone": "312-555-9988", "email": "dortiz@riverfrontstadium.com", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Maria Chen", "title": "Operations Manager", "phone": "312-555-9989", "email": "mchen@riverfrontstadium.com", "divisionIds": ["G", "V"] }
                     ],
                     "primaryContactIndex": 0
                 },

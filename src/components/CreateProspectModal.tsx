@@ -5,25 +5,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Check, ChevronsUpDown, X } from 'lucide-react';
+import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { DIVISIONS } from '@/contexts/DataContext';
 import { countries, pinnedCountryCodes, getCountryByCode, type Country } from '@/data/Countries';
 import { fetchStatesProvinces, hasStatesProvinces, type StateProvince } from '@/data/StatesProvinces';
-
-const ROLE_OPTIONS = [
-  { id: 'GC', label: 'General Contractor' },
-  { id: 'SUB-EXC', label: 'Subcontractor - Excavation' },
-  { id: 'SUB-PAV', label: 'Subcontractor - Paving' },
-  { id: 'SUB-ELEC', label: 'Subcontractor - Electrical' },
-  { id: 'SUB-MECH', label: 'Subcontractor - Mechanical' },
-  { id: 'SUB-SPEC', label: 'Subcontractor - Specialized' },
-  { id: 'SUB-STEEL', label: 'Subcontractor - Steel' },
-];
+import { RoleMultiSelect } from '@/components/RoleMultiSelect';
 
 // TODO: Replace with actual API call
 const createCompanyApi = async (data: ProspectData): Promise<string> => {
@@ -127,7 +117,6 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
   const [divisionIds, setDivisionIds] = useState<string[]>([]);
   const [divisionOpen, setDivisionOpen] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-  const [rolesOpen, setRolesOpen] = useState(false);
 
   // Address
   const [address1, setAddress1] = useState('');
@@ -227,14 +216,6 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
     if (businessPhone.trim() && hasMaskedCountry && !validatePhone(businessPhone, countryCode)) e.businessPhone = 'Invalid format';
     return e;
   }, [submitted, companyName, divisionIds, phone, addressValid, city, countryCode, stateCode, zipCode, firstName, lastName, title, mobilePhone, email, businessPhone, hasMaskedCountry, isStateRequired]);
-
-  const toggleRole = useCallback((roleId: string) => {
-    setSelectedRoles(prev => prev.includes(roleId) ? prev.filter(r => r !== roleId) : [...prev, roleId]);
-  }, []);
-
-  const removeRole = useCallback((roleId: string) => {
-    setSelectedRoles(prev => prev.filter(r => r !== roleId));
-  }, []);
 
   const resetForm = useCallback(() => {
     setCompanyName(''); setPhone(''); setDivisionIds([]); setSelectedRoles([]);
@@ -356,47 +337,11 @@ export const CreateProspectModal = ({ open, onOpenChange, onSave }: CreateProspe
             </div>
             <div>
               <Label>Role(s)</Label>
-              <Popover open={rolesOpen} onOpenChange={setRolesOpen}>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between font-normal h-10">
-                    <span className={cn(selectedRoles.length === 0 && "text-muted-foreground")}>
-                      {selectedRoles.length === 0 ? "Select roles (optional)" : `${selectedRoles.length} selected`}
-                    </span>
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-                  <Command>
-                    <CommandInput placeholder="Search roles..." />
-                    <CommandList>
-                      <CommandEmpty>No role found.</CommandEmpty>
-                      <CommandGroup>
-                        {ROLE_OPTIONS.map((role) => (
-                          <CommandItem key={role.id} value={role.label} onSelect={() => toggleRole(role.id)}>
-                            <Check className={cn("mr-2 h-4 w-4", selectedRoles.includes(role.id) ? "opacity-100" : "opacity-0")} />
-                            {role.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              {selectedRoles.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-2">
-                  {selectedRoles.map(roleId => {
-                    const role = ROLE_OPTIONS.find(r => r.id === roleId);
-                    return (
-                      <Badge key={roleId} variant={roleId === 'GC' ? 'default' : 'secondary'} className="text-xs gap-1">
-                        {role?.label || roleId}
-                        <button type="button" onClick={() => removeRole(roleId)} className="ml-0.5 hover:text-destructive">
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    );
-                  })}
-                </div>
-              )}
+              <RoleMultiSelect
+                selectedRoles={selectedRoles}
+                onRolesChange={setSelectedRoles}
+                placeholder="Select roles (optional)"
+              />
             </div>
             <div>
               <Label>Phone Number <span className="text-destructive">*</span></Label>

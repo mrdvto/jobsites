@@ -29,6 +29,7 @@ import { NotesSection } from '@/components/NotesSection';
 import { ProjectCompaniesTable } from '@/components/ProjectCompaniesTable';
 import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';
 import { CreateProspectModal, type ProspectData } from '@/components/CreateProspectModal';
+import { getRoleLabel } from '@/components/RoleMultiSelect';
 import { Input } from '@/components/ui/input';
 import { MultiSelectFilter } from '@/components/MultiSelectFilter';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
@@ -1288,19 +1289,7 @@ const ProjectDetail = () => {
         onSave={(data: ProspectData) => {
           const companyId = `PROSPECT-${Date.now()}`;
           const roleIds = data.roleIds.length > 0 ? data.roleIds : ['PROSPECT'];
-          const roleDescriptions = roleIds.map(id => {
-            const found = [
-              { id: 'GC', label: 'General Contractor' },
-              { id: 'SUB-EXC', label: 'Subcontractor - Excavation' },
-              { id: 'SUB-PAV', label: 'Subcontractor - Paving' },
-              { id: 'SUB-ELEC', label: 'Subcontractor - Electrical' },
-              { id: 'SUB-MECH', label: 'Subcontractor - Mechanical' },
-              { id: 'SUB-SPEC', label: 'Subcontractor - Specialized' },
-              { id: 'SUB-STEEL', label: 'Subcontractor - Steel' },
-              { id: 'PROSPECT', label: 'Prospect' },
-            ].find(r => r.id === id);
-            return found?.label || id;
-          });
+          const roleDescriptions = roleIds.map(id => id === 'PROSPECT' ? 'Prospect' : getRoleLabel(id));
           addProjectCompany(project.id, {
             companyId,
             companyName: data.companyName,

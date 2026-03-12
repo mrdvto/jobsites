@@ -7,9 +7,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
-import { Check, ChevronsUpDown, Star, X } from 'lucide-react';
+import { Check, ChevronsUpDown, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { RoleMultiSelect, getRoleLabel } from '@/components/RoleMultiSelect';
 
 interface AssociateCompanyModalProps {
   projectId: number;
@@ -17,16 +18,6 @@ interface AssociateCompanyModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
-const ROLE_OPTIONS = [
-  { id: 'GC', label: 'General Contractor' },
-  { id: 'SUB-EXC', label: 'Subcontractor - Excavation' },
-  { id: 'SUB-PAV', label: 'Subcontractor - Paving' },
-  { id: 'SUB-ELEC', label: 'Subcontractor - Electrical' },
-  { id: 'SUB-MECH', label: 'Subcontractor - Mechanical' },
-  { id: 'SUB-SPEC', label: 'Subcontractor - Specialized' },
-  { id: 'SUB-STEEL', label: 'Subcontractor - Steel' },
-];
 
 const isProspect = (companyId: string) => companyId.startsWith('$');
 
@@ -38,7 +29,6 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
   const [selectedContactIds, setSelectedContactIds] = useState<number[]>([]);
   const [primaryContactId, setPrimaryContactId] = useState<number | null>(null);
   const [comboboxOpen, setComboboxOpen] = useState(false);
-  const [rolesOpen, setRolesOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const availableCompanies = useMemo(() => {
@@ -65,15 +55,6 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
     return selectedCompanyObj?.companyContacts || [];
   }, [selectedCompanyObj]);
 
-  const toggleRole = (roleId: string) => {
-    setSelectedRoles(prev =>
-      prev.includes(roleId) ? prev.filter(r => r !== roleId) : [...prev, roleId]
-    );
-  };
-
-  const removeRole = (roleId: string) => {
-    setSelectedRoles(prev => prev.filter(r => r !== roleId));
-  };
 
   const toggleContact = (contactId: number) => {
     setSelectedContactIds(prev => {
@@ -99,7 +80,6 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
     setSelectedContactIds([]);
     setPrimaryContactId(null);
     setComboboxOpen(false);
-    setRolesOpen(false);
     setSearchQuery('');
   };
 
@@ -112,7 +92,7 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
     const company = selectedCompanyObj;
     if (!company) return;
 
-    const roleDescriptions = selectedRoles.map(id => ROLE_OPTIONS.find(r => r.id === id)?.label || id);
+    const roleDescriptions = selectedRoles.map(id => getRoleLabel(id));
     const allContacts = company.companyContacts || [];
     const contactsToInclude = selectedContactIds.length > 0
       ? allContacts.filter((c: any) => selectedContactIds.includes(c.id))
@@ -191,47 +171,12 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
                 {/* Multi-Role Selection */}
                 <div className="grid gap-2">
                   <Label>Role(s) *</Label>
-                  <Popover open={rolesOpen} onOpenChange={setRolesOpen}>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" role="combobox" aria-expanded={rolesOpen} className="w-full justify-between">
-                        {selectedRoles.length === 0
-                          ? "Select role(s)..."
-                          : `${selectedRoles.length} role${selectedRoles.length > 1 ? 's' : ''} selected`}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0 bg-popover z-50">
-                      <Command>
-                        <CommandInput placeholder="Search roles..." />
-                        <CommandList>
-                          <CommandEmpty>No role found.</CommandEmpty>
-                          <CommandGroup>
-                            {ROLE_OPTIONS.map((role) => (
-                              <CommandItem key={role.id} value={role.label} onSelect={() => toggleRole(role.id)}>
-                                <Check className={cn("mr-2 h-4 w-4", selectedRoles.includes(role.id) ? "opacity-100" : "opacity-0")} />
-                                {role.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  {selectedRoles.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {selectedRoles.map(roleId => {
-                        const role = ROLE_OPTIONS.find(r => r.id === roleId);
-                        return (
-                          <Badge key={roleId} variant="secondary" className="text-xs gap-1">
-                            {role?.label || roleId}
-                            <button type="button" onClick={() => removeRole(roleId)} className="ml-0.5 hover:text-destructive">
-                              <X className="h-3 w-3" />
-                            </button>
-                          </Badge>
-                        );
-                      })}
-                    </div>
-                  )}
+                  <RoleMultiSelect
+                    selectedRoles={selectedRoles}
+                    onRolesChange={setSelectedRoles}
+                    placeholder="Select role(s)..."
+                    required
+                  />
                 </div>
 
                 {/* Contact Selection (optional, shown after company selected) */}

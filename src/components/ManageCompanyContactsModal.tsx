@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ROLE_OPTIONS, getRoleLabel } from '@/components/RoleMultiSelect';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -19,18 +20,6 @@ import { CreateContactForm } from './CreateContactForm';
 import mailCodesData from '@/data/MailCodes.json';
 
 
-const ROLE_OPTIONS = [
-  { id: 'GC', label: 'General Contractor' },
-  { id: 'SUB_PLUMBING', label: 'Plumbing Subcontractor' }, { id: 'SUB_ELECTRICAL', label: 'Electrical Subcontractor' },
-  { id: 'SUB_HVAC', label: 'HVAC Subcontractor' }, { id: 'SUB_CONCRETE', label: 'Concrete Subcontractor' },
-  { id: 'SUB_FRAMING', label: 'Framing Subcontractor' }, { id: 'SUB_ROOFING', label: 'Roofing Subcontractor' },
-  { id: 'SUB_DRYWALL', label: 'Drywall Subcontractor' }, { id: 'SUB_PAINTING', label: 'Painting Subcontractor' },
-  { id: 'SUB_FLOORING', label: 'Flooring Subcontractor' }, { id: 'SUPPLIER', label: 'Supplier' },
-  { id: 'SUB-EXC', label: 'Subcontractor - Excavation' }, { id: 'SUB-PAV', label: 'Subcontractor - Paving' },
-  { id: 'SUB-ELEC', label: 'Subcontractor - Electrical' }, { id: 'SUB-MECH', label: 'Subcontractor - Mechanical' },
-  { id: 'SUB-SPEC', label: 'Subcontractor - Specialized' }, { id: 'SUB-STEEL', label: 'Subcontractor - Steel' },
-  { id: 'ARCHITECT', label: 'Architect' }, { id: 'ENGINEER', label: 'Engineer' }, { id: 'OTHER', label: 'Other' },
-];
 interface ManageCompanyContactsModalProps {
   company: ProjectCompany;
   allCompanyContacts: CompanyContact[];
@@ -107,7 +96,7 @@ export const ManageCompanyContactsModal = ({ company, allCompanyContacts, open, 
   const handleSave = () => {
     if (contacts.length === 0) { toast({ title: "No Contacts", description: "At least one contact is required.", variant: "destructive" }); return; }
     if (companyRoleIds.length === 0) { toast({ title: "No Roles", description: "At least one role is required.", variant: "destructive" }); return; }
-    const roleDescriptions = companyRoleIds.map(id => ROLE_OPTIONS.find(r => r.id === id)?.label || id);
+    const roleDescriptions = companyRoleIds.map(id => getRoleLabel(id));
     onSave({
       ...company,
       companyContacts: contacts,
@@ -183,10 +172,9 @@ export const ManageCompanyContactsModal = ({ company, allCompanyContacts, open, 
             <Label className="text-xs text-muted-foreground font-medium">Roles</Label>
             <div className="flex gap-1.5 flex-wrap mt-1.5 items-center">
               {companyRoleIds.map(roleId => {
-                const role = ROLE_OPTIONS.find(r => r.id === roleId);
                 return (
                   <Badge key={roleId} variant={roleId === 'GC' ? 'default' : 'secondary'} className="text-xs px-2 py-0.5 gap-1">
-                    {role?.label || roleId}
+                    {getRoleLabel(roleId)}
                     <button type="button" onClick={() => handleRemoveRole(roleId)} className="ml-0.5 hover:text-destructive"><X className="h-3 w-3" /></button>
                   </Badge>
                 );

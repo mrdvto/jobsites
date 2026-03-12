@@ -9,7 +9,15 @@ import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Check, ChevronsUpDown, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 import { RoleMultiSelect, getRoleLabel } from '@/components/RoleMultiSelect';
+
+interface AssociateCompanyModalProps {
+  projectId: number;
+  currentCompanyNames: string[];
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
 
 const isProspect = (companyId: string) => companyId.startsWith('$');
 

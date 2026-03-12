@@ -148,8 +148,8 @@
                     "roleDescription": "Subcontractor - Steel",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 4, "name": "Amanda Foster", "title": "Procurement Specialist", "phone": "312-555-8824", "email": "afoster@turnerconstruction.com" },
-                        { "id": 5, "name": "David Kim", "title": "Assistant Project Manager", "phone": "312-555-8825", "email": "dkim@turnerconstruction.com" }
+                        { "id": 4, "name": "Amanda Foster", "title": "Procurement Specialist", "phone": "312-555-8824", "email": "afoster@turnerconstruction.com", "divisionIds": ["G", "R"] },
+                        { "id": 5, "name": "David Kim", "title": "Assistant Project Manager", "phone": "312-555-8825", "email": "dkim@turnerconstruction.com", "divisionIds": ["G"] }
                     ],
                     "primaryContactIndex": 0
                 }

@@ -558,8 +558,8 @@
                     "roleDescription": "Subcontractor - Mechanical",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 4, "name": "George Harris", "title": "Plumbing Lead", "phone": "217-555-0777", "email": "g.harris@southlandind.com" },
-                        { "id": 5, "name": "Helen Brown", "title": "Estimator", "phone": "217-555-0778", "email": "h.brown@southlandind.com" }
+                        { "id": 4, "name": "George Harris", "title": "Plumbing Lead", "phone": "217-555-0777", "email": "g.harris@southlandind.com", "divisionIds": ["G"] },
+                        { "id": 5, "name": "Helen Brown", "title": "Estimator", "phone": "217-555-0778", "email": "h.brown@southlandind.com", "divisionIds": ["G", "S"] }
                     ],
                     "primaryContactIndex": 0
                 }

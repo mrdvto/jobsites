@@ -55,15 +55,6 @@ export const AssociateCompanyModal = ({ projectId, currentCompanyNames, open, on
     return selectedCompanyObj?.companyContacts || [];
   }, [selectedCompanyObj]);
 
-  const toggleRole = (roleId: string) => {
-    setSelectedRoles(prev =>
-      prev.includes(roleId) ? prev.filter(r => r !== roleId) : [...prev, roleId]
-    );
-  };
-
-  const removeRole = (roleId: string) => {
-    setSelectedRoles(prev => prev.filter(r => r !== roleId));
-  };
 
   const toggleContact = (contactId: number) => {
     setSelectedContactIds(prev => {

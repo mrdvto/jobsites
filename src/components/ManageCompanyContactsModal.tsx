@@ -53,6 +53,9 @@ export const ManageCompanyContactsModal = ({ company, allCompanyContacts, open, 
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [selectedEmails, setSelectedEmails] = useState<Set<string>>(new Set());
 
+  const [companyRoleIds, setCompanyRoleIds] = useState<string[]>([]);
+  const [addRoleValue, setAddRoleValue] = useState('');
+
   const availableContacts = allCompanyContacts.filter(ac => !contacts.some(c => c.email === ac.email));
 
   // Filter divisions to only those the company belongs to
@@ -61,7 +64,16 @@ export const ManageCompanyContactsModal = ({ company, allCompanyContacts, open, 
     : DIVISIONS;
 
   useEffect(() => {
-    if (open && company) { setContacts([...(company.companyContacts || [])]); setPrimaryIndex(company.primaryContactIndex || 0); setEditingId(null); setShowAddSection(false); setShowCreateForm(false); setSelectedEmails(new Set()); }
+    if (open && company) {
+      setContacts([...(company.companyContacts || [])]);
+      setPrimaryIndex(company.primaryContactIndex || 0);
+      setEditingId(null);
+      setShowAddSection(false);
+      setShowCreateForm(false);
+      setSelectedEmails(new Set());
+      const roles = getCompanyRoles(company);
+      setCompanyRoleIds([...roles.ids]);
+    }
   }, [open, company]);
 
   const handleSetPrimary = (index: number) => setPrimaryIndex(index);

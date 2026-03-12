@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ProjectCompany } from '@/types';
+import { ProjectCompany, getCompanyRoles } from '@/types';
 import { useData } from '@/contexts/DataContext';
 import { getDivisionName } from '@/contexts/DataContext';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';

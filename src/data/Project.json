@@ -53,7 +53,7 @@
                     "primaryContactIndex": 0
                 },
                 {
-                    "companyId": "1019550",
+                    "companyId": "$1019550",
                     "companyName": "Granite Excavation & Demolition",
                     "roleId": "SUB-EXC",
                     "roleDescription": "Subcontractor - Excavation",
@@ -222,7 +222,7 @@
                     "primaryContactIndex": 0
                 },
                 {
-                    "companyId": "NON-DBS",
+                    "companyId": "$NON-DBS-CC",
                     "companyName": "Curran Contracting Company",
                     "roleId": "SUB-PAV",
                     "roleDescription": "Subcontractor - Paving",
@@ -291,7 +291,7 @@
                     "primaryContactIndex": 0
                 },
                 {
-                    "companyId": "1764465",
+                    "companyId": "$1764465",
                     "companyName": "Christy Webber Landscapes",
                     "roleId": "GC",
                     "roleDescription": "General Contractor",
@@ -303,7 +303,7 @@
                     "primaryContactIndex": 0
                 },
                 {
-                    "companyId": "1019550",
+                    "companyId": "$1019550",
                     "companyName": "Granite Excavation & Demolition",
                     "roleId": "SUB-EXC",
                     "roleDescription": "Subcontractor - Excavation",
@@ -364,7 +364,7 @@
                     "primaryContactIndex": 0
                 },
                 {
-                    "companyId": "1140350",
+                    "companyId": "$1140350",
                     "companyName": "Rosendin Electric",
                     "roleId": "SUB-ELEC",
                     "roleDescription": "Subcontractor - Electrical",
@@ -472,7 +472,7 @@
                     "primaryContactIndex": 0
                 },
                 {
-                    "companyId": "1140350",
+                    "companyId": "$1140350",
                     "companyName": "Rosendin Electric",
                     "roleId": "SUB-ELEC",
                     "roleDescription": "Subcontractor - Electrical",
@@ -694,7 +694,7 @@
                     "primaryContactIndex": 0
                 },
                 {
-                    "companyId": "1764465",
+                    "companyId": "$1764465",
                     "companyName": "Christy Webber Landscapes",
                     "roleId": "SUB-SPEC",
                     "roleDescription": "Subcontractor - Specialized",

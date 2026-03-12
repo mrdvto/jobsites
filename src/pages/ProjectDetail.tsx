@@ -24,7 +24,7 @@ import { useActivityColumnVisibility, ACTIVITY_COLUMN_LABELS } from '@/hooks/use
 import type { ActivityColumnId } from '@/hooks/useActivityColumnVisibility';
 import { ActivityFilterModal, type ActivityFilters, DEFAULT_ACTIVITY_FILTERS } from '@/components/ActivityFilterModal';
 import { ActivityFilterBadges } from '@/components/ActivityFilterBadges';
-import { AssociateActivityModal } from '@/components/AssociateActivityModal';
+
 import { NotesSection } from '@/components/NotesSection';
 import { ProjectCompaniesTable } from '@/components/ProjectCompaniesTable';
 import { AddCustomerEquipmentModal } from '@/components/AddCustomerEquipmentModal';
@@ -62,7 +62,7 @@ const ProjectDetail = () => {
   const [activityModalMode, setActivityModalMode] = useState<'create' | 'edit'>('create');
   const [showDeleteActivityDialog, setShowDeleteActivityDialog] = useState(false);
   const [activityToDelete, setActivityToDelete] = useState<number | null>(null);
-  const [showAssociateActivityModal, setShowAssociateActivityModal] = useState(false);
+  
   const [showEquipmentModal, setShowEquipmentModal] = useState(false);
   const [showDeleteEquipmentDialog, setShowDeleteEquipmentDialog] = useState(false);
   const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
@@ -936,13 +936,6 @@ const ProjectDetail = () => {
                 isVisible={actColVis.isVisible}
                 moveColumn={actColVis.moveColumn}
               />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowAssociateActivityModal(true)}>
-                <LinkIcon className="h-4 w-4 mr-2" />
-                Associate Existing
-              </Button>
               <Button size="sm" onClick={handleCreateActivity}>
                 <Plus className="h-4 w-4 mr-2" />
                 Create New
@@ -1359,11 +1352,6 @@ const ProjectDetail = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      <AssociateActivityModal
-        projectId={project.id}
-        currentActivityIds={project.activities?.map((a) => a.id) || []}
-        open={showAssociateActivityModal}
-        onOpenChange={setShowAssociateActivityModal} />
 
       <ActivityFilterModal
         open={showActFilterModal}

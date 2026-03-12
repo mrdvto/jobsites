@@ -784,9 +784,9 @@
                     "roleDescription": "Subcontractor - Specialized",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 3, "name": "Jack Morrison", "title": "Hydrogeologist", "phone": "217-555-0993", "email": "j.morrison@laynechristensen.com" },
-                        { "id": 4, "name": "Karen Shaw", "title": "Project Coordinator", "phone": "217-555-0994", "email": "k.shaw@laynechristensen.com" },
-                        { "id": 5, "name": "Larry Watson", "title": "Equipment Operator", "phone": "217-555-0995", "email": "l.watson@laynechristensen.com" }
+                        { "id": 3, "name": "Jack Morrison", "title": "Hydrogeologist", "phone": "217-555-0993", "email": "j.morrison@laynechristensen.com", "divisionIds": ["G"] },
+                        { "id": 4, "name": "Karen Shaw", "title": "Project Coordinator", "phone": "217-555-0994", "email": "k.shaw@laynechristensen.com", "divisionIds": ["G", "S"] },
+                        { "id": 5, "name": "Larry Watson", "title": "Equipment Operator", "phone": "217-555-0995", "email": "l.watson@laynechristensen.com", "divisionIds": ["G", "R"] }
                     ],
                     "primaryContactIndex": 0
                 },

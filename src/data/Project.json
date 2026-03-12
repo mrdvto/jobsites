@@ -454,8 +454,8 @@
                     "roleDescription": "Property Owner",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 1, "name": "Harold Meyers", "title": "Public Works Director", "phone": "217-555-1122", "email": "publicworks@springfield.il.us" },
-                        { "id": 2, "name": "Linda Torres", "title": "Water Utilities Superintendent", "phone": "217-555-1123", "email": "ltorres@springfield.il.us" }
+                        { "id": 1, "name": "Harold Meyers", "title": "Public Works Director", "phone": "217-555-1122", "email": "publicworks@springfield.il.us", "divisionIds": ["S"] },
+                        { "id": 2, "name": "Linda Torres", "title": "Water Utilities Superintendent", "phone": "217-555-1123", "email": "ltorres@springfield.il.us", "divisionIds": ["S", "G"] }
                     ],
                     "primaryContactIndex": 0
                 },

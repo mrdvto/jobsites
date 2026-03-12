@@ -1102,8 +1102,8 @@
                     "roleDescription": "Property Owner",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 1, "name": "Nathan Cole", "title": "Construction Director", "phone": "815-555-5500", "email": "ncole@prairiewindenergy.com" },
-                        { "id": 2, "name": "Samantha Lewis", "title": "Environmental Manager", "phone": "815-555-5501", "email": "slewis@prairiewindenergy.com" }
+                        { "id": 1, "name": "Nathan Cole", "title": "Construction Director", "phone": "815-555-5500", "email": "ncole@prairiewindenergy.com", "divisionIds": ["G", "S"] },
+                        { "id": 2, "name": "Samantha Lewis", "title": "Environmental Manager", "phone": "815-555-5501", "email": "slewis@prairiewindenergy.com", "divisionIds": ["G"] }
                     ],
                     "primaryContactIndex": 0
                 },

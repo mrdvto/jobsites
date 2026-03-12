@@ -700,9 +700,9 @@
                     "roleDescription": "Subcontractor - Specialized",
                     "isPrimaryContact": false,
                     "companyContacts": [
-                        { "id": 3, "name": "Oscar Bennett", "title": "Crew Supervisor", "phone": "217-555-0223", "email": "o.bennett@christywebber.com" },
-                        { "id": 4, "name": "Paula Simmons", "title": "Irrigation Specialist", "phone": "217-555-0224", "email": "p.simmons@christywebber.com" },
-                        { "id": 5, "name": "Quincy Adams", "title": "Arborist", "phone": "217-555-0225", "email": "q.adams@christywebber.com" }
+                        { "id": 3, "name": "Oscar Bennett", "title": "Crew Supervisor", "phone": "217-555-0223", "email": "o.bennett@christywebber.com", "divisionIds": ["C"] },
+                        { "id": 4, "name": "Paula Simmons", "title": "Irrigation Specialist", "phone": "217-555-0224", "email": "p.simmons@christywebber.com", "divisionIds": ["C"] },
+                        { "id": 5, "name": "Quincy Adams", "title": "Arborist", "phone": "217-555-0225", "email": "q.adams@christywebber.com", "divisionIds": ["C", "G"] }
                     ],
                     "primaryContactIndex": 0
                 },

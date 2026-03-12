@@ -176,8 +176,31 @@ export const ManageCompanyContactsModal = ({ company, allCompanyContacts, open, 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-        <DialogHeader><DialogTitle>Manage {company.companyName} Contacts</DialogTitle><DialogDescription><Badge variant="outline">{company.roleDescription}</Badge></DialogDescription></DialogHeader>
+        <DialogHeader><DialogTitle>Manage {company.companyName}</DialogTitle><DialogDescription>Edit roles and contacts for this company on the project.</DialogDescription></DialogHeader>
         <div className="space-y-4 py-4">
+          {/* Roles Section */}
+          <div>
+            <Label className="text-xs text-muted-foreground font-medium">Roles</Label>
+            <div className="flex gap-1.5 flex-wrap mt-1.5 items-center">
+              {companyRoleIds.map(roleId => {
+                const role = ROLE_OPTIONS.find(r => r.id === roleId);
+                return (
+                  <Badge key={roleId} variant={roleId === 'GC' ? 'default' : 'secondary'} className="text-xs px-2 py-0.5 gap-1">
+                    {role?.label || roleId}
+                    <button type="button" onClick={() => handleRemoveRole(roleId)} className="ml-0.5 hover:text-destructive"><X className="h-3 w-3" /></button>
+                  </Badge>
+                );
+              })}
+              <Select value={addRoleValue} onValueChange={handleAddRole}>
+                <SelectTrigger className="h-7 w-[140px] text-xs"><SelectValue placeholder="+ Add Role" /></SelectTrigger>
+                <SelectContent className="bg-popover z-50">
+                  {ROLE_OPTIONS.filter(r => !companyRoleIds.includes(r.id)).map(role => (
+                    <SelectItem key={role.id} value={role.id} className="text-xs">{role.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
           <div className="flex items-center justify-between"><h3 className="font-medium text-sm text-muted-foreground">Contacts at this project ({contacts.length})</h3></div>
           {contacts.map((contact, index) => (
             <Card key={contact.id} className={cn("p-4 relative", index === primaryIndex && "ring-2 ring-primary")}>

@@ -48,6 +48,7 @@ Feature: 2. Project Search and Filtering
     And I should see the "Filters" modal
     And I select "Smith, John" in the "Assignees" dropdown
     And I select "Active" in the "Statuses" dropdown
+    And I select "Power" in the "Divisions" dropdown
     And I type "Turner Construction" into the "General Contractor" input (#gc-filter)
     And I click the "Done" button
     Then the table should filter to show only matching projects
@@ -92,13 +93,15 @@ Feature: 3. Sort and Paginate Projects
     Then the table should sort by "<column_name>" in descending order
 
     Examples:
-      | column_name |
-      | Project Name |
-      | Address |
-      | Assignee |
-      | Status |
-      | Valuation |
-      | Bid Date |
+      | column_name      |
+      | Project Name     |
+      | Address          |
+      | Assignee         |
+      | Status           |
+      | Valuation        |
+      | Won Revenue      |
+      | Pipeline Revenue |
+      | Bid Date         |
 
   Scenario: 3.2. Change Rows Per Page
     When I select "50" from the "Rows per page" dropdown

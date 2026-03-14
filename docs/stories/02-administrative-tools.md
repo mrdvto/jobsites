@@ -90,10 +90,11 @@ Feature: 1. Manage Dropdowns
     Then I should see the success toast message
     And the "On Hold" item should no longer be available for selection in new records
 
-  Scenario: 1.7. Prevent Deletion of Protected Roles
+  Scenario: 1.7. Prevent Deletion and Editing of Protected Roles
     When I click the "Subcontractor Role" button
     Then I should see the "General Contractor" row in the table
     And I should not see a "Delete" trash can button for the "General Contractor" row
+    And the "Label" input for the "General Contractor" row should be read-only (disabled)
 
 ### **User Story: Map External Dodge Intelligence Data**
 

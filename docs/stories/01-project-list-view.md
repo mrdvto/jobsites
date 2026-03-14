@@ -227,3 +227,53 @@ Feature: 5. Create Project Modal
       | Ownership Type         |
       | Primary Stage          |
       | Primary Project Type   |
+
+### **User Story: Create Project from Dodge Intelligence**
+
+**Description:**
+
+As an Inside Sales Rep (ISR),
+I want to create a new project directly from a Dodge Project intel record,
+So that I don't have to manually re-type data the system already received from the external feed.
+
+**Acceptance Criteria:**
+
+Feature: 6. Create Project from Dodge Source
+
+  Background:
+    Given I am viewing a "Dodge Project" record
+    When I click the "Create Project" button
+    Then I should be navigated to the "Projects List" page
+    And the "Create New Project" modal should open automatically
+
+  Scenario: 6.1. Auto-Populate Standard Fields
+    Then the "Project Name *" input (#name) should contain the Dodge project name
+    And the "Street Address *" input (#street) should contain the Dodge street address
+    And the "City *" input (#city) should contain the Dodge city
+    And the "State *" input (#state) should contain the Dodge state
+    And the "Valuation ($)" input (#create-valuation) should contain the Dodge evaluation amount
+    And the "Bid Date" should contain the Dodge bid date
+    And the "Target Start Date" should contain the Dodge target start date
+    And the "Target Completion" should contain the Dodge target completion date
+
+  Scenario: 6.2. Auto-Populate Coordinate Fields
+    Given the Dodge record has Latitude and Longitude data
+    Then the "Coordinates" location type should be selected automatically
+    And the "Latitude *" input (#latitude) should contain the Dodge latitude
+    And the "Longitude *" input (#longitude) should contain the Dodge longitude
+
+  Scenario Outline: 6.3. Auto-Select Mapped Dropdowns
+    Given the Dodge record has an external value of "<dodge_value>" for "<field_type>"
+    And the system has a configured mapping mapping "<dodge_value>" to "<internal_id>"
+    Then the "<dropdown_name>" dropdown should automatically have "<internal_id>" selected
+
+    Examples:
+      | field_type           | dodge_value        | internal_id        | dropdown_name           |
+      | Ownership Type       | Private Sector     | Private            | Ownership Type          |
+      | Primary Project Type | Medical Facility   | Institutional      | Primary Project Type    |
+      | Primary Stage        | Pre-Bid            | Pre-Construction   | Primary Stage           |
+
+  Scenario: 6.4. Handling Unmapped Data
+    Given the Dodge record has an external value of "Unknown Phase" for Primary Stage
+    And the system does NOT have a configured mapping for "Unknown Phase"
+    Then the "Primary Stage" dropdown should remain unselected (display "Select...")

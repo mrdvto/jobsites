@@ -251,6 +251,7 @@ fun ProjectDetailScreen(
                             } else {
                                 EquipmentSection(
                                     equipment = state.equipment,
+                                    getCompanyName = { viewModel.getCompanyNameById(it) },
                                     onDelete = { viewModel.deleteEquipment(it) }
                                 )
                             }

@@ -108,7 +108,19 @@ private fun OpportunityCard(
             HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
             Spacer(Modifier.height(4.dp))
 
-            // Row 2: Stage + Type
+            // Row 2: Company (if available)
+            if (fullOpp != null && fullOpp.customerName.isNotBlank()) {
+                Text(
+                    text = fullOpp.customerName,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(Modifier.height(2.dp))
+            }
+
+            // Row 3: Stage + Type
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)

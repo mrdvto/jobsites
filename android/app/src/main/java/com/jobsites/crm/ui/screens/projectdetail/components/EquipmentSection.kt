@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jobsites.crm.data.model.CustomerEquipment
@@ -38,6 +39,7 @@ import com.jobsites.crm.ui.theme.EquipmentRented
 @Composable
 fun EquipmentSection(
     equipment: List<CustomerEquipment>,
+    getCompanyName: (String) -> String = { it },
     onDelete: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -85,7 +87,7 @@ fun EquipmentSection(
         }
 
         filtered.forEach { item ->
-            EquipmentCard(item = item, onDelete = { onDelete(item.id) })
+            EquipmentCard(item = item, getCompanyName = getCompanyName, onDelete = { onDelete(item.id) })
         }
     }
 }
@@ -93,6 +95,7 @@ fun EquipmentSection(
 @Composable
 private fun EquipmentCard(
     item: CustomerEquipment,
+    getCompanyName: (String) -> String = { it },
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -115,6 +118,16 @@ private fun EquipmentCard(
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold
                 )
+                // Company
+                if (item.companyId.isNotBlank()) {
+                    Text(
+                        text = getCompanyName(item.companyId),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
                 // Type + Year
                 Row {
                     Text(

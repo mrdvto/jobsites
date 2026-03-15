@@ -31,8 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import coil3.network.NetworkHeaders
-import coil3.network.httpHeaders
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import kotlin.math.PI
@@ -102,11 +100,6 @@ fun ProjectMapCard(
                 AsyncImage(
                     model = ImageRequest.Builder(context)
                         .data(mapUrl)
-                        .httpHeaders(
-                            NetworkHeaders.Builder()
-                                .set("User-Agent", "JobsitesCRM/1.0 (Android; contact@jobsites.com)")
-                                .build()
-                        )
                         .crossfade(true)
                         .build(),
                     contentDescription = "Project location map",

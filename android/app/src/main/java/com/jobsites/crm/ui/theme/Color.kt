@@ -44,6 +44,10 @@ val DarkSurfaceVariant = Color(0xFF1F2B42)
 val DarkOnSurfaceVariant = Color(0xFFF5FAFE)
 val DarkOutline = Color(0xFF1F2B42)
 
+// ── Equipment ownership (WCAG AA accessible) ─────────────────────────
+val EquipmentOwned = Color(0xFF047857)    // Emerald-700, 5.3:1 on white
+val EquipmentRented = Color(0xFF92400E)   // Amber-800, 7.5:1 on white
+
 // ── Note tag colors (matches web) ────────────────────────────────────
 val TagRed = Color(0xFFEF4444)
 val TagAmber = Color(0xFFF59E0B)

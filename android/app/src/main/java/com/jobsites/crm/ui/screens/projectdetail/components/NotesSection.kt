@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,6 +50,7 @@ fun NotesSection(
     noteTags: List<NoteTag>,
     getUserName: (Int) -> String,
     onDelete: (Int) -> Unit,
+    onEdit: (Note) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -57,6 +59,7 @@ fun NotesSection(
                 note = note,
                 noteTags = noteTags,
                 getUserName = getUserName,
+                onEdit = { onEdit(note) },
                 onDelete = { onDelete(note.id) }
             )
         }
@@ -68,6 +71,7 @@ private fun NoteCard(
     note: Note,
     noteTags: List<NoteTag>,
     getUserName: (Int) -> String,
+    onEdit: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -112,6 +116,10 @@ private fun NoteCard(
                             Icon(Icons.Outlined.History, "History",
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
                         }
+                    }
+                    IconButton(onClick = onEdit) {
+                        Icon(Icons.Outlined.Edit, "Edit",
+                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f))
                     }
                     IconButton(onClick = onDelete) {
                         Icon(Icons.Outlined.Delete, "Delete",

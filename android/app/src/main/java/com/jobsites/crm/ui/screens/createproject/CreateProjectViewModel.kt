@@ -70,7 +70,9 @@ class CreateProjectViewModel @Inject constructor(
                 city = form.city.trim(),
                 state = form.state.trim(),
                 zipCode = form.zipCode.trim(),
-                country = form.country.trim()
+                country = form.country.trim(),
+                latitude = form.latitude.toDoubleOrNull() ?: 0.0,
+                longitude = form.longitude.toDoubleOrNull() ?: 0.0
             ),
             valuation = valuation,
             ownershipTypeId = form.ownershipTypeId.takeIf { it.isNotBlank() },

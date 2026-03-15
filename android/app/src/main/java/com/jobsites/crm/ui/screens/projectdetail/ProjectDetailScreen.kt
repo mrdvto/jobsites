@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
@@ -38,12 +40,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.jobsites.crm.data.model.Note
+import com.jobsites.crm.data.model.Opportunity
 import com.jobsites.crm.ui.components.EmptyState
 import com.jobsites.crm.ui.components.LoadingState
 import com.jobsites.crm.ui.components.StatusBadge
 import com.jobsites.crm.ui.screens.projectdetail.components.ActivitySection
 import com.jobsites.crm.ui.screens.projectdetail.components.CompanySection
 import com.jobsites.crm.ui.screens.projectdetail.components.EquipmentSection
+import com.jobsites.crm.ui.screens.projectdetail.components.NoteFormSheet
 import com.jobsites.crm.ui.screens.projectdetail.components.NotesSection
 import com.jobsites.crm.ui.screens.projectdetail.components.OpportunitySection
 import com.jobsites.crm.ui.screens.projectdetail.components.ProjectInfoCard
@@ -65,6 +70,14 @@ fun ProjectDetailScreen(
         com.jobsites.crm.data.model.NoteTag("COMPLIANCE", "Compliance", 3, "sky"),
         com.jobsites.crm.data.model.NoteTag("GENERAL", "General", 4, "slate"),
     )) }
+
+    // ── Bottom sheet / dialog state ───────────────────────────────
+    var showNoteSheet by remember { mutableStateOf(false) }
+    var editingNote by remember { mutableStateOf<Note?>(null) }
+    var showOpportunitySheet by remember { mutableStateOf(false) }
+    var editingOpportunity by remember { mutableStateOf<Opportunity?>(null) }
+    var showAddCompanySheet by remember { mutableStateOf(false) }
+    var showAddEquipmentSheet by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier,
@@ -119,14 +132,25 @@ fun ProjectDetailScreen(
                 ) {
                     // ── Project Info ─────────────────────────────────
                     item {
-                        val ownerName = project.projectOwner.companyId.takeIf { it.isNotBlank() }?.let {
-                            viewModel.getCompanyById(it)?.companyName ?: it
-                        }
+                        val ownerCompany = project.projectOwner.companyId
+                            .takeIf { it.isNotBlank() }
+                            ?.let { viewModel.getCompanyById(it) }
+                        val ownerName = ownerCompany?.companyName
+                            ?: project.projectOwner.companyId.takeIf { it.isNotBlank() }
+                        val ownerContacts = ownerCompany?.let { company ->
+                            val ids = project.projectOwner.contactIds
+                            if (ids.isNotEmpty()) {
+                                company.companyContacts.filter { it.id in ids }
+                            } else {
+                                company.companyContacts
+                            }
+                        } ?: emptyList()
                         ProjectInfoCard(
                             project = project,
                             wonRevenue = viewModel.getProjectWonRevenue(),
                             pipelineRevenue = viewModel.getProjectPipelineRevenue(),
                             ownerCompanyName = ownerName,
+                            ownerContacts = ownerContacts,
                             lookupLabel = { type, id -> viewModel.getLookupLabel(type, id) }
                         )
                     }
@@ -136,7 +160,8 @@ fun ProjectDetailScreen(
                         CollapsibleSection(
                             title = "Opportunities",
                             count = project.associatedOpportunities.size,
-                            initiallyExpanded = true
+                            initiallyExpanded = true,
+                            onAdd = { showOpportunitySheet = true }
                         ) {
                             if (project.associatedOpportunities.isEmpty()) {
                                 EmptyState(title = "No opportunities", subtitle = "")
@@ -157,7 +182,8 @@ fun ProjectDetailScreen(
                         CollapsibleSection(
                             title = "Companies & Contacts",
                             count = project.projectCompanies.size,
-                            initiallyExpanded = true
+                            initiallyExpanded = true,
+                            onAdd = { showAddCompanySheet = true }
                         ) {
                             if (project.projectCompanies.isEmpty()) {
                                 EmptyState(title = "No companies", subtitle = "")
@@ -189,7 +215,8 @@ fun ProjectDetailScreen(
                     item {
                         CollapsibleSection(
                             title = "Equipment",
-                            count = state.equipment.size
+                            count = state.equipment.size,
+                            onAdd = { showAddEquipmentSheet = true }
                         ) {
                             if (state.equipment.isEmpty()) {
                                 EmptyState(title = "No equipment", subtitle = "")
@@ -206,7 +233,8 @@ fun ProjectDetailScreen(
                     item {
                         CollapsibleSection(
                             title = "Notes",
-                            count = project.notes.size
+                            count = project.notes.size,
+                            onAdd = { showNoteSheet = true }
                         ) {
                             if (project.notes.isEmpty()) {
                                 EmptyState(title = "No notes", subtitle = "")
@@ -215,7 +243,8 @@ fun ProjectDetailScreen(
                                     notes = project.notes,
                                     noteTags = noteTags,
                                     getUserName = { viewModel.getUserName(it) },
-                                    onDelete = { viewModel.deleteNote(it) }
+                                    onDelete = { viewModel.deleteNote(it) },
+                                    onEdit = { editingNote = it }
                                 )
                             }
                         }
@@ -244,6 +273,27 @@ fun ProjectDetailScreen(
             }
         }
     }
+
+    // ── Note form bottom sheet ────────────────────────────────────
+    if (showNoteSheet || editingNote != null) {
+        NoteFormSheet(
+            noteTags = noteTags,
+            editingNote = editingNote,
+            onDismiss = {
+                showNoteSheet = false
+                editingNote = null
+            },
+            onSave = { content, tagIds ->
+                if (editingNote != null) {
+                    viewModel.updateNote(editingNote!!.id, content, tagIds)
+                } else {
+                    viewModel.addNote(content, tagIds)
+                }
+                showNoteSheet = false
+                editingNote = null
+            }
+        )
+    }
 }
 
 // ═════════════════════════════════════════════════════════════════════
@@ -255,6 +305,7 @@ private fun CollapsibleSection(
     title: String,
     count: Int,
     initiallyExpanded: Boolean = false,
+    onAdd: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     var expanded by remember { mutableStateOf(initiallyExpanded) }
@@ -282,11 +333,26 @@ private fun CollapsibleSection(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Icon(
-                imageVector = if (expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
-                contentDescription = if (expanded) "Collapse" else "Expand",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (onAdd != null) {
+                    IconButton(
+                        onClick = { onAdd() },
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            Icons.Outlined.Add, "Add",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                    Spacer(Modifier.width(4.dp))
+                }
+                Icon(
+                    imageVector = if (expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                    contentDescription = if (expanded) "Collapse" else "Expand",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
 
         AnimatedVisibility(visible = expanded) {

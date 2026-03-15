@@ -102,4 +102,25 @@ class ProjectDetailViewModel @Inject constructor(
         repository.removeProjectCompany(projectId, companyName)
         refresh()
     }
+
+    // ── Note CRUD ─────────────────────────────────────────────────
+
+    fun addNote(content: String, tagIds: List<String>) {
+        val note = Note(
+            id = 0,
+            content = content,
+            createdAt = "",
+            createdById = 0,
+            tagIds = tagIds
+        )
+        repository.addNote(projectId, note)
+        refresh()
+    }
+
+    fun updateNote(noteId: Int, content: String, tagIds: List<String>) {
+        repository.updateNote(projectId, noteId) { existing ->
+            existing.copy(content = content, tagIds = tagIds)
+        }
+        refresh()
+    }
 }

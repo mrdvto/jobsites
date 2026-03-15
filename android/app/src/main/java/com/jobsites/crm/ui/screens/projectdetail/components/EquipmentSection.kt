@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jobsites.crm.data.model.CustomerEquipment
+import com.jobsites.crm.ui.theme.EquipmentOwned
+import com.jobsites.crm.ui.theme.EquipmentRented
 
 @Composable
 fun EquipmentSection(
@@ -97,11 +99,16 @@ private fun EquipmentCard(
                             fontSize = 10.sp
                         )
                     }
+                    val ownershipColor = when (item.ownershipStatus.lowercase()) {
+                        "owned" -> EquipmentOwned
+                        "rented" -> EquipmentRented
+                        else -> MaterialTheme.colorScheme.onSurfaceVariant
+                    }
                     Text(
-                        text = item.ownershipStatus,
+                        text = item.ownershipStatus.replaceFirstChar { it.uppercase() },
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = ownershipColor,
                         fontSize = 10.sp
                     )
                 }

@@ -1,18 +1,36 @@
 package com.jobsites.crm.ui.screens.shared
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.LocationManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.MyLocation
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.jobsites.crm.data.model.LookupOption
 import com.jobsites.crm.data.model.User
 import com.jobsites.crm.ui.components.DatePickerField
@@ -40,6 +58,9 @@ data class ProjectFormState(
     val bidDate: String? = null,
     val targetStartDate: String? = null,
     val targetCompletionDate: String? = null,
+    val useCoordinates: Boolean = false,
+    val latitude: String = "",
+    val longitude: String = "",
 )
 
 data class FormValidationError(val message: String)
@@ -117,50 +138,134 @@ fun ProjectFormFields(
         Spacer(Modifier.height(16.dp))
 
         // ── Location ────────────────────────────────────────────────
-        SectionHeader("Location")
-
-        OutlinedTextField(
-            value = form.street,
-            onValueChange = { onFormChange(form.copy(street = it)) },
-            label = { Text("Street") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(Modifier.height(8.dp))
-        Row(Modifier.fillMaxWidth()) {
-            OutlinedTextField(
-                value = form.city,
-                onValueChange = { onFormChange(form.copy(city = it)) },
-                label = { Text("City") },
-                singleLine = true,
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(Modifier.width(8.dp))
-            OutlinedTextField(
-                value = form.state,
-                onValueChange = { onFormChange(form.copy(state = it)) },
-                label = { Text("State") },
-                singleLine = true,
-                modifier = Modifier.weight(0.5f)
-            )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SectionHeader("Location")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Coordinates",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.width(6.dp))
+                Switch(
+                    checked = form.useCoordinates,
+                    onCheckedChange = { onFormChange(form.copy(useCoordinates = it)) }
+                )
+            }
         }
-        Spacer(Modifier.height(8.dp))
-        Row(Modifier.fillMaxWidth()) {
+
+        if (form.useCoordinates) {
+            // GPS coordinate fields
+            val context = LocalContext.current
+            val permissionLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestMultiplePermissions()
+            ) { permissions ->
+                val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                        permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+                if (granted) {
+                    fillLocationFromGps(context)?.let { (lat, lng) ->
+                        onFormChange(form.copy(latitude = lat, longitude = lng))
+                    }
+                }
+            }
+
+            OutlinedButton(
+                onClick = {
+                    val hasPerm = ContextCompat.checkSelfPermission(
+                        context, Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                    if (hasPerm) {
+                        fillLocationFromGps(context)?.let { (lat, lng) ->
+                            onFormChange(form.copy(latitude = lat, longitude = lng))
+                        }
+                    } else {
+                        permissionLauncher.launch(
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            )
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    Icons.Outlined.MyLocation, null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(Modifier.width(6.dp))
+                Text("Use Current Location")
+            }
+            Spacer(Modifier.height(8.dp))
+
+            Row(Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = form.latitude,
+                    onValueChange = { onFormChange(form.copy(latitude = it)) },
+                    label = { Text("Latitude") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(Modifier.width(8.dp))
+                OutlinedTextField(
+                    value = form.longitude,
+                    onValueChange = { onFormChange(form.copy(longitude = it)) },
+                    label = { Text("Longitude") },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        } else {
+            // Address fields
             OutlinedTextField(
-                value = form.zipCode,
-                onValueChange = { onFormChange(form.copy(zipCode = it)) },
-                label = { Text("Zip Code") },
+                value = form.street,
+                onValueChange = { onFormChange(form.copy(street = it)) },
+                label = { Text("Street") },
                 singleLine = true,
-                modifier = Modifier.weight(0.5f)
+                modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.width(8.dp))
-            OutlinedTextField(
-                value = form.country,
-                onValueChange = { onFormChange(form.copy(country = it)) },
-                label = { Text("Country") },
-                singleLine = true,
-                modifier = Modifier.weight(1f)
-            )
+            Spacer(Modifier.height(8.dp))
+            Row(Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = form.city,
+                    onValueChange = { onFormChange(form.copy(city = it)) },
+                    label = { Text("City") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(Modifier.width(8.dp))
+                OutlinedTextField(
+                    value = form.state,
+                    onValueChange = { onFormChange(form.copy(state = it)) },
+                    label = { Text("State") },
+                    singleLine = true,
+                    modifier = Modifier.weight(0.5f)
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            Row(Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = form.zipCode,
+                    onValueChange = { onFormChange(form.copy(zipCode = it)) },
+                    label = { Text("Zip Code") },
+                    singleLine = true,
+                    modifier = Modifier.weight(0.5f)
+                )
+                Spacer(Modifier.width(8.dp))
+                OutlinedTextField(
+                    value = form.country,
+                    onValueChange = { onFormChange(form.copy(country = it)) },
+                    label = { Text("Country") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
 
         Spacer(Modifier.height(16.dp))
@@ -245,6 +350,18 @@ fun ProjectFormFields(
             modifier = Modifier.fillMaxWidth()
         )
     }
+}
+
+@Suppress("MissingPermission")
+private fun fillLocationFromGps(context: Context): Pair<String, String>? {
+    val lm = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager ?: return null
+    val location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        ?: lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        ?: return null
+    return Pair(
+        "%.6f".format(location.latitude),
+        "%.6f".format(location.longitude)
+    )
 }
 
 @Composable

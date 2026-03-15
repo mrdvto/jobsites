@@ -58,7 +58,10 @@ class EditProjectViewModel @Inject constructor(
                 primaryProjectTypeId = project.primaryProjectTypeId ?: "",
                 bidDate = project.bidDate,
                 targetStartDate = project.targetStartDate,
-                targetCompletionDate = project.targetCompletionDate
+                targetCompletionDate = project.targetCompletionDate,
+                useCoordinates = project.address.latitude != 0.0 || project.address.longitude != 0.0,
+                latitude = if (project.address.latitude != 0.0) project.address.latitude.toString() else "",
+                longitude = if (project.address.longitude != 0.0) project.address.longitude.toString() else ""
             )
         } else ProjectFormState()
 
@@ -98,8 +101,8 @@ class EditProjectViewModel @Inject constructor(
                     state = form.state.trim(),
                     zipCode = form.zipCode.trim(),
                     country = form.country.trim(),
-                    latitude = existing.address.latitude,
-                    longitude = existing.address.longitude
+                    latitude = form.latitude.toDoubleOrNull() ?: 0.0,
+                    longitude = form.longitude.toDoubleOrNull() ?: 0.0
                 ),
                 valuation = valuation,
                 ownershipTypeId = form.ownershipTypeId.takeIf { it.isNotBlank() },

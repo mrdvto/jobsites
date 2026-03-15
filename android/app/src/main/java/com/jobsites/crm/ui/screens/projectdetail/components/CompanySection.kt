@@ -1,5 +1,7 @@
 package com.jobsites.crm.ui.screens.projectdetail.components
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -155,38 +158,49 @@ private fun ContactRow(
             }
         }
         // Phone + Email row
+        val context = LocalContext.current
         Row(
             modifier = Modifier.padding(top = 2.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             val phone = contact.mobilePhone ?: contact.businessPhone ?: contact.phone
             if (phone.isNotBlank()) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable {
+                        context.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phone")))
+                    }
+                ) {
                     Icon(
                         Icons.Outlined.Phone, null,
                         modifier = Modifier.height(12.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
                     )
                     Spacer(Modifier.width(2.dp))
                     Text(
                         text = phone,
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }
             if (contact.email.isNotBlank()) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable {
+                        context.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:${contact.email}")))
+                    }
+                ) {
                     Icon(
                         Icons.Outlined.Email, null,
                         modifier = Modifier.height(12.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
                     )
                     Spacer(Modifier.width(2.dp))
                     Text(
                         text = contact.email,
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
             }

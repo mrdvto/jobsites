@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.SortByAlpha
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Badge
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -95,14 +96,18 @@ fun ProjectListScreen(
                     )
                     // Filter button with badge
                     IconButton(onClick = { showFilters = true }) {
-                        if (state.filters.activeFilterCount > 0) {
-                            Badge(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
-                            ) {
-                                Text(state.filters.activeFilterCount.toString())
+                        BadgedBox(
+                            badge = {
+                                if (state.filters.activeFilterCount > 0) {
+                                    Badge(
+                                        containerColor = MaterialTheme.colorScheme.primary,
+                                        contentColor = MaterialTheme.colorScheme.onPrimary
+                                    ) {
+                                        Text(state.filters.activeFilterCount.toString())
+                                    }
+                                }
                             }
-                        } else {
+                        ) {
                             Icon(Icons.Outlined.FilterList, "Filter")
                         }
                     }

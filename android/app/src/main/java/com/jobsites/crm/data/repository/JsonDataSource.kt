@@ -32,6 +32,7 @@ class JsonDataSource(private val context: Context) {
     private val json = Json {
         ignoreUnknownKeys = true
         isLenient = true
+        coerceInputValues = true
     }
 
     // ── Helper: read raw text from assets ────────────────────────────

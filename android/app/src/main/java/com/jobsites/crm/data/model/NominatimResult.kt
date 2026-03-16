@@ -30,5 +30,6 @@ data class NominatimAddress(
     val village: String? = null,
     val state: String? = null,
     val postcode: String? = null,
-    val country: String? = null
+    val country: String? = null,
+    @SerialName("country_code") val countryCode: String? = null
 )

@@ -1,6 +1,7 @@
 package com.jobsites.crm.data.repository
 
 import com.jobsites.crm.data.model.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -233,6 +234,17 @@ class CrmRepository @Inject constructor(
 
     fun getUserNames(ids: List<Int>): String =
         ids.joinToString("; ") { getUserName(it) }
+
+    // TODO: In production, this should call the user search API endpoint
+    suspend fun searchUsers(query: String): List<User> {
+        delay(200) // simulate network latency
+        val q = query.lowercase()
+        return _users.value.filter {
+            it.firstName.lowercase().contains(q) ||
+            it.lastName.lowercase().contains(q) ||
+            (it.email?.lowercase()?.contains(q) == true)
+        }
+    }
 
     fun getStageName(id: Int): String =
         _opportunityStages.value.find { it.stageId == id }?.stageName ?: "Unknown"

@@ -32,15 +32,16 @@ fun AddressAutocompleteField(
     onValueChange: (String) -> Unit,
     onSuggestionSelected: (NominatimResult) -> Unit,
     nominatimService: NominatimService,
+    countryCode: String = "",
     modifier: Modifier = Modifier
 ) {
     var suggestions by remember { mutableStateOf(emptyList<NominatimResult>()) }
     var expanded by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
-    var isUserEditing by remember { mutableStateOf(true) }
+    var isUserEditing by remember { mutableStateOf(false) }
 
-    // Debounced search: cancels previous coroutine when value changes
-    LaunchedEffect(value) {
+    // Debounced search: cancels previous coroutine when value or country changes
+    LaunchedEffect(value, countryCode) {
         if (!isUserEditing || value.length < 3) {
             suggestions = emptyList()
             expanded = false
@@ -48,7 +49,7 @@ fun AddressAutocompleteField(
         }
         isLoading = true
         delay(500L) // debounce
-        val results = nominatimService.search(value)
+        val results = nominatimService.search(value, countryCode)
         suggestions = results
         expanded = results.isNotEmpty()
         isLoading = false

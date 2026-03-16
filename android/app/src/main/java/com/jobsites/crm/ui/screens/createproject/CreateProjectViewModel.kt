@@ -8,6 +8,7 @@ import com.jobsites.crm.data.model.ProjectOwner
 import com.jobsites.crm.data.model.User
 import com.jobsites.crm.data.network.NominatimService
 import com.jobsites.crm.data.repository.CrmRepository
+import com.jobsites.crm.ui.components.DropdownOption
 import com.jobsites.crm.ui.screens.shared.FormValidationError
 import com.jobsites.crm.ui.screens.shared.ProjectFormState
 import com.jobsites.crm.ui.screens.shared.validateProjectForm
@@ -45,6 +46,11 @@ class CreateProjectViewModel @Inject constructor(
             ownershipTypes = lookups.ownershipTypes
         )
     }
+
+    suspend fun searchUsers(query: String): List<DropdownOption> =
+        repository.searchUsers(query).map {
+            DropdownOption(it.id.toString(), "${it.lastName}, ${it.firstName}")
+        }
 
     fun onFormChange(form: ProjectFormState) {
         _uiState.value = _uiState.value.copy(form = form, error = null)

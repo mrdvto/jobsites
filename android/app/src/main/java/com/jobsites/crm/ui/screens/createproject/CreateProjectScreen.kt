@@ -81,6 +81,7 @@ fun CreateProjectScreen(
                     primaryProjectTypes = state.primaryProjectTypes,
                     ownershipTypes = state.ownershipTypes,
                     nominatimService = viewModel.nominatimService,
+                    searchUsers = { viewModel.searchUsers(it) },
                     showNameField = true,
                     showStatusField = true
                 )

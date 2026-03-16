@@ -16,14 +16,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.MyLocation
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,14 +40,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.jobsites.crm.data.model.ALL_COUNTRIES
 import com.jobsites.crm.data.model.LookupOption
 import com.jobsites.crm.data.model.User
+import com.jobsites.crm.data.model.countryNameByCode
 import com.jobsites.crm.ui.components.DatePickerField
 import com.jobsites.crm.data.network.NominatimService
 import com.jobsites.crm.ui.components.AddressAutocompleteField
 import com.jobsites.crm.ui.components.DropdownField
 import com.jobsites.crm.ui.components.DropdownOption
-import com.jobsites.crm.ui.components.MultiSelectField
+import com.jobsites.crm.ui.components.SearchableMultiSelectField
 
 /**
  * Shared mutable state for the project form, used by both Create and Edit.
@@ -52,7 +63,8 @@ data class ProjectFormState(
     val city: String = "",
     val state: String = "",
     val zipCode: String = "",
-    val country: String = "",
+    // TODO: In production, default country should come from back-end configuration
+    val country: String = "us",
     val valuation: String = "",
     val ownershipTypeId: String = "",
     val primaryStageId: String = "",
@@ -76,6 +88,7 @@ fun validateProjectForm(form: ProjectFormState, requireName: Boolean = true): Fo
 /**
  * Reusable form fields composable shared by Create and Edit screens.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProjectFormFields(
     form: ProjectFormState,
@@ -85,6 +98,7 @@ fun ProjectFormFields(
     primaryProjectTypes: List<LookupOption>,
     ownershipTypes: List<LookupOption>,
     nominatimService: NominatimService,
+    searchUsers: suspend (String) -> List<DropdownOption>,
     showNameField: Boolean = true,
     showStatusField: Boolean = true,
     modifier: Modifier = Modifier
@@ -95,8 +109,6 @@ fun ProjectFormFields(
         DropdownOption("On Hold", "On Hold"),
         DropdownOption("Completed", "Completed"),
     )
-    val userOptions = users.sortedBy { it.lastName }
-        .map { DropdownOption(it.id.toString(), "${it.lastName}, ${it.firstName}") }
     val stageOptions = listOf(DropdownOption("", "None")) +
             primaryStages.map { DropdownOption(it.id, it.label) }
     val typeOptions = listOf(DropdownOption("", "None")) +
@@ -130,11 +142,18 @@ fun ProjectFormFields(
             Spacer(Modifier.height(8.dp))
         }
 
-        MultiSelectField(
+        val selectedLabels = remember(form.assigneeIds, users) {
+            form.assigneeIds.associateWith { key ->
+                users.find { it.id.toString() == key }
+                    ?.let { "${it.lastName}, ${it.firstName}" } ?: key
+            }
+        }
+        SearchableMultiSelectField(
             label = "Assignee(s) *",
-            options = userOptions,
             selectedKeys = form.assigneeIds,
+            selectedLabels = selectedLabels,
             onSelectionChange = { onFormChange(form.copy(assigneeIds = it)) },
+            onSearch = searchUsers,
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -231,6 +250,15 @@ fun ProjectFormFields(
             }
         } else {
             // Address fields (with autocomplete lookup)
+
+            // TODO: In production, default country should come from back-end configuration
+            SearchableCountryDropdown(
+                selectedCode = form.country,
+                onCountrySelected = { onFormChange(form.copy(country = it)) },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(8.dp))
+
             AddressAutocompleteField(
                 value = form.street,
                 onValueChange = { onFormChange(form.copy(street = it)) },
@@ -240,12 +268,13 @@ fun ProjectFormFields(
                         city = result.cityName(),
                         state = result.address?.state ?: "",
                         zipCode = result.address?.postcode ?: "",
-                        country = result.address?.country ?: "",
+                        country = result.address?.countryCode?.lowercase() ?: form.country,
                         latitude = result.lat,
                         longitude = result.lon
                     ))
                 },
                 nominatimService = nominatimService,
+                countryCode = form.country,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))
@@ -267,23 +296,13 @@ fun ProjectFormFields(
                 )
             }
             Spacer(Modifier.height(8.dp))
-            Row(Modifier.fillMaxWidth()) {
-                OutlinedTextField(
-                    value = form.zipCode,
-                    onValueChange = { onFormChange(form.copy(zipCode = it)) },
-                    label = { Text("Zip Code") },
-                    singleLine = true,
-                    modifier = Modifier.weight(0.5f)
-                )
-                Spacer(Modifier.width(8.dp))
-                OutlinedTextField(
-                    value = form.country,
-                    onValueChange = { onFormChange(form.copy(country = it)) },
-                    label = { Text("Country") },
-                    singleLine = true,
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            OutlinedTextField(
+                value = form.zipCode,
+                onValueChange = { onFormChange(form.copy(zipCode = it)) },
+                label = { Text("Zip / Postal Code") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
 
         Spacer(Modifier.height(16.dp))
@@ -392,4 +411,75 @@ private fun SectionHeader(title: String) {
         modifier = Modifier.fillMaxWidth()
     )
     Spacer(Modifier.height(8.dp))
+}
+
+/**
+ * Searchable country dropdown that displays full country names but stores ISO codes.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchableCountryDropdown(
+    selectedCode: String,
+    onCountrySelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var searchText by remember { mutableStateOf("") }
+    val displayName = countryNameByCode(selectedCode)
+
+    // When not expanded, show full country name; when expanded, show search text
+    val textFieldValue = if (expanded) searchText else displayName
+
+    val filteredCountries = remember(searchText) {
+        if (searchText.isBlank()) ALL_COUNTRIES
+        else ALL_COUNTRIES.filter { it.name.contains(searchText, ignoreCase = true) }
+    }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = {
+            expanded = it
+            if (it) searchText = "" // clear search when opening
+        },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = textFieldValue,
+            onValueChange = { searchText = it },
+            label = { Text("Country") },
+            singleLine = true,
+            leadingIcon = {
+                Icon(Icons.Outlined.LocationOn, contentDescription = null, modifier = Modifier.size(18.dp))
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(MenuAnchorType.PrimaryEditable)
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+                searchText = ""
+            }
+        ) {
+            filteredCountries.forEach { country ->
+                DropdownMenuItem(
+                    text = { Text(country.name) },
+                    onClick = {
+                        onCountrySelected(country.code)
+                        expanded = false
+                        searchText = ""
+                    }
+                )
+            }
+            if (filteredCountries.isEmpty()) {
+                DropdownMenuItem(
+                    text = { Text("No countries found", color = MaterialTheme.colorScheme.onSurfaceVariant) },
+                    onClick = { },
+                    enabled = false
+                )
+            }
+        }
+    }
 }

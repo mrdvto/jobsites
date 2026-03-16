@@ -22,7 +22,7 @@
                 "city": "Chicago",
                 "state": "IL",
                 "zipCode": "60612",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.8748,
                 "longitude": -87.6688
             },
@@ -113,7 +113,7 @@
                 "city": null,
                 "state": "IL",
                 "zipCode": null,
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.8623,
                 "longitude": -87.6167
             },
@@ -194,7 +194,7 @@
                 "city": "Bolingbrook",
                 "state": "IL",
                 "zipCode": "60440",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.698,
                 "longitude": -88.068
             },
@@ -275,7 +275,7 @@
                 "city": "Aurora",
                 "state": "IL",
                 "zipCode": "60504",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.755,
                 "longitude": -88.214
             },
@@ -350,7 +350,7 @@
                 "city": "Aurora",
                 "state": "IL",
                 "zipCode": "60502",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.785,
                 "longitude": -88.250
             },
@@ -446,7 +446,7 @@
                 "city": "Springfield",
                 "state": "IL",
                 "zipCode": "62702",
-                "country": "USA",
+                "country": "us",
                 "latitude": 39.801,
                 "longitude": -89.643
             },
@@ -526,7 +526,7 @@
                 "city": "Rockford",
                 "state": "IL",
                 "zipCode": "61108",
-                "country": "USA",
+                "country": "us",
                 "latitude": 42.259,
                 "longitude": -89.064
             },
@@ -605,7 +605,7 @@
                 "city": "Bloomington",
                 "state": "IL",
                 "zipCode": "61701",
-                "country": "USA",
+                "country": "us",
                 "latitude": 40.484,
                 "longitude": -88.993
             },
@@ -680,7 +680,7 @@
                 "city": "Champaign",
                 "state": "IL",
                 "zipCode": "61820",
-                "country": "USA",
+                "country": "us",
                 "latitude": 40.096,
                 "longitude": -88.243
             },
@@ -753,7 +753,7 @@
                 "city": "Joliet",
                 "state": "IL",
                 "zipCode": "60436",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.525,
                 "longitude": -88.081
             },
@@ -846,7 +846,7 @@
                 "city": "Bolingbrook",
                 "state": "IL",
                 "zipCode": "60440",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.698,
                 "longitude": -88.068
             },
@@ -908,7 +908,7 @@
                 "city": "Chicago",
                 "state": "IL",
                 "zipCode": "60614",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.926,
                 "longitude": -87.648
             },
@@ -972,7 +972,7 @@
                 "city": "Channahon",
                 "state": "IL",
                 "zipCode": "60410",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.428,
                 "longitude": -88.228
             },
@@ -1034,7 +1034,7 @@
                 "city": "Chicago",
                 "state": "IL",
                 "zipCode": "60666",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.978,
                 "longitude": -87.904
             },
@@ -1094,7 +1094,7 @@
                 "city": "Kankakee",
                 "state": "IL",
                 "zipCode": "60901",
-                "country": "USA",
+                "country": "us",
                 "latitude": 41.120,
                 "longitude": -87.860
             },

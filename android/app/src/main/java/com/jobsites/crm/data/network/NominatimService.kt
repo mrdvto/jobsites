@@ -15,7 +15,7 @@ class NominatimService(private val client: OkHttpClient) {
     @Volatile
     private var lastRequestTime = 0L
 
-    suspend fun search(query: String): List<NominatimResult> = withContext(Dispatchers.IO) {
+    suspend fun search(query: String, countryCode: String = ""): List<NominatimResult> = withContext(Dispatchers.IO) {
         try {
             // Enforce ≥1000ms between requests (Nominatim usage policy)
             val now = System.currentTimeMillis()
@@ -25,8 +25,9 @@ class NominatimService(private val client: OkHttpClient) {
             }
 
             val encoded = URLEncoder.encode(query, "UTF-8")
+            val countryParam = if (countryCode.isNotBlank()) "&countrycodes=$countryCode" else ""
             val url = "https://nominatim.openstreetmap.org/search" +
-                "?q=$encoded&format=json&addressdetails=1&limit=5&countrycodes=us"
+                "?q=$encoded&format=json&addressdetails=1&limit=5$countryParam"
 
             val request = Request.Builder()
                 .url(url)

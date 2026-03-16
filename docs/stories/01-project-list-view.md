@@ -6,6 +6,26 @@ As an Outside rental rep,
 I want to view a list of all active construction projects,
 So that I can see my pipeline and determine which projects I need to visit and drop location pins on.
 
+**Data Definitions (Sales Perspective):**
+*   **KPIs:**
+    *   **Pipeline Revenue:** The sum of estimated revenue for all opportunities across the currently filtered projects that are in an active pipeline phase (Phase 1 or 2). Broken down by opportunity type (e.g., Rental, Sale).
+    *   **Won Revenue:** The sum of actual revenue for all opportunities across the currently filtered projects that are in the "Won" stage (Stage 16). Broken down by opportunity type.
+*   **List View Columns:**
+    *   **Project Name:** The official or working name of the construction project.
+    *   **Address:** The geographical location (City, State) of the jobsite.
+    *   **Assignee:** The internal sales representatives responsible for this project.
+    *   **Owner:** The primary corporate entity or developer funding the project.
+    *   **Status:** The CRM-specific status of our engagement with the project (Active, Planning, On Hold, Completed).
+    *   **Won Revenue:** Our total finalized deal size (closed/won opportunities) for this specific project.
+    *   **Pipeline Revenue:** Our total potential deal size (open opportunities) for this specific project.
+    *   **Valuation:** The total overall dollar value of the construction project itself (not just our piece).
+    *   **Primary Stage:** The current physical or planning phase of the construction (e.g., Bidding, Construction).
+    *   **Project Type:** The category of construction (e.g., Commercial, Medical, Infrastructure).
+    *   **Ownership Type:** The funding source type (e.g., Private, Public Sector).
+    *   **Bid Date:** The deadline for subcontractors to submit pricing.
+    *   **Target Start/Completion:** Working timeline for when dirt moves to when the project wraps up.
+    *   **External Reference:** IDs mapping back to external lead providers like Dodge Construction Network.
+
 **Acceptance Criteria:**
 
 Feature: 1. Project List View
@@ -16,8 +36,24 @@ Feature: 1. Project List View
 
   Scenario: 1.1. Default Data Load
     Then I should see the "Projects List" header
-    And I should see the KPI cards displaying aggregate metrics
-    And I should see a table of projects
+    And I should see the KPI card displaying "Pipeline Revenue" total and subtype breakdown
+    And I should see the KPI card displaying "Won Revenue" total and subtype breakdown
+    And I should see a table of projects with the following columns:
+      | Project Name       |
+      | Address            |
+      | Assignee           |
+      | Owner              |
+      | Status             |
+      | Won Revenue        |
+      | Pipeline Revenue   |
+      | Valuation          |
+      | Primary Stage      |
+      | Project Type       |
+      | Ownership Type     |
+      | Bid Date           |
+      | Target Start       |
+      | Target Completion  |
+      | External Reference |
     And the table should display 25 rows by default
 
   Scenario: 1.2. Navigate to Project Details
@@ -93,15 +129,22 @@ Feature: 3. Sort and Paginate Projects
     Then the table should sort by "<column_name>" in descending order
 
     Examples:
-      | column_name      |
-      | Project Name     |
-      | Address          |
-      | Assignee         |
-      | Status           |
-      | Valuation        |
-      | Won Revenue      |
-      | Pipeline Revenue |
-      | Bid Date         |
+      | column_name          |
+      | Project Name         |
+      | Address              |
+      | Assignee             |
+      | Owner                |
+      | Status               |
+      | Won Revenue          |
+      | Pipeline Revenue     |
+      | Valuation            |
+      | Primary Stage        |
+      | Project Type         |
+      | Ownership Type       |
+      | Bid Date             |
+      | Target Start         |
+      | Target Completion    |
+      | External Reference   |
 
   Scenario: 3.2. Change Rows Per Page
     When I select "50" from the "Rows per page" dropdown
@@ -128,6 +171,8 @@ Feature: 4. Column Visibility
 
   Background:
     Given I am on the "Projects List" page
+    And "Project Name" is always a visible column
+    And the table has the following toggleable columns: "Address", "Assignee", "Owner", "Status", "Won Revenue", "Pipeline Revenue", "Valuation", "Primary Stage", "Project Type", "Ownership Type", "Bid Date", "Target Start", "Target Completion", "External Reference"
 
   Scenario: 4.1. Hide and Show Columns
     When I click the "Columns" visibility selector button

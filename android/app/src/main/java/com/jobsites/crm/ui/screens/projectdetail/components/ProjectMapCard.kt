@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.NearMe
 import androidx.compose.material3.Card
@@ -108,6 +109,22 @@ fun ProjectMapCard(
                         .fillMaxWidth()
                         .height(180.dp)
                         .clip(RoundedCornerShape(12.dp))
+                )
+
+                // PROTOTYPE ONLY: This is a static placeholder pin drawn at the center of
+                // the map tile. In production, the pin should be rendered by OSM or a
+                // static-map service (Mapbox, Google, Geoapify) that places the marker at
+                // the exact geocoded coordinates on the server side. This client-side
+                // overlay assumes the tile is centered on the location, which is only
+                // approximately correct because OSM tiles snap to a grid.
+                Icon(
+                    imageVector = Icons.Filled.LocationOn,
+                    contentDescription = "Approximate project location",
+                    tint = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(bottom = 18.dp) // offset so pin tip lands at center
+                        .size(40.dp)
                 )
             } else {
                 // Placeholder when no coordinates — address-only case

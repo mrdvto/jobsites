@@ -235,6 +235,18 @@
                         { "id": 3, "name": "Jessica Palmer", "title": "Paving Crew Lead", "phone": "630-555-0443", "email": "j.palmer@currancontracting.com", "divisionIds": ["P"] }
                     ],
                     "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "NON-MWS",
+                    "companyName": "Midwest Striping & Signs",
+                    "roleId": "SUB-EXC",
+                    "roleDescription": "Subcontractor - Excavating",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Tom Brannigan", "title": "Operations Director", "phone": "815-555-0390", "email": "t.brannigan@midweststriping.com", "divisionIds": ["P"] },
+                        { "id": 2, "name": "Rachel Dunn", "title": "Field Supervisor", "phone": "815-555-0391", "email": "r.dunn@midweststriping.com", "divisionIds": ["P"] }
+                    ],
+                    "primaryContactIndex": 0
                 }
             ],
             "associatedOpportunities": [

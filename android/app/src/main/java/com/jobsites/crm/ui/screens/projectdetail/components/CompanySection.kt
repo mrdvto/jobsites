@@ -166,11 +166,10 @@ private fun CompanyCard(
                                 FilterChip(
                                     selected = true,
                                     onClick = {},
-                                    enabled = false,
                                     label = { Text(role, style = MaterialTheme.typography.labelSmall) },
                                     colors = FilterChipDefaults.filterChipColors(
-                                        selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                        selectedLabelColor = MaterialTheme.colorScheme.primary
+                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
                                 )
                             }

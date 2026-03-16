@@ -160,7 +160,7 @@ fun ProjectMapCard(
                     .align(Alignment.BottomEnd)
                     .padding(8.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.9f),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f),
                         shape = RoundedCornerShape(16.dp)
                     )
                     .padding(horizontal = 10.dp, vertical = 5.dp),
@@ -170,14 +170,14 @@ fun ProjectMapCard(
                     Icons.Outlined.NearMe,
                     contentDescription = null,
                     modifier = Modifier.size(14.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
                     text = "Navigate",
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 13.sp
                 )
             }

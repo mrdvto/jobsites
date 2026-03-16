@@ -10,19 +10,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import com.jobsites.crm.ui.components.FilteredEmptyState
+import com.jobsites.crm.ui.components.SectionSearchBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -91,6 +87,10 @@ fun OpportunitySection(
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         // Filter toggles
+        val chipColors = FilterChipDefaults.filterChipColors(
+            selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+            selectedLabelColor = MaterialTheme.colorScheme.primary
+        )
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             FilterChip(
                 selected = showOpenOnly,
@@ -98,7 +98,8 @@ fun OpportunitySection(
                     showOpenOnly = !showOpenOnly
                     onFilterChange(showOpenOnly, showMineOnly)
                 },
-                label = { Text("Open Only") }
+                label = { Text("Open Only") },
+                colors = chipColors
             )
             FilterChip(
                 selected = showMineOnly,
@@ -106,40 +107,19 @@ fun OpportunitySection(
                     showMineOnly = !showMineOnly
                     onFilterChange(showOpenOnly, showMineOnly)
                 },
-                label = { Text("My Opportunities") }
+                label = { Text("My Opportunities") },
+                colors = chipColors
             )
         }
 
-        // Search bar
         if (associatedOpportunities.size > 3) {
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                placeholder = { Text("Search opportunities…", style = MaterialTheme.typography.bodySmall) },
-                leadingIcon = { Icon(Icons.Outlined.Search, null, modifier = Modifier.size(18.dp)) },
-                trailingIcon = {
-                    if (searchQuery.isNotBlank()) {
-                        IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(24.dp)) {
-                            Icon(Icons.Outlined.Close, "Clear", modifier = Modifier.size(16.dp))
-                        }
-                    }
-                },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = MaterialTheme.typography.bodySmall,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                )
-            )
+            SectionSearchBar(query = searchQuery, onQueryChange = { searchQuery = it }, placeholder = "Search opportunities…")
         }
 
         if (filtered.isEmpty() && (searchQuery.isNotBlank() || showOpenOnly || showMineOnly)) {
-            Text(
-                text = if (searchQuery.isNotBlank()) "No opportunities match \"$searchQuery\""
-                       else "No opportunities match current filters",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(vertical = 8.dp)
+            FilteredEmptyState(
+                if (searchQuery.isNotBlank()) "No opportunities match \"$searchQuery\""
+                else "No opportunities match current filters"
             )
         }
 

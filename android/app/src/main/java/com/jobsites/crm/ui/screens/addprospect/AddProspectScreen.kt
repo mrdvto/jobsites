@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -122,7 +123,11 @@ fun AddProspectScreen(
                                     copy(divisionIds = if (selected) divisionIds - div.code else divisionIds + div.code)
                                 }
                             },
-                            label = { Text("${div.code} — ${div.name}") }
+                            label = { Text("${div.code} — ${div.name}") },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                                selectedLabelColor = MaterialTheme.colorScheme.primary
+                            )
                         )
                     }
                 }
@@ -149,7 +154,11 @@ fun AddProspectScreen(
                                     copy(roleIds = if (selected) roleIds - role.id else roleIds + role.id)
                                 }
                             },
-                            label = { Text(role.label) }
+                            label = { Text(role.label) },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                                selectedLabelColor = MaterialTheme.colorScheme.primary
+                            )
                         )
                     }
                 }

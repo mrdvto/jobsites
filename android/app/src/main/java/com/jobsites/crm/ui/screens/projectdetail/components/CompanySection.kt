@@ -16,14 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.Phone
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
@@ -32,8 +30,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.runtime.Composable
@@ -49,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jobsites.crm.data.model.CompanyContact
 import com.jobsites.crm.data.model.ProjectCompany
+import com.jobsites.crm.ui.components.FilteredEmptyState
+import com.jobsites.crm.ui.components.SectionSearchBar
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -73,36 +71,12 @@ fun CompanySection(
     }
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        // Search bar (shown when > 3 companies)
         if (companies.size > 3) {
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                placeholder = { Text("Search companies/contacts…", style = MaterialTheme.typography.bodySmall) },
-                leadingIcon = { Icon(Icons.Outlined.Search, null, modifier = Modifier.size(18.dp)) },
-                trailingIcon = {
-                    if (searchQuery.isNotBlank()) {
-                        IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(24.dp)) {
-                            Icon(Icons.Outlined.Close, "Clear", modifier = Modifier.size(16.dp))
-                        }
-                    }
-                },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = MaterialTheme.typography.bodySmall,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                )
-            )
+            SectionSearchBar(query = searchQuery, onQueryChange = { searchQuery = it }, placeholder = "Search companies/contacts…")
         }
 
         if (filtered.isEmpty() && searchQuery.isNotBlank()) {
-            Text(
-                text = "No companies or contacts match \"$searchQuery\"",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
+            FilteredEmptyState("No companies or contacts match \"$searchQuery\"")
         }
 
         filtered.forEach { company ->
@@ -168,8 +142,8 @@ private fun CompanyCard(
                                     onClick = {},
                                     label = { Text(role, style = MaterialTheme.typography.labelSmall) },
                                     colors = FilterChipDefaults.filterChipColors(
-                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                        selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                                        selectedLabelColor = MaterialTheme.colorScheme.primary
                                     )
                                 )
                             }

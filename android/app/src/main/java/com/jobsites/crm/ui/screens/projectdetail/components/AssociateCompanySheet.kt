@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -153,7 +154,11 @@ fun AssociateCompanySheet(
                                 selectedRoles + role.id
                             error = null
                         },
-                        label = { Text(role.label) }
+                        label = { Text(role.label) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                            selectedLabelColor = MaterialTheme.colorScheme.primary
+                        )
                     )
                 }
             }

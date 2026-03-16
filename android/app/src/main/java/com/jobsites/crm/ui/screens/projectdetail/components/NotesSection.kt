@@ -17,13 +17,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
-import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Image
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
@@ -32,8 +30,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,6 +47,8 @@ import androidx.core.net.toUri
 import com.jobsites.crm.data.model.Attachment
 import com.jobsites.crm.data.model.Note
 import com.jobsites.crm.data.model.NoteTag
+import com.jobsites.crm.ui.components.FilteredEmptyState
+import com.jobsites.crm.ui.components.SectionSearchBar
 import com.jobsites.crm.ui.theme.TagAmber
 import com.jobsites.crm.ui.theme.TagRed
 import com.jobsites.crm.ui.theme.TagSky
@@ -87,25 +85,7 @@ fun NotesSection(
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
         // Search bar (shown when > 3 notes)
         if (notes.size > 3) {
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                placeholder = { Text("Search notes…", style = MaterialTheme.typography.bodySmall) },
-                leadingIcon = { Icon(Icons.Outlined.Search, null, modifier = Modifier.size(18.dp)) },
-                trailingIcon = {
-                    if (searchQuery.isNotBlank()) {
-                        IconButton(onClick = { searchQuery = "" }, modifier = Modifier.size(24.dp)) {
-                            Icon(Icons.Outlined.Close, "Clear", modifier = Modifier.size(16.dp))
-                        }
-                    }
-                },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = MaterialTheme.typography.bodySmall,
-                colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
-                )
-            )
+            SectionSearchBar(query = searchQuery, onQueryChange = { searchQuery = it }, placeholder = "Search notes…")
         }
 
         // Tag filter chips
@@ -142,12 +122,7 @@ fun NotesSection(
 
         // Filtered note list
         if (filtered.isEmpty() && notes.isNotEmpty()) {
-            Text(
-                text = "No notes match your filters",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
+            FilteredEmptyState("No notes match your filters")
         }
 
         filtered.forEach { note ->

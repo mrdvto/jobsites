@@ -6,7 +6,7 @@ As an Outside rental rep,
 I want to view a list of all active construction projects,
 So that I can see my pipeline and determine which projects I need to visit and drop location pins on.
 
-**Data Definitions (Sales Perspective):**
+**Data Definitions:**
 *   **KPIs:**
     *   **Pipeline Revenue:** The sum of estimated revenue for all opportunities across the currently filtered projects that are in an active pipeline phase (Phase 1 or 2). Broken down by opportunity type (e.g., Rental, Sale).
     *   **Won Revenue:** The sum of actual revenue for all opportunities across the currently filtered projects that are in the "Won" stage (Stage 16). Broken down by opportunity type.
@@ -16,7 +16,7 @@ So that I can see my pipeline and determine which projects I need to visit and d
     *   **Assignee:** The internal sales representatives responsible for this project.
     *   **Owner:** The primary corporate entity or developer funding the project.
     *   **Status:** The CRM-specific status of our engagement with the project (Active, Planning, On Hold, Completed).
-    *   **Won Revenue:** Our total finalized deal size (closed/won opportunities) for this specific project.
+    *   **Won Revenue:** Our total finalized deal size (won opportunities) for this specific project.
     *   **Pipeline Revenue:** Our total potential deal size (open opportunities) for this specific project.
     *   **Valuation:** The total overall dollar value of the construction project itself (not just our piece).
     *   **Primary Stage:** The current physical or planning phase of the construction (e.g., Bidding, Construction).

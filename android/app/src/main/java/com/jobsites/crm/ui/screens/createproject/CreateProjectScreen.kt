@@ -80,6 +80,7 @@ fun CreateProjectScreen(
                     primaryStages = state.primaryStages,
                     primaryProjectTypes = state.primaryProjectTypes,
                     ownershipTypes = state.ownershipTypes,
+                    nominatimService = viewModel.nominatimService,
                     showNameField = true,
                     showStatusField = true
                 )

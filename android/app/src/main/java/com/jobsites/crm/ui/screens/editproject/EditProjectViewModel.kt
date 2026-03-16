@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.jobsites.crm.data.model.Address
 import com.jobsites.crm.data.model.LookupOption
 import com.jobsites.crm.data.model.User
+import com.jobsites.crm.data.network.NominatimService
 import com.jobsites.crm.data.repository.CrmRepository
 import com.jobsites.crm.ui.screens.shared.FormValidationError
 import com.jobsites.crm.ui.screens.shared.ProjectFormState
@@ -29,7 +30,8 @@ data class EditProjectUiState(
 @HiltViewModel
 class EditProjectViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: CrmRepository
+    private val repository: CrmRepository,
+    val nominatimService: NominatimService
 ) : ViewModel() {
 
     private val projectId: Int = savedStateHandle["projectId"] ?: 0

@@ -76,6 +76,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
+    // Networking (OkHttp — for Nominatim address autocomplete)
+    implementation(libs.okhttp)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

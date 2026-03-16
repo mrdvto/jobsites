@@ -34,6 +34,8 @@ import androidx.core.content.ContextCompat
 import com.jobsites.crm.data.model.LookupOption
 import com.jobsites.crm.data.model.User
 import com.jobsites.crm.ui.components.DatePickerField
+import com.jobsites.crm.data.network.NominatimService
+import com.jobsites.crm.ui.components.AddressAutocompleteField
 import com.jobsites.crm.ui.components.DropdownField
 import com.jobsites.crm.ui.components.DropdownOption
 import com.jobsites.crm.ui.components.MultiSelectField
@@ -82,6 +84,7 @@ fun ProjectFormFields(
     primaryStages: List<LookupOption>,
     primaryProjectTypes: List<LookupOption>,
     ownershipTypes: List<LookupOption>,
+    nominatimService: NominatimService,
     showNameField: Boolean = true,
     showStatusField: Boolean = true,
     modifier: Modifier = Modifier
@@ -227,12 +230,22 @@ fun ProjectFormFields(
                 )
             }
         } else {
-            // Address fields
-            OutlinedTextField(
+            // Address fields (with autocomplete lookup)
+            AddressAutocompleteField(
                 value = form.street,
                 onValueChange = { onFormChange(form.copy(street = it)) },
-                label = { Text("Street") },
-                singleLine = true,
+                onSuggestionSelected = { result ->
+                    onFormChange(form.copy(
+                        street = result.streetLine(),
+                        city = result.cityName(),
+                        state = result.address?.state ?: "",
+                        zipCode = result.address?.postcode ?: "",
+                        country = result.address?.country ?: "",
+                        latitude = result.lat,
+                        longitude = result.lon
+                    ))
+                },
+                nominatimService = nominatimService,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.height(8.dp))

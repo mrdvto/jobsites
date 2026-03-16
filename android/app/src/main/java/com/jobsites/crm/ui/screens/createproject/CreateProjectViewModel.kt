@@ -6,6 +6,7 @@ import com.jobsites.crm.data.model.LookupOption
 import com.jobsites.crm.data.model.Project
 import com.jobsites.crm.data.model.ProjectOwner
 import com.jobsites.crm.data.model.User
+import com.jobsites.crm.data.network.NominatimService
 import com.jobsites.crm.data.repository.CrmRepository
 import com.jobsites.crm.ui.screens.shared.FormValidationError
 import com.jobsites.crm.ui.screens.shared.ProjectFormState
@@ -28,7 +29,8 @@ data class CreateProjectUiState(
 
 @HiltViewModel
 class CreateProjectViewModel @Inject constructor(
-    private val repository: CrmRepository
+    private val repository: CrmRepository,
+    val nominatimService: NominatimService
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CreateProjectUiState())

@@ -83,6 +83,7 @@ fun EditProjectScreen(
                     primaryStages = state.primaryStages,
                     primaryProjectTypes = state.primaryProjectTypes,
                     ownershipTypes = state.ownershipTypes,
+                    nominatimService = viewModel.nominatimService,
                     showNameField = false,   // Name not editable
                     showStatusField = false  // Status not editable in edit
                 )

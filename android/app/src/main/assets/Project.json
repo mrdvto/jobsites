@@ -18,13 +18,13 @@
                 "contactIds": [1, 2]
             },
             "address": {
-                "street": "1200 Medical Center Dr",
+                "street": "1653 W Congress Pkwy",
                 "city": "Chicago",
                 "state": "IL",
                 "zipCode": "60612",
                 "country": "USA",
-                "latitude": 41.872,
-                "longitude": -87.665
+                "latitude": 41.8748,
+                "longitude": -87.6688
             },
             "siteCompanies": [
                 {

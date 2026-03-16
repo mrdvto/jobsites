@@ -1,73 +1,36 @@
-# Welcome to your Lovable project
+# The Dealership Death Trap (And How to Escape It)
 
-## Project info
+Look, here’s the brutal truth about your equipment dealership right now:
 
-**URL**: https://lovable.dev/projects/5286a018-ae1a-4840-85f3-08d11d069c24
+**You are leaving millions of dollars on the table on every single construction site, and you don't even know it.**
 
-## How can I edit this code?
+Why? Because your CRM is built for *accounts*, but the real world is built on *projects*.
 
-There are several ways of editing your application.
+Right now, a major hospital or data center goes up in your territory. You’ve got General Contractors, five different Subcontractors, and your own internal teams—Rental, Machine Sales, Product Support, Power Systems—all swarming the exact same dirt.
 
-**Use Lovable**
+And what happens?
+*   Your rental reps hate the CRM, so they go rogue with spreadsheets and Google Maps.
+*   Your inside sales team is blind, quoting blindly when contractors call in.
+*   Your pipeline is massively inflated because five different sub-contractors bid the same job, and your managers count it five times.
+*   Your mechanics waste hours driving around massive 500-acre sites because they don’t have unit-level GPS pings.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5286a018-ae1a-4840-85f3-08d11d069c24) and start prompting.
+**You are fighting turf wars internally while your competitors steal your lunch externally.**
 
-Changes made via Lovable will be committed automatically to this repo.
+## The Solution: A Native Project Ecosystem
 
-**Use your preferred IDE**
+The market is shifting. "Usership" is crushing "Ownership." Rentals are booming. OEMs are demanding you double your service revenue. If you stay on your legacy "account-centric" CRM or try to hack together Salesforce... you die.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+We built this Project Module to fix the core rot in your operations. It maps the *exact* many-to-many relationship of a modern construction project.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+**Here is exactly what happens when you turn this on:**
 
-Follow these steps:
+1.  **Shadow IT Dies Today:** Your outside guys get a blazing-fast, mobile-first iPad app where they can drop pins and log subcontractors in seconds. They actually *want* to use it.
+2.  **Unbreakable Stickiness:** We move your Inside Sales and Parts Counter staff into the core CRM. They stop flying blind. They verify accounts and dispatch mechanics instantly. The friction disappears.
+3.  **Perfect Pipeline Vision:** Your Sales Managers get a unified, deduplicated view of the *actual* project revenue. No more fake numbers. No more pipeline inflation.
+4.  **Maximum Share of Wallet:** Your Machine Sales guy knows what Rental is doing. Your Product Support team knows exactly where the equipment is parked so they can service it. You extract every single dollar from the project.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+This isn't a feature update. This is how you defend your territory from Tier-1 ERPs and dominate your market.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Stop guessing. Start dominating. 
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/5286a018-ae1a-4840-85f3-08d11d069c24) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+* * *

@@ -137,3 +137,33 @@ Feature: 4. Global Navigation
     When I click the "Projects" link
     Then I should be navigated to the "Project List" page (`/`)
     And the link should be visually highlighted to indicate the active section
+
+---
+
+### **User Story: Transfer Customer Flow**
+
+**Description:**
+
+As a Sales Administrator or Sales Rep,
+I want the system to automatically transfer all associated CRM Projects when a prospect is converted to a customer,
+So that project data remains intact and accurately linked to the new ERP-originated customer number without manual data entry.
+
+**Acceptance Criteria:**
+
+Feature: 5. Transfer Customer Flow for Projects
+
+  Background:
+    Given I am in the "Transfer Customer" process flow for a prospect being converted to a customer
+    And I am on "Step 2: Transfer Records"
+
+  Scenario: 5.1. Projects Record Type Selection
+    Then I should see "Projects" listed in the available record types to transfer
+    And the action dropdown for "Projects" should be locked to "Transfer"
+    And I should not see "Take no action" as an available option for the "Projects" record type
+
+  Scenario: 5.2. Automatic Project ID Update on Transfer Completion
+    Given a prospect company with ID "$PROSPECT_123" is associated with one or more CRM Projects
+    When I complete the "Transfer Customer" process
+    And the new customer number originated from the ERP is "CUSTOMER_456"
+    Then all CRM Projects previously associated with "$PROSPECT_123" should be updated to link to "CUSTOMER_456"
+    And the old "$PROSPECT_123" association should be removed from those projects

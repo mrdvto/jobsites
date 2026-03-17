@@ -6,7 +6,7 @@ Look, here’s the brutal truth about your equipment dealership right now:
 
 Why? Because your CRM is built for *accounts*, but the real world is built on *projects*.
 
-Right now, a major hospital or data center goes up in your territory. You’ve got General Contractors, five different Subcontractors, and your own internal teams—Rental, Machine Sales, Product Support, Power Systems—all swarming the exact same dirt.
+Right now, a major hospital or data center goes up in your territory. You’ve got General Contractors, five different Subcontractors, and your own internal teams (Rental, Machine Sales, Product Support, Power Systems) all swarming the exact same dirt.
 
 And what happens?
 *   Your rental reps hate the CRM, so they go rogue with spreadsheets and Google Maps.
@@ -24,7 +24,7 @@ We built this Project Module to fix the core rot in your operations. It maps the
 
 **Here is exactly what happens when you turn this on:**
 
-1.  **Shadow IT Dies Today:** Your outside guys get a blazing-fast, mobile-first iPad app where they can drop pins and log subcontractors in seconds. They actually *want* to use it.
+1.  **Shadow IT Dies Today:** Your outside guys get a blazing-fast, mobile-first smartphone app where they can drop pins and log subcontractors in seconds. They actually *want* to use it.
 2.  **Unbreakable Stickiness:** We move your Inside Sales and Parts Counter staff into the core CRM. They stop flying blind. They verify accounts and dispatch mechanics instantly. The friction disappears.
 3.  **Perfect Pipeline Vision:** Your Sales Managers get a unified, deduplicated view of the *actual* project revenue. No more fake numbers. No more pipeline inflation.
 4.  **Maximum Share of Wallet:** Your Machine Sales guy knows what Rental is doing. Your Product Support team knows exactly where the equipment is parked so they can service it. You extract every single dollar from the project.

@@ -167,3 +167,34 @@ Feature: 5. Transfer Customer Flow for Projects
     And the new customer number originated from the ERP is "CUSTOMER_456"
     Then all CRM Projects previously associated with "$PROSPECT_123" should be updated to link to "CUSTOMER_456"
     And the old "$PROSPECT_123" association should be removed from those projects
+
+---
+
+### **User Story: Equipment to Project Link**
+
+**Description:**
+
+As a Sales Rep,
+I want to see which CRM Project a piece of customer equipment is associated with,
+So that I can understand the jobsite context for that asset and navigate to the project quickly.
+
+**Acceptance Criteria:**
+
+Feature: 6. Equipment to Project Link
+
+  Background:
+    Given I am on the "Equipment Detail" view for a piece of owned or rented equipment
+
+  Scenario: 6.1. View Linked CRM Project on Equipment Record
+    Given the equipment record is associated with a CRM Project
+    Then I should see a "CRM Project" field displaying the linked project's name as a clickable link
+
+  Scenario: 6.2. Navigate to Linked CRM Project from Equipment
+    Given the equipment record is associated with a CRM Project
+    When I click the linked project name in the "CRM Project" field
+    Then I should be navigated to the "Project Detail" page for that specific CRM Project
+
+  Scenario: 6.3. No Project Linked
+    Given the equipment record is not associated with any CRM Project
+    Then the "CRM Project" field should be empty or display a placeholder (e.g., "—")
+

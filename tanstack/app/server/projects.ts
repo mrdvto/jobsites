@@ -88,13 +88,13 @@ export const getProjects = createServerFn({ method: 'GET' }).handler(async () =>
 });
 
 export const getProjectById = createServerFn({ method: 'GET' })
-  .validator((data: { id: number }) => data)
+  .inputValidator((data: { id: number }) => data)
   .handler(async ({ data }) => {
     return projects.find(p => p.id === data.id) || null;
   });
 
 export const getChangeLog = createServerFn({ method: 'GET' })
-  .validator((data: { projectId: number }) => data)
+  .inputValidator((data: { projectId: number }) => data)
   .handler(async ({ data }) => {
     return changeLog.filter(e => e.projectId === data.projectId);
   });
@@ -116,7 +116,7 @@ export const getAllKnownCompanies = createServerFn({ method: 'GET' }).handler(as
 // --- Write functions ---
 
 export const createProject = createServerFn({ method: 'POST' })
-  .validator((data: { project: Omit<Project, 'id'>; userId: number }) => data)
+  .inputValidator((data: { project: Omit<Project, 'id'>; userId: number }) => data)
   .handler(async ({ data }) => {
     const newId = Math.max(...projects.map(p => p.id), 0) + 1;
     const newProject: Project = { ...data.project, id: newId } as Project;
@@ -126,7 +126,7 @@ export const createProject = createServerFn({ method: 'POST' })
   });
 
 export const updateProject = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; updates: Partial<Project>; userId: number }) => data)
+  .inputValidator((data: { projectId: number; updates: Partial<Project>; userId: number }) => data)
   .handler(async ({ data }) => {
     const existing = projects.find(p => p.id === data.projectId);
     if (existing) {
@@ -142,7 +142,7 @@ export const updateProject = createServerFn({ method: 'POST' })
   });
 
 export const addProjectCompany = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; company: any; userId: number }) => data)
+  .inputValidator((data: { projectId: number; company: any; userId: number }) => data)
   .handler(async ({ data }) => {
     projects = projects.map(p => {
       if (p.id === data.projectId) {
@@ -155,7 +155,7 @@ export const addProjectCompany = createServerFn({ method: 'POST' })
   });
 
 export const removeProjectCompany = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; companyName: string; userId: number }) => data)
+  .inputValidator((data: { projectId: number; companyName: string; userId: number }) => data)
   .handler(async ({ data }) => {
     projects = projects.map(p => {
       if (p.id === data.projectId) {
@@ -168,7 +168,7 @@ export const removeProjectCompany = createServerFn({ method: 'POST' })
   });
 
 export const updateProjectCompany = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; oldCompanyName: string; updatedCompany: ProjectCompany; userId: number }) => data)
+  .inputValidator((data: { projectId: number; oldCompanyName: string; updatedCompany: ProjectCompany; userId: number }) => data)
   .handler(async ({ data }) => {
     projects = projects.map(p => {
       if (p.id === data.projectId) {
@@ -181,7 +181,7 @@ export const updateProjectCompany = createServerFn({ method: 'POST' })
   });
 
 export const addActivity = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; activity: Omit<Activity, 'id'>; userId: number }) => data)
+  .inputValidator((data: { projectId: number; activity: Omit<Activity, 'id'>; userId: number }) => data)
   .handler(async ({ data }) => {
     projects = projects.map(p => {
       if (p.id === data.projectId) {
@@ -196,7 +196,7 @@ export const addActivity = createServerFn({ method: 'POST' })
   });
 
 export const updateActivity = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; activityId: number; updates: Partial<Activity>; userId: number }) => data)
+  .inputValidator((data: { projectId: number; activityId: number; updates: Partial<Activity>; userId: number }) => data)
   .handler(async ({ data }) => {
     projects = projects.map(p => {
       if (p.id === data.projectId) {
@@ -209,7 +209,7 @@ export const updateActivity = createServerFn({ method: 'POST' })
   });
 
 export const deleteActivity = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; activityId: number; userId: number }) => data)
+  .inputValidator((data: { projectId: number; activityId: number; userId: number }) => data)
   .handler(async ({ data }) => {
     let desc = '';
     projects = projects.map(p => {
@@ -225,7 +225,7 @@ export const deleteActivity = createServerFn({ method: 'POST' })
   });
 
 export const addNote = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>; userId: number }) => data)
+  .inputValidator((data: { projectId: number; noteData: Omit<Note, 'id' | 'createdAt' | 'createdById'>; userId: number }) => data)
   .handler(async ({ data }) => {
     projects = projects.map(p => {
       if (p.id === data.projectId) {
@@ -245,7 +245,7 @@ export const addNote = createServerFn({ method: 'POST' })
   });
 
 export const updateNote = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; noteId: number; updates: Partial<Note>; userId: number }) => data)
+  .inputValidator((data: { projectId: number; noteId: number; updates: Partial<Note>; userId: number }) => data)
   .handler(async ({ data }) => {
     const now = new Date().toISOString();
     projects = projects.map(p => {
@@ -286,7 +286,7 @@ export const updateNote = createServerFn({ method: 'POST' })
   });
 
 export const deleteNote = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; noteId: number; userId: number }) => data)
+  .inputValidator((data: { projectId: number; noteId: number; userId: number }) => data)
   .handler(async ({ data }) => {
     projects = projects.map(p => {
       if (p.id === data.projectId) {
@@ -301,7 +301,7 @@ export const deleteNote = createServerFn({ method: 'POST' })
 // --- Equipment assignment (project-level) ---
 
 export const addCustomerEquipment = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; equipmentId: number; equipmentLabel?: string; userId: number }) => data)
+  .inputValidator((data: { projectId: number; equipmentId: number; equipmentLabel?: string; userId: number }) => data)
   .handler(async ({ data }) => {
     projects = projects.map(p => {
       if (p.id === data.projectId) {
@@ -315,7 +315,7 @@ export const addCustomerEquipment = createServerFn({ method: 'POST' })
   });
 
 export const deleteCustomerEquipment = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; equipmentId: number; equipmentLabel?: string; userId: number }) => data)
+  .inputValidator((data: { projectId: number; equipmentId: number; equipmentLabel?: string; userId: number }) => data)
   .handler(async ({ data }) => {
     projects = projects.map(p => {
       if (p.id === data.projectId) {
@@ -330,7 +330,7 @@ export const deleteCustomerEquipment = createServerFn({ method: 'POST' })
 // --- Opportunity ↔ Project linking ---
 
 export const addOpportunityToProject = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; opportunity: { id: number; typeId: number; description: string; stageId: number; estimateRevenue: number }; userId: number }) => data)
+  .inputValidator((data: { projectId: number; opportunity: { id: number; typeId: number; description: string; stageId: number; estimateRevenue: number }; userId: number }) => data)
   .handler(async ({ data }) => {
     const { opportunity: opp } = data;
     projects = projects.map(p => {
@@ -351,7 +351,7 @@ export const addOpportunityToProject = createServerFn({ method: 'POST' })
   });
 
 export const createNewOpportunityOnProject = createServerFn({ method: 'POST' })
-  .validator((data: { projectId: number; opportunity: { id: number; typeId: number; description: string; stageId: number; estimateRevenue: number }; userId: number }) => data)
+  .inputValidator((data: { projectId: number; opportunity: { id: number; typeId: number; description: string; stageId: number; estimateRevenue: number }; userId: number }) => data)
   .handler(async ({ data }) => {
     const { opportunity: opp } = data;
     projects = projects.map(p => {
@@ -373,7 +373,7 @@ export const createNewOpportunityOnProject = createServerFn({ method: 'POST' })
 // --- Equipment assignment lookup ---
 
 export const getEquipmentProjectAssignment = createServerFn({ method: 'GET' })
-  .validator((data: { equipmentId: number; excludeProjectId?: number }) => data)
+  .inputValidator((data: { equipmentId: number; excludeProjectId?: number }) => data)
   .handler(async ({ data }) => {
     for (const p of projects) {
       if (data.excludeProjectId !== undefined && p.id === data.excludeProjectId) continue;

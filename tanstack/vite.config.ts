@@ -13,7 +13,7 @@ export default defineConfig({
     },
     tsconfigPaths: true,
   },
-  plugins: [tanstackStart({ ssr: 'stream' }), viteReact()],
+  plugins: [tanstackStart({ srcDirectory: 'app' }), viteReact()],
   css: {
     postcss: './postcss.config.js',
   },

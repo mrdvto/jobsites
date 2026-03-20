@@ -55,7 +55,7 @@ export const getNoteTags = createServerFn({ method: 'GET' }).handler(async () =>
 // --- Write functions ---
 
 export const updateLookups = createServerFn({ method: 'POST' })
-  .validator((data: { primaryStages?: LookupOption[]; primaryProjectTypes?: LookupOption[]; ownershipTypes?: LookupOption[] }) => data)
+  .inputValidator((data: { primaryStages?: LookupOption[]; primaryProjectTypes?: LookupOption[]; ownershipTypes?: LookupOption[] }) => data)
   .handler(async ({ data }) => {
     if (data.primaryStages) primaryStages = data.primaryStages;
     if (data.primaryProjectTypes) primaryProjectTypes = data.primaryProjectTypes;
@@ -64,7 +64,7 @@ export const updateLookups = createServerFn({ method: 'POST' })
   });
 
 export const updateNoteTags = createServerFn({ method: 'POST' })
-  .validator((data: { tags: NoteTag[] }) => data)
+  .inputValidator((data: { tags: NoteTag[] }) => data)
   .handler(async ({ data }) => {
     noteTags = data.tags;
     return noteTags;

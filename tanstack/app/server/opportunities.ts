@@ -14,14 +14,14 @@ export const getOpportunities = createServerFn({ method: 'GET' }).handler(async 
 });
 
 export const createOpportunity = createServerFn({ method: 'POST' })
-  .validator((data: { opportunity: Opportunity }) => data)
+  .inputValidator((data: { opportunity: Opportunity }) => data)
   .handler(async ({ data }) => {
     opportunities = [...opportunities, data.opportunity];
     return data.opportunity;
   });
 
 export const updateOpportunity = createServerFn({ method: 'POST' })
-  .validator((data: { opportunityId: number; updates: Partial<Opportunity> }) => data)
+  .inputValidator((data: { opportunityId: number; updates: Partial<Opportunity> }) => data)
   .handler(async ({ data }) => {
     opportunities = opportunities.map(o =>
       o.id === data.opportunityId ? { ...o, ...data.updates } : o

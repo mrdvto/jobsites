@@ -11,13 +11,13 @@ export const getEquipment = createServerFn({ method: 'GET' }).handler(async () =
 });
 
 export const getEquipmentByCompany = createServerFn({ method: 'GET' })
-  .validator((data: { companyId: string }) => data)
+  .inputValidator((data: { companyId: string }) => data)
   .handler(async ({ data }) => {
     return masterEquipment.filter(e => e.companyId === data.companyId);
   });
 
 export const addEquipmentToMaster = createServerFn({ method: 'POST' })
-  .validator((data: { equipment: CustomerEquipment }) => data)
+  .inputValidator((data: { equipment: CustomerEquipment }) => data)
   .handler(async ({ data }) => {
     masterEquipment = [...masterEquipment, data.equipment];
     return data.equipment;

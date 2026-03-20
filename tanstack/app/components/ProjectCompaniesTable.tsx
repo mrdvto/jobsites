@@ -1,0 +1,193 @@
+import { useState } from 'react';
+import { ProjectCompany, getCompanyRoles } from '@/types';
+import { useUpdateProjectCompany, useProjects } from '@/hooks/useProjects';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { getDivisionName } from '@/lib/constants';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ManageCompanyContactsModal } from './ManageCompanyContactsModal';
+import { ChevronRight, ChevronDown, Star, Pencil, X, Phone, Mail, Users, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface ProjectCompaniesTableProps {
+  projectId: number;
+  companies: ProjectCompany[];
+  onRemoveCompany: (companyName: string) => void;
+  showCustomerNumber: boolean;
+}
+
+const isProspect = (companyId: string) => companyId.startsWith('$');
+
+export const ProjectCompaniesTable = ({ projectId, companies, onRemoveCompany, showCustomerNumber }: ProjectCompaniesTableProps) => {
+  const updateProjectCompany = useUpdateProjectCompany();
+  const { currentUserId } = useCurrentUser();
+  const { data: projects = [] } = useProjects();
+  const [expandedCompanies, setExpandedCompanies] = useState<Set<string>>(new Set());
+  const [editingCompany, setEditingCompany] = useState<ProjectCompany | null>(null);
+  const [sortColumn, setSortColumn] = useState<'company' | 'role' | 'contacts' | 'customerNumber' | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+
+  const getAllCompanyContacts = (companyName: string) => {
+    const contactsMap = new Map<string, typeof companies[0]['companyContacts'][0]>();
+    projects.forEach(project => {
+      project.projectCompanies.forEach(company => {
+        if (company.companyName === companyName) {
+          company.companyContacts.forEach(contact => {
+            if (!contactsMap.has(contact.email)) contactsMap.set(contact.email, contact);
+          });
+        }
+      });
+    });
+    return Array.from(contactsMap.values());
+  };
+
+  const toggleExpanded = (companyName: string) => {
+    const newExpanded = new Set(expandedCompanies);
+    if (newExpanded.has(companyName)) newExpanded.delete(companyName);
+    else newExpanded.add(companyName);
+    setExpandedCompanies(newExpanded);
+  };
+
+  const handleSaveContacts = (updatedCompany: ProjectCompany) => {
+    if (editingCompany) {
+      updateProjectCompany.mutate({ projectId, oldCompanyName: editingCompany.companyName, updatedCompany, userId: currentUserId });
+      setEditingCompany(null);
+    }
+  };
+
+  const handleSort = (column: typeof sortColumn) => {
+    if (sortColumn === column) {
+      if (sortDirection === 'asc') setSortDirection('desc');
+      else { setSortDirection(null); setSortColumn(null); }
+    } else { setSortColumn(column); setSortDirection('asc'); }
+  };
+
+  const SortIcon = ({ column }: { column: typeof sortColumn }) => {
+    if (sortColumn !== column) return <ArrowUpDown className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-50 transition-opacity" />;
+    if (sortDirection === 'asc') return <ArrowUp className="h-4 w-4 ml-1" />;
+    return <ArrowDown className="h-4 w-4 ml-1" />;
+  };
+
+  const sortedCompanies = [...companies].sort((a, b) => {
+    if (!sortColumn || !sortDirection) return 0;
+    let cmp = 0;
+    switch (sortColumn) {
+      case 'company': cmp = a.companyName.localeCompare(b.companyName); break;
+      case 'role': {
+        const rolesA = getCompanyRoles(a).descriptions.join(', ');
+        const rolesB = getCompanyRoles(b).descriptions.join(', ');
+        cmp = rolesA.localeCompare(rolesB);
+        break;
+      }
+      case 'contacts': cmp = (a.companyContacts?.length || 0) - (b.companyContacts?.length || 0); break;
+      case 'customerNumber': cmp = (a.companyId || '').localeCompare(b.companyId || ''); break;
+    }
+    return sortDirection === 'asc' ? cmp : -cmp;
+  });
+
+  const colSpanCount = showCustomerNumber ? 6 : 5;
+
+  if (companies.length === 0) {
+    return <p className="text-center text-muted-foreground py-8">No companies associated with this project yet.</p>;
+  }
+
+  return (
+    <>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[40px]"></TableHead>
+            <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('company')}><div className="flex items-center">Company<SortIcon column="company" /></div></TableHead>
+            <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('role')}><div className="flex items-center">Role<SortIcon column="role" /></div></TableHead>
+            {showCustomerNumber && (
+              <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('customerNumber')}><div className="flex items-center">Customer #<SortIcon column="customerNumber" /></div></TableHead>
+            )}
+            <TableHead className="cursor-pointer select-none group hover:bg-muted/50" onClick={() => handleSort('contacts')}><div className="flex items-center">Contacts<SortIcon column="contacts" /></div></TableHead>
+            <TableHead className="w-[120px]"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedCompanies.map((company, idx) => {
+            const isExpanded = expandedCompanies.has(company.companyName);
+            const contacts = company.companyContacts || [];
+            const primaryContact = contacts[company.primaryContactIndex || 0];
+            const contactCount = contacts.length;
+            const prospect = isProspect(company.companyId || '');
+            return (
+              <Collapsible key={idx} asChild open={isExpanded} onOpenChange={() => toggleExpanded(company.companyName)}>
+                <>
+                  <TableRow className={cn(isExpanded && "border-b-0")}>
+                    <TableCell className="p-2">
+                      <CollapsibleTrigger asChild><Button variant="ghost" size="icon" className="h-8 w-8">{isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}</Button></CollapsibleTrigger>
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        {company.companyName}
+                        {prospect && <Badge className="bg-amber-500/15 text-amber-700 border-amber-300 hover:bg-amber-500/25 text-[10px] px-1.5 py-0">Prospect</Badge>}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-1 flex-wrap">
+                        {(() => {
+                          const roles = getCompanyRoles(company);
+                          return roles.descriptions.map((desc, i) => (
+                            <Badge key={roles.ids[i]} variant={roles.ids[i] === 'GC' ? 'default' : 'secondary'}>{desc}</Badge>
+                          ));
+                        })()}
+                      </div>
+                    </TableCell>
+                    {showCustomerNumber && (
+                      <TableCell className="text-sm text-muted-foreground font-mono">{company.companyId}</TableCell>
+                    )}
+                    <TableCell><div className="flex items-center gap-2"><Users className="h-4 w-4 text-muted-foreground" /><span className="text-sm">{contactCount} {contactCount === 1 ? 'person' : 'people'}</span></div></TableCell>
+                    <TableCell>
+                      <div className="flex gap-1 justify-end">
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditingCompany(company)}><Pencil className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onRemoveCompany(company.companyName)}><X className="h-4 w-4" /></Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                  <CollapsibleContent asChild>
+                    <tr><td colSpan={colSpanCount} className="p-0">
+                      <div className="bg-muted/30 border-b px-6 py-4">
+                        <div className="grid gap-3">
+                          {contacts.map((contact, contactIdx) => (
+                            <div key={contact.id} className={cn("flex items-start justify-between p-3 rounded-lg bg-background border", contactIdx === (company.primaryContactIndex || 0) && "ring-2 ring-primary")}>
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  {contactIdx === (company.primaryContactIndex || 0) && <Star className="h-4 w-4 text-primary fill-primary" />}
+                                  <span className="font-medium">{contact.name}</span>
+                                  {contact.title && <span className="text-muted-foreground text-sm">• {contact.title}</span>}
+                                  {contact.divisionIds && contact.divisionIds.length > 0 && (
+                                    <div className="flex gap-1">
+                                      {contact.divisionIds.map(div => (
+                                        <Badge key={div} variant="outline" className="text-[10px] px-1.5 py-0 font-mono" title={getDivisionName(div)}>{div}</Badge>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                  {contact.phone && <div className="flex items-center gap-1"><Phone className="h-3 w-3" /><span>{contact.phone}</span></div>}
+                                  <div className="flex items-center gap-1"><Mail className="h-3 w-3" /><a href={`mailto:${contact.email}`} className="text-primary hover:underline">{contact.email}</a></div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </td></tr>
+                  </CollapsibleContent>
+                </>
+              </Collapsible>
+            );
+          })}
+        </TableBody>
+      </Table>
+      {editingCompany && (
+        <ManageCompanyContactsModal company={editingCompany} allCompanyContacts={getAllCompanyContacts(editingCompany.companyName)} open={!!editingCompany} onOpenChange={(open) => !open && setEditingCompany(null)} onSave={handleSaveContacts} countryCode={projects.find(p => p.id === projectId)?.address?.country || 'US'} />
+      )}
+    </>
+  );
+};

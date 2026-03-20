@@ -33,7 +33,7 @@ export const getTypeName = (types: OpportunityType[], typeId: number): string =>
 };
 
 export const getLookupLabel = (
-  options: LookupOption[],
+  options: Pick<LookupOption, 'id' | 'label'>[] | LookupOption[],
   id: string
 ): string => {
   return options.find(item => item.id === id)?.label || id;

@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,12 +15,13 @@ import { useToast } from '@/hooks/use-toast';
 import { CompanyContact } from '@/types';
 import { getCountryByCode } from '@/data/Countries';
 import { fetchStatesProvinces, hasStatesProvinces, type StateProvince } from '@/data/StatesProvinces';
-import { applyPhoneMask, validatePhone, validateEmail, applyZipMask, validateZip } from '@/utils/phoneValidation';
+import { applyPhoneMask, validatePhone, applyZipMask, validateZip } from '@/utils/phoneValidation';
 import contactTypesData from '@/data/ContactTypes.json';
 import mailCodesData from '@/data/MailCodes.json';
 import { X, Check, UserPlus, ChevronDown, ChevronRight, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
+import { contactSchema, CONTACT_DEFAULTS, type ContactInput } from '@/lib/schemas/contact';
 
 interface Division {
   code: string;
@@ -36,30 +39,25 @@ interface CreateContactFormProps {
 export const CreateContactForm = ({ availableDivisions, countryCode, companyId, onSave, onCancel }: CreateContactFormProps) => {
   const { toast } = useToast();
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [title, setTitle] = useState('');
-  const [typeCode, setTypeCode] = useState('');
-  const [mobilePhone, setMobilePhone] = useState('');
-  const [businessPhone, setBusinessPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [fax, setFax] = useState('');
-  const [divisionIds, setDivisionIds] = useState<string[]>([]);
-  const [addressType, setAddressType] = useState<'same' | 'different'>('same');
-  const [address1, setAddress1] = useState('');
-  const [address2, setAddress2] = useState('');
-  const [address3, setAddress3] = useState('');
-  const [city, setCity] = useState('');
-  const [stateCode, setStateCode] = useState('');
-  const [zipCode, setZipCode] = useState('');
-  const [mailCodes, setMailCodes] = useState<string[]>([]);
+  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<ContactInput>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: CONTACT_DEFAULTS,
+  });
+
   const [additionalFieldsOpen, setAdditionalFieldsOpen] = useState(false);
   const [mailCodesPopoverOpen, setMailCodesPopoverOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
   const [availableStates, setAvailableStates] = useState<StateProvince[]>([]);
   const [statesLoading, setStatesLoading] = useState(false);
+
+  const mobilePhone = watch('mobilePhone');
+  const businessPhone = watch('businessPhone');
+  const phone = watch('phone');
+  const fax = watch('fax');
+  const divisionIds = watch('divisionIds');
+  const addressType = watch('addressType');
+  const stateCode = watch('stateCode');
+  const zipCodeVal = watch('zipCode');
+  const mailCodes = watch('mailCodes');
 
   const selectedCountry = useMemo(() => getCountryByCode(countryCode), [countryCode]);
   const hasMaskedCountry = ['US', 'CA', 'AU'].includes(countryCode);
@@ -79,87 +77,72 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
     }
   }, [countryCode]);
 
-  const handlePhoneChange = (value: string, setter: (v: string) => void) => {
-    setter(hasMaskedCountry ? applyPhoneMask(value, countryCode) : value);
+  const handlePhoneChange = (value: string, field: 'mobilePhone' | 'businessPhone' | 'phone' | 'fax') => {
+    setValue(field, hasMaskedCountry ? applyPhoneMask(value, countryCode) : value);
   };
 
   const handleZipChange = (value: string) => {
-    setZipCode(hasMaskedCountry ? applyZipMask(value, countryCode) : value);
+    setValue('zipCode', hasMaskedCountry ? applyZipMask(value, countryCode) : value);
   };
 
   const toggleDivision = (code: string) => {
-    setDivisionIds(prev => prev.includes(code) ? prev.filter(d => d !== code) : [...prev, code]);
+    setValue('divisionIds', divisionIds.includes(code) ? divisionIds.filter(d => d !== code) : [...divisionIds, code]);
   };
 
   const toggleMailCode = (code: string) => {
-    setMailCodes(prev => prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code]);
+    setValue('mailCodes', mailCodes.includes(code) ? mailCodes.filter(c => c !== code) : [...mailCodes, code]);
   };
 
   const removeMailCode = (code: string) => {
-    setMailCodes(prev => prev.filter(c => c !== code));
+    setValue('mailCodes', mailCodes.filter(c => c !== code));
   };
 
-  const errors = useMemo(() => {
-    if (!submitted) return {};
-    const e: Record<string, string> = {};
-    if (!firstName.trim()) e.firstName = 'Required';
-    if (!lastName.trim()) e.lastName = 'Required';
-    if (!title.trim()) e.title = 'Required';
-    if (!mobilePhone.trim()) e.mobilePhone = 'Required';
-    else if (hasMaskedCountry && !validatePhone(mobilePhone, countryCode)) e.mobilePhone = 'Invalid format';
-    if (!businessPhone.trim()) e.businessPhone = 'Required';
-    else if (hasMaskedCountry && !validatePhone(businessPhone, countryCode)) e.businessPhone = 'Invalid format';
-    if (!email.trim()) e.email = 'Required';
-    else if (!validateEmail(email)) e.email = 'Invalid email';
-    if (divisionIds.length === 0) e.division = 'Select at least one division';
-    if (phone.trim() && hasMaskedCountry && !validatePhone(phone, countryCode)) e.phone = 'Invalid format';
-    if (fax.trim() && hasMaskedCountry && !validatePhone(fax, countryCode)) e.fax = 'Invalid format';
-    if (addressType === 'different' && zipCode.trim() && hasMaskedCountry && !validateZip(zipCode, countryCode)) e.zip = 'Invalid format';
-    return e;
-  }, [submitted, firstName, lastName, title, mobilePhone, businessPhone, email, divisionIds, phone, fax, zipCode, countryCode, hasMaskedCountry, addressType]);
-
-  const handleSubmit = () => {
-    setSubmitted(true);
-    const hasErrors = !firstName.trim() || !lastName.trim() || !title.trim() ||
-      !mobilePhone.trim() || !businessPhone.trim() || !email.trim() || !validateEmail(email) ||
-      divisionIds.length === 0 ||
-      (hasMaskedCountry && !validatePhone(mobilePhone, countryCode)) ||
-      (hasMaskedCountry && !validatePhone(businessPhone, countryCode)) ||
-      (phone.trim() && hasMaskedCountry && !validatePhone(phone, countryCode)) ||
-      (fax.trim() && hasMaskedCountry && !validatePhone(fax, countryCode)) ||
-      (addressType === 'different' && zipCode.trim() && hasMaskedCountry && !validateZip(zipCode, countryCode));
-
-    if (hasErrors) {
-      toast({ title: 'Validation Error', description: 'Please fix the highlighted fields.', variant: 'destructive' });
-      return;
+  const onSubmit = (data: ContactInput) => {
+    // Additional phone/zip validation with country context
+    if (hasMaskedCountry) {
+      if (data.mobilePhone && !validatePhone(data.mobilePhone, countryCode)) {
+        toast({ title: 'Validation Error', description: 'Invalid mobile phone format.', variant: 'destructive' }); return;
+      }
+      if (data.businessPhone && !validatePhone(data.businessPhone, countryCode)) {
+        toast({ title: 'Validation Error', description: 'Invalid business phone format.', variant: 'destructive' }); return;
+      }
+      if (data.phone.trim() && !validatePhone(data.phone, countryCode)) {
+        toast({ title: 'Validation Error', description: 'Invalid phone format.', variant: 'destructive' }); return;
+      }
+      if (data.fax.trim() && !validatePhone(data.fax, countryCode)) {
+        toast({ title: 'Validation Error', description: 'Invalid fax format.', variant: 'destructive' }); return;
+      }
+      if (data.addressType === 'different' && data.zipCode.trim() && !validateZip(data.zipCode, countryCode)) {
+        toast({ title: 'Validation Error', description: 'Invalid zip format.', variant: 'destructive' }); return;
+      }
     }
 
-    const typeDesc = contactTypesData.find(t => t.code === typeCode)?.description;
-    const fullName = `${firstName.trim()} ${lastName.trim()}`;
-    const isDifferentAddress = addressType === 'different';
+    const typeDesc = contactTypesData.find(t => t.code === data.typeCode)?.description;
+    const fullName = `${data.firstName.trim()} ${data.lastName.trim()}`;
+    const isDifferentAddress = data.addressType === 'different';
 
     const newContact: CompanyContact = {
       id: Date.now(),
       name: fullName,
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
-      title: title.trim(),
-      typeCode: typeCode || undefined,
+      firstName: data.firstName.trim(),
+      lastName: data.lastName.trim(),
+      title: data.title.trim(),
+      typeCode: data.typeCode || undefined,
       typeDescription: typeDesc,
-      phone: phone || mobilePhone,
-      mobilePhone,
-      businessPhone,
-      email: email.trim(),
-      fax: fax.trim() || undefined,
-      address1: isDifferentAddress ? (address1.trim() || undefined) : undefined,
-      address2: isDifferentAddress ? (address2.trim() || undefined) : undefined,
-      address3: isDifferentAddress ? (address3.trim() || undefined) : undefined,
-      city: isDifferentAddress ? (city.trim() || undefined) : undefined,
-      state: isDifferentAddress ? (stateCode || undefined) : undefined,
-      zipCode: isDifferentAddress ? (zipCode.trim() || undefined) : undefined,
-      mainDivision: divisionIds[0],
-      divisionIds,
-      mailCodes: mailCodes.length > 0 ? mailCodes : undefined,
+      phone: data.phone || data.mobilePhone,
+      mobilePhone: data.mobilePhone,
+      businessPhone: data.businessPhone,
+      email: data.email.trim(),
+      fax: data.fax.trim() || undefined,
+      address1: isDifferentAddress ? (data.address1.trim() || undefined) : undefined,
+      address2: isDifferentAddress ? (data.address2.trim() || undefined) : undefined,
+      address3: isDifferentAddress ? (data.address3.trim() || undefined) : undefined,
+      city: isDifferentAddress ? (data.city.trim() || undefined) : undefined,
+      state: isDifferentAddress ? (data.stateCode || undefined) : undefined,
+      zipCode: isDifferentAddress ? (data.zipCode.trim() || undefined) : undefined,
+      mainDivision: data.divisionIds[0],
+      divisionIds: data.divisionIds,
+      mailCodes: data.mailCodes.length > 0 ? data.mailCodes : undefined,
     };
 
     console.log('Simulated API payload - Create Contact:', {
@@ -189,8 +172,14 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
     onSave(newContact);
   };
 
-  const FieldError = ({ error }: { error?: string }) =>
-    error ? <p className="text-xs text-destructive mt-1">{error}</p> : null;
+  const onError = () => {
+    toast({ title: 'Validation Error', description: 'Please fix the highlighted fields.', variant: 'destructive' });
+  };
+
+  const FieldError = ({ name }: { name: keyof ContactInput }) => {
+    const error = errors[name];
+    return error?.message ? <p className="text-xs text-destructive mt-1">{error.message as string}</p> : null;
+  };
 
   const phonePlaceholder = selectedCountry?.phoneMask || 'Phone number';
 
@@ -201,18 +190,18 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
         <h4 className="font-medium">Create New Contact</h4>
       </div>
 
-      <div className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-4">
         {/* Name */}
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label className="text-xs">First Name <span className="text-destructive">*</span></Label>
-            <Input value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="First name" className={`h-8 ${errors.firstName ? 'border-destructive' : ''}`} />
-            <FieldError error={errors.firstName} />
+            <Input {...register('firstName')} placeholder="First name" className={`h-8 ${errors.firstName ? 'border-destructive' : ''}`} />
+            <FieldError name="firstName" />
           </div>
           <div>
             <Label className="text-xs">Last Name <span className="text-destructive">*</span></Label>
-            <Input value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Last name" className={`h-8 ${errors.lastName ? 'border-destructive' : ''}`} />
-            <FieldError error={errors.lastName} />
+            <Input {...register('lastName')} placeholder="Last name" className={`h-8 ${errors.lastName ? 'border-destructive' : ''}`} />
+            <FieldError name="lastName" />
           </div>
         </div>
 
@@ -220,12 +209,12 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label className="text-xs">Title <span className="text-destructive">*</span></Label>
-            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Job title" className={`h-8 ${errors.title ? 'border-destructive' : ''}`} />
-            <FieldError error={errors.title} />
+            <Input {...register('title')} placeholder="Job title" className={`h-8 ${errors.title ? 'border-destructive' : ''}`} />
+            <FieldError name="title" />
           </div>
           <div>
             <Label className="text-xs">Contact Type</Label>
-            <Select value={typeCode} onValueChange={setTypeCode}>
+            <Select value={watch('typeCode')} onValueChange={(v) => setValue('typeCode', v)}>
               <SelectTrigger className="h-8"><SelectValue placeholder="Select type" /></SelectTrigger>
               <SelectContent>
                 {contactTypesData.map(t => (
@@ -240,13 +229,13 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label className="text-xs">Mobile Phone <span className="text-destructive">*</span></Label>
-            <Input value={mobilePhone} onChange={e => handlePhoneChange(e.target.value, setMobilePhone)} placeholder={phonePlaceholder} className={`h-8 ${errors.mobilePhone ? 'border-destructive' : ''}`} />
-            <FieldError error={errors.mobilePhone} />
+            <Input value={mobilePhone} onChange={e => handlePhoneChange(e.target.value, 'mobilePhone')} placeholder={phonePlaceholder} className={`h-8 ${errors.mobilePhone ? 'border-destructive' : ''}`} />
+            <FieldError name="mobilePhone" />
           </div>
           <div>
             <Label className="text-xs">Business Phone <span className="text-destructive">*</span></Label>
-            <Input value={businessPhone} onChange={e => handlePhoneChange(e.target.value, setBusinessPhone)} placeholder={phonePlaceholder} className={`h-8 ${errors.businessPhone ? 'border-destructive' : ''}`} />
-            <FieldError error={errors.businessPhone} />
+            <Input value={businessPhone} onChange={e => handlePhoneChange(e.target.value, 'businessPhone')} placeholder={phonePlaceholder} className={`h-8 ${errors.businessPhone ? 'border-destructive' : ''}`} />
+            <FieldError name="businessPhone" />
           </div>
         </div>
 
@@ -254,13 +243,13 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label className="text-xs">Email <span className="text-destructive">*</span></Label>
-            <Input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="email@example.com" className={`h-8 ${errors.email ? 'border-destructive' : ''}`} />
-            <FieldError error={errors.email} />
+            <Input type="email" {...register('email')} placeholder="email@example.com" className={`h-8 ${errors.email ? 'border-destructive' : ''}`} />
+            <FieldError name="email" />
           </div>
           <div>
             <Label className="text-xs">Phone</Label>
-            <Input value={phone} onChange={e => handlePhoneChange(e.target.value, setPhone)} placeholder={phonePlaceholder} className={`h-8 ${errors.phone ? 'border-destructive' : ''}`} />
-            <FieldError error={errors.phone} />
+            <Input value={phone} onChange={e => handlePhoneChange(e.target.value, 'phone')} placeholder={phonePlaceholder} className={`h-8 ${errors.phone ? 'border-destructive' : ''}`} />
+            <FieldError name="phone" />
           </div>
         </div>
 
@@ -268,15 +257,15 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
         <div className="grid grid-cols-2 gap-3">
           <div>
             <Label className="text-xs">Fax</Label>
-            <Input value={fax} onChange={e => handlePhoneChange(e.target.value, setFax)} placeholder={phonePlaceholder} className={`h-8 ${errors.fax ? 'border-destructive' : ''}`} />
-            <FieldError error={errors.fax} />
+            <Input value={fax} onChange={e => handlePhoneChange(e.target.value, 'fax')} placeholder={phonePlaceholder} className={`h-8 ${errors.fax ? 'border-destructive' : ''}`} />
+            <FieldError name="fax" />
           </div>
         </div>
 
         {/* Divisions */}
         <div>
           <Label className="text-xs">Division(s) <span className="text-destructive">*</span></Label>
-          <div className={`flex gap-1.5 flex-wrap mt-1 ${errors.division ? 'ring-1 ring-destructive rounded p-1' : ''}`}>
+          <div className={`flex gap-1.5 flex-wrap mt-1 ${errors.divisionIds ? 'ring-1 ring-destructive rounded p-1' : ''}`}>
             {availableDivisions.map(div => (
               <Badge
                 key={div.code}
@@ -288,7 +277,7 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
               </Badge>
             ))}
           </div>
-          <FieldError error={errors.division} />
+          <FieldError name="divisionIds" />
         </div>
 
         <Separator />
@@ -303,9 +292,9 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
               variant={addressType === 'same' ? 'default' : 'ghost'}
               className="rounded-none h-8 text-xs"
               onClick={() => {
-                setAddressType('same');
-                setAddress1(''); setAddress2(''); setAddress3('');
-                setCity(''); setStateCode(''); setZipCode('');
+                setValue('addressType', 'same');
+                setValue('address1', ''); setValue('address2', ''); setValue('address3', '');
+                setValue('city', ''); setValue('stateCode', ''); setValue('zipCode', '');
               }}
             >
               Same as Company
@@ -315,7 +304,7 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
               size="sm"
               variant={addressType === 'different' ? 'default' : 'ghost'}
               className="rounded-none h-8 text-xs"
-              onClick={() => setAddressType('different')}
+              onClick={() => setValue('addressType', 'different')}
             >
               Different Address
             </Button>
@@ -325,27 +314,27 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
             <div className="space-y-3">
               <div>
                 <Label className="text-xs">Address Line 1</Label>
-                <Input value={address1} onChange={e => setAddress1(e.target.value)} placeholder="Street address" className="h-8" />
+                <Input {...register('address1')} placeholder="Street address" className="h-8" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="text-xs">Address Line 2</Label>
-                  <Input value={address2} onChange={e => setAddress2(e.target.value)} placeholder="Suite, unit, etc." className="h-8" />
+                  <Input {...register('address2')} placeholder="Suite, unit, etc." className="h-8" />
                 </div>
                 <div>
                   <Label className="text-xs">Address Line 3</Label>
-                  <Input value={address3} onChange={e => setAddress3(e.target.value)} placeholder="Additional info" className="h-8" />
+                  <Input {...register('address3')} placeholder="Additional info" className="h-8" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="text-xs">City</Label>
-                  <Input value={city} onChange={e => setCity(e.target.value)} placeholder="City" className="h-8" />
+                  <Input {...register('city')} placeholder="City" className="h-8" />
                 </div>
                 {showStateField ? (
                   <div>
                     <Label className="text-xs">{stateLabel}</Label>
-                    <Select value={stateCode} onValueChange={setStateCode} disabled={statesLoading}>
+                    <Select value={stateCode} onValueChange={(v) => setValue('stateCode', v)} disabled={statesLoading}>
                       <SelectTrigger className="h-8"><SelectValue placeholder={`Select ${stateLabel.toLowerCase()}`} /></SelectTrigger>
                       <SelectContent>
                         {availableStates.map(s => (
@@ -357,15 +346,15 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
                 ) : (
                   <div>
                     <Label className="text-xs">{stateLabel}</Label>
-                    <Input value={stateCode} onChange={e => setStateCode(e.target.value)} placeholder={stateLabel} className="h-8" />
+                    <Input {...register('stateCode')} placeholder={stateLabel} className="h-8" />
                   </div>
                 )}
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="text-xs">{zipLabel}</Label>
-                  <Input value={zipCode} onChange={e => handleZipChange(e.target.value)} placeholder={selectedCountry?.zipMask || zipLabel} className={`h-8 ${errors.zip ? 'border-destructive' : ''}`} />
-                  <FieldError error={errors.zip} />
+                  <Input value={zipCodeVal} onChange={e => handleZipChange(e.target.value)} placeholder={selectedCountry?.zipMask || zipLabel} className={`h-8 ${errors.zipCode ? 'border-destructive' : ''}`} />
+                  <FieldError name="zipCode" />
                 </div>
               </div>
             </div>
@@ -426,7 +415,7 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
                     return (
                       <Badge key={code} variant="secondary" className="text-[10px] px-1.5 py-0.5 gap-1">
                         <span className="font-mono">{code}</span>
-                        <button onClick={() => removeMailCode(code)} className="ml-0.5 hover:text-destructive">
+                        <button type="button" onClick={() => removeMailCode(code)} className="ml-0.5 hover:text-destructive">
                           <X className="h-3 w-3" />
                         </button>
                       </Badge>
@@ -440,14 +429,14 @@ export const CreateContactForm = ({ availableDivisions, countryCode, companyId, 
 
         {/* Actions */}
         <div className="flex justify-end gap-2 pt-2">
-          <Button variant="ghost" size="sm" onClick={onCancel}>
+          <Button variant="ghost" size="sm" type="button" onClick={onCancel}>
             <X className="h-4 w-4 mr-1" /> Cancel
           </Button>
-          <Button size="sm" onClick={handleSubmit}>
+          <Button size="sm" type="submit">
             <Check className="h-4 w-4 mr-1" /> Create Contact
           </Button>
         </div>
-      </div>
+      </form>
     </Card>
   );
 };

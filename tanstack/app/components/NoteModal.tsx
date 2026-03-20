@@ -1,4 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
   DialogContent,
@@ -9,12 +12,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { X, Upload, FileText, Plus } from 'lucide-react';
+import { X, Upload, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Note, Attachment, NoteTag, NoteModification } from '@/types';
 import { STATUS_COLORS } from '@/hooks/useStatusColors';
+import { noteSchema, NOTE_DEFAULTS, type NoteInput } from '@/lib/schemas/note';
 
 const HISTORY_PREVIEW_COUNT = 3;
 
@@ -86,30 +89,35 @@ export const NoteModal = ({
 }: NoteModalProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [content, setContent] = useState('');
-  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
-  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+
+  const { register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<NoteInput>({
+    resolver: zodResolver(noteSchema),
+    defaultValues: NOTE_DEFAULTS,
+  });
+
+  const selectedTagIds = watch('selectedTagIds');
+  const attachments = watch('attachments');
 
   useEffect(() => {
     if (open) {
       if (mode === 'edit' && note) {
-        setContent(note.content);
-        setSelectedTagIds(note.tagIds || []);
-        setAttachments(note.attachments || []);
+        reset({
+          content: note.content,
+          selectedTagIds: note.tagIds || [],
+          attachments: note.attachments || [],
+        });
       } else {
-        setContent('');
-        setSelectedTagIds([]);
-        setAttachments([]);
+        reset(NOTE_DEFAULTS);
       }
     }
-  }, [open, mode, note]);
+  }, [open, mode, note, reset]);
 
   const handleTagToggle = (tagId: string) => {
-    setSelectedTagIds(prev =>
-      prev.includes(tagId)
-        ? prev.filter(id => id !== tagId)
-        : [...prev, tagId]
+    setValue('selectedTagIds',
+      selectedTagIds.includes(tagId)
+        ? selectedTagIds.filter(id => id !== tagId)
+        : [...selectedTagIds, tagId]
     );
   };
 
@@ -152,7 +160,7 @@ export const NoteModal = ({
       newAttachments.push(attachment);
     }
 
-    setAttachments(prev => [...prev, ...newAttachments]);
+    setValue('attachments', [...attachments, ...newAttachments]);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -172,7 +180,7 @@ export const NoteModal = ({
   };
 
   const handleRemoveAttachment = (attachmentId: number) => {
-    setAttachments(prev => prev.filter(a => a.id !== attachmentId));
+    setValue('attachments', attachments.filter(a => a.id !== attachmentId));
   };
 
   const formatFileSize = (bytes: number) => {
@@ -181,23 +189,21 @@ export const NoteModal = ({
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
-  const handleSave = () => {
-    if (!content.trim()) {
-      toast({
-        title: 'Content required',
-        description: 'Please enter note content.',
-        variant: 'destructive',
-      });
-      return;
-    }
-
+  const onSubmit = (data: NoteInput) => {
     onSave({
-      content: content.trim(),
-      tagIds: selectedTagIds,
-      attachments,
+      content: data.content.trim(),
+      tagIds: data.selectedTagIds,
+      attachments: data.attachments,
     });
-
     onOpenChange(false);
+  };
+
+  const onError = () => {
+    toast({
+      title: 'Content required',
+      description: 'Please enter note content.',
+      variant: 'destructive',
+    });
   };
 
   const getTagColor = (colorId: string) => {
@@ -241,9 +247,9 @@ export const NoteModal = ({
             <Textarea
               id="content"
               placeholder="Enter note content..."
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              {...register('content')}
               rows={4}
+              className={errors.content ? 'border-destructive' : ''}
             />
           </div>
 
@@ -342,7 +348,7 @@ export const NoteModal = ({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>
+          <Button onClick={handleSubmit(onSubmit, onError)}>
             {mode === 'create' ? 'Add Note' : 'Save Changes'}
           </Button>
         </DialogFooter>

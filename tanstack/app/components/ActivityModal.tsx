@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +22,7 @@ import { cn } from '@/lib/utils';
 import activityTypesData from '@/data/ActivityTypes.json';
 import campaignsData from '@/data/Campaigns.json';
 import issuesData from '@/data/Issues.json';
+import { activitySchema, ACTIVITY_DEFAULTS, type ActivityInput } from '@/lib/schemas/activity';
 
 const ACTIVITY_TYPES = activityTypesData.content;
 
@@ -32,6 +35,50 @@ interface ActivityModalProps {
   followUpFrom?: Activity;
 }
 
+function activityToFormValues(activity: Activity, projectCompanies: any[]): ActivityInput {
+  const actDate = activity.date ? new Date(activity.date) : undefined;
+  let contactId: number | '' = '';
+  if (activity.customerId) {
+    const company = projectCompanies.find(c => c.companyId === activity.customerId);
+    if (company && activity.contactName) {
+      const contact = company.companyContacts.find((c: any) => c.name === activity.contactName);
+      contactId = contact?.id ?? '';
+    }
+  }
+  return {
+    salesRepId: activity.salesRepId.toString(),
+    typeId: activity.typeId,
+    date: actDate as Date,
+    timeValue: actDate ? format(actDate, 'HH:mm') : '12:00',
+    description: activity.description,
+    notes: activity.notes || '',
+    selectedCompanyId: activity.customerId || '',
+    selectedContactId: contactId,
+    showMoreFields: !!(activity.campaignId || activity.issueId || activity.previousRelatedActivityId),
+    campaignId: activity.campaignId?.toString() || '',
+    issueId: activity.issueId?.toString() || '',
+    linkedActivityId: activity.previousRelatedActivityId?.toString() || '',
+  };
+}
+
+function followUpToFormValues(followUp: Activity, projectCompanies: any[]): ActivityInput {
+  let contactId: number | '' = '';
+  if (followUp.customerId) {
+    const company = projectCompanies.find(c => c.companyId === followUp.customerId);
+    if (company && followUp.contactName) {
+      const contact = company.companyContacts.find((c: any) => c.name === followUp.contactName);
+      contactId = contact?.id ?? '';
+    }
+  }
+  return {
+    ...ACTIVITY_DEFAULTS,
+    salesRepId: followUp.salesRepId.toString(),
+    typeId: followUp.typeId,
+    selectedCompanyId: followUp.customerId || '',
+    selectedContactId: contactId,
+  };
+}
+
 export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, followUpFrom }: ActivityModalProps) => {
   const { data: users = [] } = useUsers();
   const { data: project } = useProject(projectId);
@@ -42,104 +89,49 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
 
   const projectCompanies = project?.projectCompanies ?? [];
 
-  const [salesRepId, setSalesRepId] = useState<string>('');
-  const [typeId, setTypeId] = useState<string>('');
-  const [date, setDate] = useState<Date | undefined>(undefined);
-  const [timeValue, setTimeValue] = useState<string>('12:00');
-  const [description, setDescription] = useState('');
-  const [notes, setNotes] = useState('');
-  const [selectedCompanyId, setSelectedCompanyId] = useState<string>('');
-  const [selectedContactId, setSelectedContactId] = useState<number | ''>('');
+  const { control, register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<ActivityInput>({
+    resolver: zodResolver(activitySchema),
+    defaultValues: ACTIVITY_DEFAULTS,
+  });
+
   const [companyPopoverOpen, setCompanyPopoverOpen] = useState(false);
   const [contactPopoverOpen, setContactPopoverOpen] = useState(false);
-  const [showMoreFields, setShowMoreFields] = useState(false);
-  const [campaignId, setCampaignId] = useState<string>('');
-  const [issueId, setIssueId] = useState<string>('');
-  const [linkedActivityId, setLinkedActivityId] = useState<string>('');
+
+  const selectedCompanyId = watch('selectedCompanyId');
+  const selectedContactId = watch('selectedContactId');
+  const date = watch('date');
+  const timeValue = watch('timeValue');
+  const showMoreFields = watch('showMoreFields');
 
   const selectedCompany = projectCompanies.find(c => c.companyId === selectedCompanyId);
   const companyContacts = selectedCompany?.companyContacts ?? [];
 
   useEffect(() => {
+    if (!open) return;
     if (activity && mode === 'edit') {
-      setSalesRepId(activity.salesRepId.toString());
-      setTypeId(activity.typeId);
-      const actDate = activity.date ? new Date(activity.date) : undefined;
-      setDate(actDate);
-      setTimeValue(actDate ? format(actDate, 'HH:mm') : '12:00');
-      setDescription(activity.description);
-      setNotes(activity.notes || '');
-      // Initialize company/contact from activity
-      if (activity.customerId) {
-        setSelectedCompanyId(activity.customerId);
-        const company = projectCompanies.find(c => c.companyId === activity.customerId);
-        if (company && activity.contactName) {
-          const contact = company.companyContacts.find(c => c.name === activity.contactName);
-          setSelectedContactId(contact?.id ?? '');
-        }
-      } else {
-        setSelectedCompanyId('');
-        setSelectedContactId('');
-      }
-      setCampaignId(activity.campaignId?.toString() || '');
-      setIssueId(activity.issueId?.toString() || '');
-      setLinkedActivityId(activity.previousRelatedActivityId?.toString() || '');
-      setShowMoreFields(!!(activity.campaignId || activity.issueId || activity.previousRelatedActivityId));
+      reset(activityToFormValues(activity, projectCompanies));
     } else if (mode === 'create' && followUpFrom) {
-      setSalesRepId(followUpFrom.salesRepId.toString());
-      setTypeId(followUpFrom.typeId);
-      setDate(undefined);
-      setTimeValue('12:00');
-      setDescription('');
-      setNotes('');
-      if (followUpFrom.customerId) {
-        setSelectedCompanyId(followUpFrom.customerId);
-        const company = projectCompanies.find(c => c.companyId === followUpFrom.customerId);
-        if (company && followUpFrom.contactName) {
-          const contact = company.companyContacts.find(c => c.name === followUpFrom.contactName);
-          setSelectedContactId(contact?.id ?? '');
-        } else {
-          setSelectedContactId('');
-        }
-      } else {
-        setSelectedCompanyId('');
-        setSelectedContactId('');
-      }
-      setCampaignId('');
-      setIssueId('');
-      setLinkedActivityId('');
-      setShowMoreFields(false);
+      reset(followUpToFormValues(followUpFrom, projectCompanies));
     } else {
-      setSalesRepId('');
-      setTypeId('');
-      setDate(undefined);
-      setTimeValue('12:00');
-      setDescription('');
-      setNotes('');
-      setSelectedCompanyId('');
-      setSelectedContactId('');
-      setCampaignId('');
-      setIssueId('');
-      setLinkedActivityId('');
-      setShowMoreFields(false);
+      reset(ACTIVITY_DEFAULTS);
     }
-  }, [activity, mode, open, followUpFrom]);
+  }, [activity, mode, open, followUpFrom, reset]);
 
   const handleDateSelect = (selectedDay: Date | undefined) => {
-    if (!selectedDay) { setDate(undefined); return; }
+    if (!selectedDay) { setValue('date', undefined as unknown as Date); return; }
     const [hours, minutes] = timeValue.split(':').map(Number);
     const merged = new Date(selectedDay);
     merged.setHours(hours, minutes, 0, 0);
-    setDate(merged);
+    setValue('date', merged);
   };
 
   const handleTimeChange = (newTime: string) => {
-    setTimeValue(newTime);
+    setValue('timeValue', newTime);
     if (!date) return;
     const [hours, minutes] = newTime.split(':').map(Number);
     const merged = new Date(date);
     merged.setHours(hours, minutes, 0, 0);
-    setDate(merged);
+    setValue('date', merged);
   };
 
   const status = useMemo(() => {
@@ -154,38 +146,27 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
   }, [selectedCompanyId]);
 
   const handleCompanyChange = (companyId: string) => {
-    setSelectedCompanyId(companyId);
-    setSelectedContactId('');
+    setValue('selectedCompanyId', companyId);
+    setValue('selectedContactId', '');
     setCompanyPopoverOpen(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!salesRepId || !typeId || !date || !description.trim() || !notes.trim()) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const statusId = isPast(date) ? 2 : 1;
-    const selectedContact = companyContacts.find(c => c.id === selectedContactId);
+  const onSubmit = (data: ActivityInput) => {
+    const statusId = isPast(data.date) ? 2 : 1;
+    const selectedContact = companyContacts.find(c => c.id === data.selectedContactId);
 
     const activityData = {
       statusId,
-      salesRepId: parseInt(salesRepId),
-      typeId,
-      date: date.toISOString(),
-      description: description.trim(),
+      salesRepId: parseInt(data.salesRepId),
+      typeId: data.typeId,
+      date: data.date.toISOString(),
+      description: data.description.trim(),
       contactName: selectedContact?.name || '',
-      notes: notes.trim(),
-      customerId: selectedCompanyId || undefined,
-      campaignId: campaignId && campaignId !== 'none' ? parseInt(campaignId) : undefined,
-      issueId: issueId && issueId !== 'none' ? parseInt(issueId) : undefined,
-      previousRelatedActivityId: followUpFrom?.id || (linkedActivityId && linkedActivityId !== 'none' ? parseInt(linkedActivityId) : undefined)
+      notes: data.notes.trim(),
+      customerId: data.selectedCompanyId || undefined,
+      campaignId: data.campaignId && data.campaignId !== 'none' ? parseInt(data.campaignId) : undefined,
+      issueId: data.issueId && data.issueId !== 'none' ? parseInt(data.issueId) : undefined,
+      previousRelatedActivityId: followUpFrom?.id || (data.linkedActivityId && data.linkedActivityId !== 'none' ? parseInt(data.linkedActivityId) : undefined)
     };
 
     if (mode === 'create') {
@@ -197,6 +178,10 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
     }
 
     onOpenChange(false);
+  };
+
+  const onError = () => {
+    toast({ title: "Error", description: "Please fill in all required fields.", variant: "destructive" });
   };
 
   return (
@@ -217,34 +202,38 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
             )}
             <div className="space-y-2">
               <Label htmlFor="salesRep">Sales Rep</Label>
-              <Select value={salesRepId} onValueChange={setSalesRepId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select sales rep" />
-                </SelectTrigger>
-                <SelectContent>
-                  {users.map(user => (
-                    <SelectItem key={user.id} value={user.id.toString()}>
-                      {user.lastName}, {user.firstName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Controller control={control} name="salesRepId" render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className={errors.salesRepId ? 'border-destructive' : ''}>
+                    <SelectValue placeholder="Select sales rep" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {users.map(user => (
+                      <SelectItem key={user.id} value={user.id.toString()}>
+                        {user.lastName}, {user.firstName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )} />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="typeId">Activity Type</Label>
-              <Select value={typeId} onValueChange={setTypeId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ACTIVITY_TYPES.map(type => (
-                    <SelectItem key={type.id} value={type.id}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Controller control={control} name="typeId" render={({ field }) => (
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <SelectTrigger className={errors.typeId ? 'border-destructive' : ''}>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ACTIVITY_TYPES.map(type => (
+                      <SelectItem key={type.id} value={type.id}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )} />
             </div>
 
             <div className="space-y-2">
@@ -270,7 +259,8 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
                     variant="outline"
                     className={cn(
                       "w-full justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
+                      !date && "text-muted-foreground",
+                      errors.date && "border-destructive"
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
@@ -333,7 +323,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
                 </PopoverContent>
               </Popover>
               {selectedCompanyId && (
-                <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => { setSelectedCompanyId(''); setSelectedContactId(''); }}>
+                <Button type="button" variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => { setValue('selectedCompanyId', ''); setValue('selectedContactId', ''); }}>
                   <X className="h-3 w-3 mr-1" /> Clear company
                 </Button>
               )}
@@ -363,7 +353,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
                             <CommandItem
                               key={contact.id}
                               value={contact.name}
-                              onSelect={() => { setSelectedContactId(contact.id); setContactPopoverOpen(false); }}
+                              onSelect={() => { setValue('selectedContactId', contact.id); setContactPopoverOpen(false); }}
                             >
                               <Check className={cn("mr-2 h-4 w-4", selectedContactId === contact.id ? "opacity-100" : "opacity-0")} />
                               <div>
@@ -384,9 +374,9 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
               <Label htmlFor="description">Description</Label>
               <Input
                 id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                {...register('description')}
                 placeholder="Enter activity description"
+                className={errors.description ? 'border-destructive' : ''}
               />
             </div>
 
@@ -394,10 +384,10 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
               <Label htmlFor="notes">Notes</Label>
               <Textarea
                 id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                {...register('notes')}
                 placeholder="Enter notes"
                 rows={2}
+                className={errors.notes ? 'border-destructive' : ''}
               />
             </div>
 
@@ -407,7 +397,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
                 variant="ghost"
                 size="sm"
                 className="flex items-center gap-1 text-xs text-muted-foreground px-0"
-                onClick={() => setShowMoreFields(!showMoreFields)}
+                onClick={() => setValue('showMoreFields', !showMoreFields)}
               >
                 {showMoreFields ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
                 More fields
@@ -416,50 +406,50 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
                 <div className="mt-2 space-y-4">
                   <div className="space-y-2">
                     <Label>Campaign</Label>
-                    <Select value={campaignId} onValueChange={setCampaignId}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="None" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
-                        {campaignsData.content.map(c => (
-                          <SelectItem key={c.id} value={c.id.toString()}>{c.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Controller control={control} name="campaignId" render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          {campaignsData.content.map(c => (
+                            <SelectItem key={c.id} value={c.id.toString()}>{c.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )} />
                   </div>
                   <div className="space-y-2">
                     <Label>Issue</Label>
-                    <Select value={issueId} onValueChange={setIssueId}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="None" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
-                        {filteredIssues.map(issue => (
-                          <SelectItem key={issue.id} value={issue.id.toString()}>{issue.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Controller control={control} name="issueId" render={({ field }) => (
+                      <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">None</SelectItem>
+                          {filteredIssues.map(issue => (
+                            <SelectItem key={issue.id} value={issue.id.toString()}>{issue.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )} />
                   </div>
                   {!followUpFrom && (
                     <div className="space-y-2">
                       <Label>Follow-up to</Label>
-                      <Select value={linkedActivityId} onValueChange={setLinkedActivityId}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="None" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          {(project?.activities || [])
-                            .filter(a => !(mode === 'edit' && activity && a.id === activity.id))
-                            .map(a => (
-                              <SelectItem key={a.id} value={a.id.toString()}>
-                                {a.description}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
+                      <Controller control={control} name="linkedActivityId" render={({ field }) => (
+                        <Select value={field.value} onValueChange={field.onChange}>
+                          <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {(project?.activities || [])
+                              .filter(a => !(mode === 'edit' && activity && a.id === activity.id))
+                              .map(a => (
+                                <SelectItem key={a.id} value={a.id.toString()}>
+                                  {a.description}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                      )} />
                     </div>
                   )}
                 </div>
@@ -468,7 +458,7 @@ export const ActivityModal = ({ open, onOpenChange, projectId, activity, mode, f
           </div>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <div className="flex justify-end gap-2 pt-4 border-t border-border bg-background">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel

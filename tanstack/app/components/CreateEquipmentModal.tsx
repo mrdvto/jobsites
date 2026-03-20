@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +14,7 @@ import { Calendar as CalendarIcon, Check, ChevronDown, ChevronUp, ChevronsUpDown
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { ProjectCompany, CustomerEquipment } from '@/types';
+import { createEquipmentSchema, EQUIPMENT_DEFAULTS, type CreateEquipmentInput } from '@/lib/schemas/equipment';
 
 // ── API Stubs ──
 
@@ -109,7 +112,6 @@ const fetchCompatibilityCodes = async (fpcId: string): Promise<LookupOption[]> =
 };
 
 const fetchPrincipalWorkCodes = async (): Promise<LookupOption[]> => {
-  console.log('[API STUB] Fetching principal work codes');
   await new Promise(r => setTimeout(r, 100));
   return [
     { value: '105', description: 'SPECIALTY CROPS' },
@@ -138,7 +140,6 @@ const fetchPrincipalWorkCodes = async (): Promise<LookupOption[]> => {
 };
 
 const fetchApplicationCodes = async (): Promise<LookupOption[]> => {
-  console.log('[API STUB] Fetching application codes');
   await new Promise(r => setTimeout(r, 100));
   return [
     { value: '1', description: 'Light' },
@@ -148,7 +149,6 @@ const fetchApplicationCodes = async (): Promise<LookupOption[]> => {
 };
 
 const fetchEngineMakes = async (): Promise<LookupOption[]> => {
-  console.log('[API STUB] Fetching engine makes');
   await new Promise(r => setTimeout(r, 100));
   return [
     { value: 'AA', description: 'Caterpillar' },
@@ -158,7 +158,6 @@ const fetchEngineMakes = async (): Promise<LookupOption[]> => {
 };
 
 const fetchIndustryGroups = async (): Promise<LookupOption[]> => {
-  console.log('[API STUB] Fetching industry groups');
   await new Promise(r => setTimeout(r, 100));
   return [
     { value: '199', description: 'Agriculture' },
@@ -183,7 +182,6 @@ const fetchIndustryGroups = async (): Promise<LookupOption[]> => {
 };
 
 const fetchIndustryCodes = async (groupId: string): Promise<LookupOption[]> => {
-  console.log('[API STUB] Fetching industry codes for group:', groupId);
   await new Promise(r => setTimeout(r, 100));
   return [
     { value: 'LG40', description: 'ASPHALT PRODUCTION' },
@@ -299,35 +297,12 @@ interface CreateEquipmentModalProps {
 }
 
 export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, projectCompanies }: CreateEquipmentModalProps) {
-  // Company (first required field)
-  const [companyId, setCompanyId] = useState('');
+  const { control, register, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<CreateEquipmentInput>({
+    resolver: zodResolver(createEquipmentSchema),
+    defaultValues: EQUIPMENT_DEFAULTS,
+  });
 
-  // Required fields
-  const [make, setMake] = useState('');
-  const [fpc, setFpc] = useState('');
-  const [compatibilityCode, setCompatibilityCode] = useState('');
-  const [model, setModel] = useState('');
-  const [serialNumber, setSerialNumber] = useState('');
-  const [yearOfManufacture, setYearOfManufacture] = useState('');
-  const [territory, setTerritory] = useState('in');
-
-  // Additional fields
-  const [equipmentNumber, setEquipmentNumber] = useState('');
-  const [smu, setSmu] = useState('');
-  const [smuDate, setSmuDate] = useState<Date | undefined>();
-  const [smuDateOpen, setSmuDateOpen] = useState(false);
-  const [industryGroup, setIndustryGroup] = useState('');
-  const [industryCode, setIndustryCode] = useState('');
-  const [principalWorkCode, setPrincipalWorkCode] = useState('');
-  const [applicationCode, setApplicationCode] = useState('');
-  const [annualUseHours, setAnnualUseHours] = useState('');
-  const [engineMake, setEngineMake] = useState('');
-  const [engineModel, setEngineModel] = useState('');
-  const [engineSerialNumber, setEngineSerialNumber] = useState('');
-  const [purchaseDate, setPurchaseDate] = useState<Date | undefined>();
-  const [purchaseDateOpen, setPurchaseDateOpen] = useState(false);
-
-  // Lookup data
+  // Lookup data (not form state)
   const [makes, setMakes] = useState<LookupOption[]>([]);
   const [fpcs, setFpcs] = useState<LookupOption[]>([]);
   const [compCodes, setCompCodes] = useState<LookupOption[]>([]);
@@ -339,9 +314,16 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, pr
 
   const [additionalOpen, setAdditionalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [smuDateOpen, setSmuDateOpen] = useState(false);
+  const [purchaseDateOpen, setPurchaseDateOpen] = useState(false);
 
-  // Company options from project companies
+  const make = watch('make');
+  const fpc = watch('fpc');
+  const industryGroup = watch('industryGroup');
+  const smuDate = watch('smuDate');
+  const purchaseDate = watch('purchaseDate');
+  const territory = watch('territory');
+
   const companyOptions: LookupOption[] = useMemo(
     () => (projectCompanies || []).map(c => ({ value: c.companyId, description: c.companyName })),
     [projectCompanies],
@@ -373,10 +355,10 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, pr
     } else {
       setFpcs([]);
     }
-    setFpc('');
-    setCompatibilityCode('');
+    setValue('fpc', '');
+    setValue('compatibilityCode', '');
     setCompCodes([]);
-  }, [make]);
+  }, [make, setValue]);
 
   // Cascade: FPC → Compatibility Code
   useEffect(() => {
@@ -385,8 +367,8 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, pr
     } else {
       setCompCodes([]);
     }
-    setCompatibilityCode('');
-  }, [fpc]);
+    setValue('compatibilityCode', '');
+  }, [fpc, setValue]);
 
   // Cascade: Industry Group → Industry Code
   useEffect(() => {
@@ -395,74 +377,53 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, pr
     } else {
       setIndustryCodes([]);
     }
-    setIndustryCode('');
-  }, [industryGroup]);
-
-  const resetForm = () => {
-    setCompanyId(''); setMake(''); setFpc(''); setCompatibilityCode(''); setModel('');
-    setSerialNumber(''); setYearOfManufacture(''); setTerritory('in');
-    setEquipmentNumber(''); setSmu(''); setSmuDate(undefined);
-    setIndustryGroup(''); setIndustryCode(''); setPrincipalWorkCode('');
-    setApplicationCode(''); setAnnualUseHours(''); setEngineMake('');
-    setEngineModel(''); setEngineSerialNumber(''); setPurchaseDate(undefined);
-    setAdditionalOpen(false); setErrors({});
-    setFpcs([]); setCompCodes([]); setIndustryCodes([]);
-  };
+    setValue('industryCode', '');
+  }, [industryGroup, setValue]);
 
   const handleClose = (isOpen: boolean) => {
-    if (!isOpen) resetForm();
+    if (!isOpen) {
+      reset(EQUIPMENT_DEFAULTS);
+      setAdditionalOpen(false);
+      setFpcs([]); setCompCodes([]); setIndustryCodes([]);
+    }
     onOpenChange(isOpen);
   };
 
-  const handleSubmit = async () => {
-    const newErrors: Record<string, boolean> = {};
-    if (!companyId) newErrors.companyId = true;
-    if (!make) newErrors.make = true;
-    if (!fpc) newErrors.fpc = true;
-    if (!compatibilityCode) newErrors.compatibilityCode = true;
-    if (!model.trim()) newErrors.model = true;
-    if (!serialNumber.trim()) newErrors.serialNumber = true;
-    if (!yearOfManufacture.trim()) newErrors.yearOfManufacture = true;
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-    setErrors({});
+  const onSubmit = async (data: CreateEquipmentInput) => {
     setSubmitting(true);
-
     try {
       const payload: Record<string, unknown> = {
-        companyId, make, fpc, compatibilityCode, model, serialNumber,
-        yearOfManufacture: parseInt(yearOfManufacture),
-        territory: territory === 'in' ? 'In Territory' : 'Out of Territory',
-        ...(equipmentNumber && { equipmentNumber }),
-        ...(smu && { smu: parseFloat(smu) }),
-        ...(smuDate && { smuDate: format(smuDate, 'yyyy-MM-dd') }),
-        ...(industryGroup && { industryGroup }),
-        ...(industryCode && { industryCode }),
-        ...(principalWorkCode && { principalWorkCode }),
-        ...(applicationCode && { applicationCode }),
-        ...(annualUseHours && { annualUseHours: parseInt(annualUseHours) }),
-        ...(engineMake && { engineMake }),
-        ...(engineModel && { engineModel }),
-        ...(engineSerialNumber && { engineSerialNumber }),
-        ...(purchaseDate && { purchaseDate: format(purchaseDate, 'yyyy-MM-dd') }),
+        companyId: data.companyId, make: data.make, fpc: data.fpc, compatibilityCode: data.compatibilityCode,
+        model: data.model, serialNumber: data.serialNumber,
+        yearOfManufacture: parseInt(data.yearOfManufacture),
+        territory: data.territory === 'in' ? 'In Territory' : 'Out of Territory',
+        ...(data.equipmentNumber && { equipmentNumber: data.equipmentNumber }),
+        ...(data.smu && { smu: parseFloat(data.smu) }),
+        ...(data.smuDate && { smuDate: format(data.smuDate, 'yyyy-MM-dd') }),
+        ...(data.industryGroup && { industryGroup: data.industryGroup }),
+        ...(data.industryCode && { industryCode: data.industryCode }),
+        ...(data.principalWorkCode && { principalWorkCode: data.principalWorkCode }),
+        ...(data.applicationCode && { applicationCode: data.applicationCode }),
+        ...(data.annualUseHours && { annualUseHours: parseInt(data.annualUseHours) }),
+        ...(data.engineMake && { engineMake: data.engineMake }),
+        ...(data.engineModel && { engineModel: data.engineModel }),
+        ...(data.engineSerialNumber && { engineSerialNumber: data.engineSerialNumber }),
+        ...(data.purchaseDate && { purchaseDate: format(data.purchaseDate, 'yyyy-MM-dd') }),
       };
 
       const newId = await createEquipmentApi(payload);
       await associateEquipmentToProjectApi(projectId, newId);
 
-      const selectedMake = makes.find(m => m.value === make);
+      const selectedMake = makes.find(m => m.value === data.make);
       const newEquipment: CustomerEquipment = {
         id: newId,
-        companyId,
-        equipmentType: fpcs.find(f => f.value === fpc)?.description || fpc,
-        make: selectedMake?.description || make,
-        model,
-        year: parseInt(yearOfManufacture),
-        serialNumber,
-        ...(smu && { smu: parseFloat(smu) }),
+        companyId: data.companyId,
+        equipmentType: fpcs.find(f => f.value === data.fpc)?.description || data.fpc,
+        make: selectedMake?.description || data.make,
+        model: data.model,
+        year: parseInt(data.yearOfManufacture),
+        serialNumber: data.serialNumber,
+        ...(data.smu && { smu: parseFloat(data.smu) }),
         ownershipStatus: 'owned',
       };
       onSave(newEquipment);
@@ -472,12 +433,12 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, pr
     }
   };
 
-  const DatePickerField = ({ label, date, onSelect, open: isOpen, onOpenChange: setOpen }: {
+  const DatePickerField = ({ label, date, onSelect, isOpen, setOpen }: {
     label: string;
     date: Date | undefined;
     onSelect: (d: Date | undefined) => void;
-    open: boolean;
-    onOpenChange: (o: boolean) => void;
+    isOpen: boolean;
+    setOpen: (o: boolean) => void;
   }) => (
     <div className="space-y-2">
       <Label>{label}</Label>
@@ -502,104 +463,65 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, pr
           <DialogTitle>Create New Equipment</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
-          {/* Company — first required field, full width */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Company */}
           <div className="space-y-2">
             <Label>Company <span className="text-destructive">*</span></Label>
-            <SearchableSelect
-              options={companyOptions}
-              value={companyId}
-              onValueChange={setCompanyId}
-              placeholder="Select company"
-              hasError={errors.companyId}
-              formatLabel={(opt) => opt.description}
-            />
+            <Controller control={control} name="companyId" render={({ field }) => (
+              <SearchableSelect
+                options={companyOptions}
+                value={field.value}
+                onValueChange={field.onChange}
+                placeholder="Select company"
+                hasError={!!errors.companyId}
+                formatLabel={(opt) => opt.description}
+              />
+            )} />
           </div>
 
           {/* Required Fields */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Make */}
             <div className="space-y-2">
               <Label>Make <span className="text-destructive">*</span></Label>
-              <SearchableSelect
-                options={makes}
-                value={make}
-                onValueChange={setMake}
-                placeholder="Select make"
-                hasError={errors.make}
-              />
+              <Controller control={control} name="make" render={({ field }) => (
+                <SearchableSelect options={makes} value={field.value} onValueChange={field.onChange} placeholder="Select make" hasError={!!errors.make} />
+              )} />
             </div>
-
-            {/* FPC */}
             <div className="space-y-2">
               <Label>Family Product Code <span className="text-destructive">*</span></Label>
-              <SearchableSelect
-                options={fpcs}
-                value={fpc}
-                onValueChange={setFpc}
-                placeholder="Select FPC"
-                disabledPlaceholder="Select make first"
-                disabled={!make}
-                hasError={errors.fpc}
-              />
+              <Controller control={control} name="fpc" render={({ field }) => (
+                <SearchableSelect options={fpcs} value={field.value} onValueChange={field.onChange} placeholder="Select FPC" disabledPlaceholder="Select make first" disabled={!make} hasError={!!errors.fpc} />
+              )} />
             </div>
-
-            {/* Compatibility Code */}
             <div className="space-y-2">
               <Label>Compatibility Code <span className="text-destructive">*</span></Label>
-              <SearchableSelect
-                options={compCodes}
-                value={compatibilityCode}
-                onValueChange={setCompatibilityCode}
-                placeholder="Select code"
-                disabledPlaceholder="Select FPC first"
-                disabled={!fpc}
-                hasError={errors.compatibilityCode}
-              />
+              <Controller control={control} name="compatibilityCode" render={({ field }) => (
+                <SearchableSelect options={compCodes} value={field.value} onValueChange={field.onChange} placeholder="Select code" disabledPlaceholder="Select FPC first" disabled={!fpc} hasError={!!errors.compatibilityCode} />
+              )} />
             </div>
-
-            {/* Model */}
             <div className="space-y-2">
               <Label>Model <span className="text-destructive">*</span></Label>
-              <Input
-                value={model}
-                onChange={e => setModel(e.target.value)}
-                placeholder="Enter model"
-                className={cn(errors.model && 'border-destructive')}
-              />
+              <Input {...register('model')} placeholder="Enter model" className={cn(errors.model && 'border-destructive')} />
             </div>
-
-            {/* Serial Number */}
             <div className="space-y-2">
               <Label>Serial Number <span className="text-destructive">*</span></Label>
-              <Input
-                value={serialNumber}
-                onChange={e => setSerialNumber(e.target.value)}
-                placeholder="Enter serial number"
-                className={cn(errors.serialNumber && 'border-destructive')}
-              />
+              <Input {...register('serialNumber')} placeholder="Enter serial number" className={cn(errors.serialNumber && 'border-destructive')} />
             </div>
-
-            {/* Year of Manufacture */}
             <div className="space-y-2">
               <Label>Year of Manufacture <span className="text-destructive">*</span></Label>
-              <Input
-                type="number"
-                value={yearOfManufacture}
-                onChange={e => setYearOfManufacture(e.target.value)}
-                placeholder="e.g. 2024"
-                className={cn(errors.yearOfManufacture && 'border-destructive')}
-              />
+              <Input type="number" {...register('yearOfManufacture')} placeholder="e.g. 2024" className={cn(errors.yearOfManufacture && 'border-destructive')} />
             </div>
           </div>
 
           {/* Territory */}
           <div className="space-y-2">
             <Label>Territory <span className="text-destructive">*</span></Label>
-            <ToggleGroup type="single" value={territory} onValueChange={(v) => v && setTerritory(v)} className="justify-start">
-              <ToggleGroupItem value="in" className="px-4">In Territory</ToggleGroupItem>
-              <ToggleGroupItem value="out" className="px-4">Out of Territory</ToggleGroupItem>
-            </ToggleGroup>
+            <Controller control={control} name="territory" render={({ field }) => (
+              <ToggleGroup type="single" value={field.value} onValueChange={(v) => v && field.onChange(v)} className="justify-start">
+                <ToggleGroupItem value="in" className="px-4">In Territory</ToggleGroupItem>
+                <ToggleGroupItem value="out" className="px-4">Out of Territory</ToggleGroupItem>
+              </ToggleGroup>
+            )} />
           </div>
 
           {/* Additional Fields */}
@@ -612,111 +534,69 @@ export function CreateEquipmentModal({ open, onOpenChange, onSave, projectId, pr
             </CollapsibleTrigger>
             <CollapsibleContent>
               <div className="grid grid-cols-2 gap-4 pt-2">
-                {/* Equipment Number */}
                 <div className="space-y-2">
                   <Label>Equipment Number</Label>
-                  <Input value={equipmentNumber} onChange={e => setEquipmentNumber(e.target.value)} placeholder="Enter equipment number" />
+                  <Input {...register('equipmentNumber')} placeholder="Enter equipment number" />
                 </div>
-
-                {/* SMU */}
                 <div className="space-y-2">
                   <Label>SMU</Label>
-                  <Input type="number" value={smu} onChange={e => setSmu(e.target.value)} placeholder="Enter SMU" />
+                  <Input type="number" {...register('smu')} placeholder="Enter SMU" />
                 </div>
-
-                {/* SMU Date */}
-                <DatePickerField label="SMU Date" date={smuDate} onSelect={setSmuDate} open={smuDateOpen} onOpenChange={setSmuDateOpen} />
-
-                {/* Industry Group */}
+                <DatePickerField label="SMU Date" date={smuDate} onSelect={(d) => setValue('smuDate', d)} isOpen={smuDateOpen} setOpen={setSmuDateOpen} />
                 <div className="space-y-2">
                   <Label>Industry Group</Label>
-                  <SearchableSelect
-                    options={industryGroups}
-                    value={industryGroup}
-                    onValueChange={setIndustryGroup}
-                    placeholder="Select industry group"
-                    formatLabel={(opt) => opt.description}
-                  />
+                  <Controller control={control} name="industryGroup" render={({ field }) => (
+                    <SearchableSelect options={industryGroups} value={field.value} onValueChange={field.onChange} placeholder="Select industry group" formatLabel={(opt) => opt.description} />
+                  )} />
                 </div>
-
-                {/* Industry Code */}
                 <div className="space-y-2">
                   <Label>Industry Code</Label>
-                  <SearchableSelect
-                    options={industryCodes}
-                    value={industryCode}
-                    onValueChange={setIndustryCode}
-                    placeholder="Select industry code"
-                    disabledPlaceholder="Select group first"
-                    disabled={!industryGroup}
-                  />
+                  <Controller control={control} name="industryCode" render={({ field }) => (
+                    <SearchableSelect options={industryCodes} value={field.value} onValueChange={field.onChange} placeholder="Select industry code" disabledPlaceholder="Select group first" disabled={!industryGroup} />
+                  )} />
                 </div>
-
-                {/* Principal Work Code */}
                 <div className="space-y-2">
                   <Label>Principal Work Code</Label>
-                  <SearchableSelect
-                    options={principalWorkCodes}
-                    value={principalWorkCode}
-                    onValueChange={setPrincipalWorkCode}
-                    placeholder="Select work code"
-                  />
+                  <Controller control={control} name="principalWorkCode" render={({ field }) => (
+                    <SearchableSelect options={principalWorkCodes} value={field.value} onValueChange={field.onChange} placeholder="Select work code" />
+                  )} />
                 </div>
-
-                {/* Application Code */}
                 <div className="space-y-2">
                   <Label>Application Code</Label>
-                  <SearchableSelect
-                    options={applicationCodes}
-                    value={applicationCode}
-                    onValueChange={setApplicationCode}
-                    placeholder="Select application"
-                    formatLabel={(opt) => opt.description}
-                  />
+                  <Controller control={control} name="applicationCode" render={({ field }) => (
+                    <SearchableSelect options={applicationCodes} value={field.value} onValueChange={field.onChange} placeholder="Select application" formatLabel={(opt) => opt.description} />
+                  )} />
                 </div>
-
-                {/* Annual Use Hours */}
                 <div className="space-y-2">
                   <Label>Annual Use Hours</Label>
-                  <Input type="number" value={annualUseHours} onChange={e => setAnnualUseHours(e.target.value)} placeholder="Enter hours" />
+                  <Input type="number" {...register('annualUseHours')} placeholder="Enter hours" />
                 </div>
-
-                {/* Engine Make */}
                 <div className="space-y-2">
                   <Label>Engine Make</Label>
-                  <SearchableSelect
-                    options={engineMakes}
-                    value={engineMake}
-                    onValueChange={setEngineMake}
-                    placeholder="Select engine make"
-                  />
+                  <Controller control={control} name="engineMake" render={({ field }) => (
+                    <SearchableSelect options={engineMakes} value={field.value} onValueChange={field.onChange} placeholder="Select engine make" />
+                  )} />
                 </div>
-
-                {/* Engine Model */}
                 <div className="space-y-2">
                   <Label>Engine Model</Label>
-                  <Input value={engineModel} onChange={e => setEngineModel(e.target.value)} placeholder="Enter engine model" />
+                  <Input {...register('engineModel')} placeholder="Enter engine model" />
                 </div>
-
-                {/* Engine Serial Number */}
                 <div className="space-y-2">
                   <Label>Engine Serial Number</Label>
-                  <Input value={engineSerialNumber} onChange={e => setEngineSerialNumber(e.target.value)} placeholder="Enter engine serial" />
+                  <Input {...register('engineSerialNumber')} placeholder="Enter engine serial" />
                 </div>
-
-                {/* Purchase Date */}
-                <DatePickerField label="Purchase Date" date={purchaseDate} onSelect={setPurchaseDate} open={purchaseDateOpen} onOpenChange={setPurchaseDateOpen} />
+                <DatePickerField label="Purchase Date" date={purchaseDate} onSelect={(d) => setValue('purchaseDate', d)} isOpen={purchaseDateOpen} setOpen={setPurchaseDateOpen} />
               </div>
             </CollapsibleContent>
           </Collapsible>
-        </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => handleClose(false)}>Cancel</Button>
-          <Button onClick={handleSubmit} disabled={submitting}>
-            {submitting ? 'Creating...' : 'Create Equipment'}
-          </Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button variant="outline" type="button" onClick={() => handleClose(false)}>Cancel</Button>
+            <Button type="submit" disabled={submitting}>
+              {submitting ? 'Creating...' : 'Create Equipment'}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

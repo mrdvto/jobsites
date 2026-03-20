@@ -198,3 +198,62 @@ Feature: 6. Equipment to Project Link
     Given the equipment record is not associated with any CRM Project
     Then the "CRM Project" field should be empty or display a placeholder (e.g., "—")
 
+---
+
+### **User Story: Lead/Opportunity to Project Link**
+
+**Description:**
+
+As a Sales Rep,
+I want to see which CRM Project a lead or opportunity is associated with from the record detail view,
+So that I can understand the jobsite context for that deal and navigate to the project quickly.
+
+**Acceptance Criteria:**
+
+Feature: 7. Lead/Opportunity to Project Link
+
+  Background:
+    Given I am on the "Lead Detail" or "Opportunity Detail" view
+
+  Scenario: 7.1. View Linked CRM Project on Lead/Opportunity Record
+    Given the record is associated with a CRM Project
+    Then I should see a "CRM Project" field displaying the linked project's name as a clickable link
+
+  Scenario: 7.2. Navigate to Linked CRM Project from Lead/Opportunity
+    Given the record is associated with a CRM Project
+    When I click the linked project name in the "CRM Project" field
+    Then I should be navigated to the "Project Detail" page for that specific CRM Project
+
+  Scenario: 7.3. No Project Linked
+    Given the record is not associated with any CRM Project
+    Then the "CRM Project" field should be empty or display a placeholder (e.g., "—")
+
+---
+
+### **User Story: Activity to Project Link**
+
+**Description:**
+
+As a Sales Rep,
+I want to see which CRM Project an activity is associated with from the activity detail view,
+So that I can understand the jobsite context for that interaction and navigate to the project quickly.
+
+**Acceptance Criteria:**
+
+Feature: 8. Activity to Project Link
+
+  Background:
+    Given I am on the "Activity Detail" view
+
+  Scenario: 8.1. View Linked CRM Project on Activity Record
+    Given the activity record is associated with a CRM Project
+    Then I should see a "CRM Project" field displaying the linked project's name as a clickable link
+
+  Scenario: 8.2. Navigate to Linked CRM Project from Activity
+    Given the activity record is associated with a CRM Project
+    When I click the linked project name in the "CRM Project" field
+    Then I should be navigated to the "Project Detail" page for that specific CRM Project
+
+  Scenario: 8.3. No Project Linked
+    Given the activity record is not associated with any CRM Project
+    Then the "CRM Project" field should be empty or display a placeholder (e.g., "—")

@@ -1,0 +1,1152 @@
+{
+    "content": [
+        {
+            "id": 500101,
+            "name": "St. Mary's Hospital - West Wing Expansion",
+            "description": "Construction of a new 4-story wing for the cardiology department, including underground parking structure.",
+            "statusId": "Active",
+            "assigneeIds": [313, 305],
+            "valuation": 45000000,
+            "primaryStageId": "UNDER_CONSTRUCTION",
+            "primaryProjectTypeId": "INSTITUTIONAL",
+            "ownershipTypeId": "PRIVATE",
+            "bidDate": "2024-06-15",
+            "targetStartDate": "2024-09-01",
+            "targetCompletionDate": "2026-12-31",
+            "projectOwner": {
+                "companyId": "OWN-STMARYS",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "1200 Medical Center Dr",
+                "city": "Chicago",
+                "state": "IL",
+                "zipCode": "60612",
+                "country": "USA",
+                "latitude": 41.872,
+                "longitude": -87.665
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-STMARYS",
+                    "companyName": "St. Mary's Medical Center",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Sarah Jenkins", "title": "Senior Project Manager", "phone": "312-555-0101", "email": "sjenkins@stmarysprojects.com", "divisionIds": ["G", "S"] },
+                        { "id": 2, "name": "Dr. Raymond Park", "title": "Chief of Facilities", "phone": "312-555-0102", "email": "rpark@stmarysmed.com", "divisionIds": ["S"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "998810",
+                    "companyName": "Turner Construction Company",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "roleIds": ["GC", "SUPPLIER"],
+                    "roleDescriptions": ["General Contractor", "Supplier"],
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Michael Ross", "title": "Site Superintendent", "phone": "312-555-8821", "email": "mross@turnerconstruction.com", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Jennifer Walsh", "title": "Project Manager", "phone": "312-555-8822", "email": "jwalsh@turnerconstruction.com", "divisionIds": ["G", "C"] },
+                        { "id": 3, "name": "Robert Chen", "title": "Safety Director", "phone": "312-555-8823", "email": "rchen@turnerconstruction.com", "divisionIds": ["G", "R"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "$1019550",
+                    "companyName": "Granite Excavation & Demolition",
+                    "roleId": "SUB-EXC",
+                    "roleDescription": "Subcontractor - Excavation",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Latisha Tyler", "title": "Fleet Manager", "phone": "312-555-0192", "email": "latisha.tyler@graniteexcavation.com", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Marcus Johnson", "title": "Site Foreman", "phone": "312-555-0193", "email": "m.johnson@graniteexcavation.com", "divisionIds": ["G", "R"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 100002, "type": "Rental", "description": "12-month rental of 950M Heavy Duty Loader", "stageId": 16, "revenue": 2590 },
+                { "id": 300001, "type": "Sales", "description": "CAT D8T Dozer for foundation excavation", "stageId": 4, "revenue": 125000 },
+                { "id": 300002, "type": "Parts", "description": "Hydraulic cylinder rebuild kit for 320F", "stageId": 2, "revenue": 8500 },
+                { "id": 300003, "type": "Rental Service", "description": "Crane service with operator for steel erection", "stageId": 8, "revenue": 22000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Strict noise ordinances after 6 PM. All equipment must be shut down by 5:45 PM to allow for proper wind-down.", "createdAt": "2025-01-15T09:30:00.000Z", "createdById": 313, "tagIds": ["COMPLIANCE"], "attachments": [], "lastModifiedAt": "2025-01-18T10:15:00.000Z", "lastModifiedById": 313, "modificationHistory": [{ "modifiedAt": "2025-01-17T14:00:00.000Z", "modifiedById": 313, "summary": "Content updated", "previousContent": "Strict noise ordinances after 6 PM. All equipment must be shut down by 6 PM." }, { "modifiedAt": "2025-01-18T10:15:00.000Z", "modifiedById": 313, "summary": "Content updated, Tags changed", "previousContent": "Strict noise ordinances after 6 PM. All equipment must be shut down by 5:45 PM.", "previousTagIds": ["GENERAL"] }] },
+                { "id": 2, "content": "Badging required for site access. All personnel must check in at the security trailer before entering the construction zone.", "createdAt": "2025-01-16T14:22:00.000Z", "createdById": 313, "tagIds": ["SECURITY"], "attachments": [], "lastModifiedAt": "2025-01-19T11:30:00.000Z", "lastModifiedById": 305, "modificationHistory": [{ "modifiedAt": "2025-01-19T11:30:00.000Z", "modifiedById": 305, "summary": "Content updated", "previousContent": "Badging required for site access." }] },
+                { "id": 3, "content": "Hard hats and steel-toed boots mandatory at all times. High-visibility vests required in active construction areas.", "createdAt": "2025-01-20T11:00:00.000Z", "createdById": 313, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 4, "content": "Hospital loading dock available for equipment deliveries on Tuesdays and Thursdays only.", "createdAt": "2025-02-01T08:45:00.000Z", "createdById": 313, "tagIds": ["GENERAL"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1001, "statusId": 2, "salesRepId": 313, "typeId": "F", "date": "2025-01-20T09:30:00.000Z", "description": "Initial site walkthrough with project manager", "contactName": "Michael Ross", "notes": "Reviewed crane placement options and staging area layout." },
+                { "id": 1002, "statusId": 2, "salesRepId": 313, "typeId": "P", "date": "2025-02-05T14:00:00.000Z", "description": "Follow-up call regarding equipment needs", "contactName": "Jennifer Walsh", "notes": "Discussed rental vs purchase options for excavator.", "previousRelatedActivityId": 1001 },
+                { "id": 1003, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-02-15T10:00:00.000Z", "description": "Quarterly review meeting with Turner Construction", "contactName": "Michael Ross", "notes": "Reviewed project timeline and upcoming equipment needs.", "campaignId": 1 }
+            ],
+            "customerEquipment": [1001, 1002, 1003, 1004, 1005],
+            "externalReference": {
+                "source": "Dodge Data & Analytics",
+                "url": "https://www.construction.com/projects/5001010/st-marys-hospital-west-wing-expansion",
+                "name": "St. Mary's Medical Center West Wing Expansion"
+            }
+        },
+        {
+            "id": 500102,
+            "name": "Riverfront Stadium Renovation",
+            "description": "Complete resurfacing of playing field and installation of new structural seating.",
+            "statusId": "Planning",
+            "assigneeIds": [305],
+            "valuation": 28000000,
+            "primaryStageId": "BIDDING",
+            "primaryProjectTypeId": "COMMERCIAL",
+            "ownershipTypeId": "PRIVATE",
+            "bidDate": "2025-04-01",
+            "targetStartDate": "2025-07-01",
+            "targetCompletionDate": "2027-03-31",
+            "projectOwner": {
+                "companyId": "OWN-RVRFRNT",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": null,
+                "city": null,
+                "state": "IL",
+                "zipCode": null,
+                "country": "USA",
+                "latitude": 41.8623,
+                "longitude": -87.6167
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-RVRFRNT",
+                    "companyName": "Riverfront Stadium Authority",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "David Ortiz", "title": "Facilities Director", "phone": "312-555-9988", "email": "dortiz@riverfrontstadium.com", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Maria Chen", "title": "Operations Manager", "phone": "312-555-9989", "email": "mchen@riverfrontstadium.com", "divisionIds": ["G", "V"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1067200",
+                    "companyName": "Mortenson Construction",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Aisha Bartlett", "title": "Procurement Manager", "phone": "815-555-0332", "email": "aisha.bartlett@mortenson.com", "divisionIds": ["G", "C"] },
+                        { "id": 2, "name": "Brian Sullivan", "title": "Project Executive", "phone": "815-555-0333", "email": "b.sullivan@mortenson.com", "divisionIds": ["G"] },
+                        { "id": 3, "name": "Christine Ng", "title": "Field Engineer", "phone": "815-555-0334", "email": "c.ng@mortenson.com", "divisionIds": ["G", "P"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "998810",
+                    "companyName": "Turner Construction Company",
+                    "roleId": "SUB-STEEL",
+                    "roleDescription": "Subcontractor - Steel",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 4, "name": "Amanda Foster", "title": "Procurement Specialist", "phone": "312-555-8824", "email": "afoster@turnerconstruction.com", "divisionIds": ["G", "R"] },
+                        { "id": 5, "name": "David Kim", "title": "Assistant Project Manager", "phone": "312-555-8825", "email": "dkim@turnerconstruction.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 100015, "type": "Sale", "description": "Purchase of new CAT 320 Excavator", "stageId": 8, "revenue": 200000 },
+                { "id": 300004, "type": "Rent", "description": "6-month rental of vibratory roller", "stageId": 4, "revenue": 35000 },
+                { "id": 300005, "type": "Service", "description": "Annual preventive maintenance on fleet excavators", "stageId": 1, "revenue": 12000 },
+                { "id": 300006, "type": "Lease", "description": "24-month lease of CAT 950GC Wheel Loader", "stageId": 16, "revenue": 95000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Stadium will remain operational during renovation. Work must be scheduled around game days and events.", "createdAt": "2025-02-15T10:30:00.000Z", "createdById": 305, "tagIds": ["GENERAL", "COMPLIANCE"], "attachments": [], "lastModifiedAt": "2025-02-18T16:45:00.000Z", "lastModifiedById": 305, "modificationHistory": [{ "modifiedAt": "2025-02-18T16:45:00.000Z", "modifiedById": 305, "summary": "Content updated", "previousContent": "Stadium will remain operational during renovation. Coordinate schedule with stadium ops." }] },
+                { "id": 2, "content": "All workers must complete crowd safety training before accessing field areas.", "createdAt": "2025-02-20T09:00:00.000Z", "createdById": 305, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 3, "content": "Background checks required for all personnel due to public venue security protocols.", "createdAt": "2025-03-01T14:15:00.000Z", "createdById": 305, "tagIds": ["SECURITY"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1004, "statusId": 2, "salesRepId": 305, "typeId": "E", "date": "2025-03-01T11:15:00.000Z", "description": "Sent proposal for excavator purchase", "contactName": "Aisha Bartlett", "notes": "Included pricing for CAT 320 and trade-in options." },
+                { "id": 1005, "statusId": 1, "salesRepId": 305, "typeId": "F", "date": "2026-04-10T08:00:00.000Z", "description": "Equipment demonstration scheduled", "contactName": "Brian Sullivan", "notes": "Demo of CAT 320 at Mortenson yard.", "issueId": 3, "customerId": "OWN-RVRFRNT" }
+            ],
+            "customerEquipment": [1008, 1007, 1009]
+        },
+        {
+            "id": 500103,
+            "name": "I-55 Highway Resurfacing (Mile Marker 20-35)",
+            "description": "Night work only. Asphalt removal and resurfacing of southbound lanes.",
+            "statusId": "Active",
+            "assigneeIds": [303],
+            "valuation": 12000000,
+            "primaryStageId": "UNDER_CONSTRUCTION",
+            "primaryProjectTypeId": "INFRASTRUCTURE",
+            "ownershipTypeId": "GOVERNMENTAL",
+            "targetStartDate": "2025-03-01",
+            "targetCompletionDate": "2025-11-30",
+            "projectOwner": {
+                "companyId": "OWN-IDOT",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "I-55 Southbound",
+                "city": "Bolingbrook",
+                "state": "IL",
+                "zipCode": "60440",
+                "country": "USA",
+                "latitude": 41.698,
+                "longitude": -88.068
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-IDOT",
+                    "companyName": "Illinois Department of Transportation",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Richard Hale", "title": "District Engineer", "phone": "217-555-0000", "email": "dist3@idot.gov", "divisionIds": ["P"] },
+                        { "id": 2, "name": "Patricia Nguyen", "title": "Project Liaison", "phone": "217-555-0001", "email": "p.nguyen@idot.gov", "divisionIds": ["P", "G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "NON-DBS",
+                    "companyName": "Gallagher Asphalt Corporation",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Wesley Moss", "title": "Site Foreman", "phone": "309-555-0821", "email": "wesley.moss@gallagherasphalt.com", "divisionIds": ["P"] },
+                        { "id": 2, "name": "Patricia Lane", "title": "Project Manager", "phone": "309-555-0822", "email": "p.lane@gallagherasphalt.com", "divisionIds": ["P", "G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "$NON-DBS-CC",
+                    "companyName": "Curran Contracting Company",
+                    "roleId": "SUB-PAV",
+                    "roleDescription": "Subcontractor - Paving",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Angelia Sexton", "title": "Owner", "phone": "630-555-0441", "email": "angelia.s@currancontracting.com", "divisionIds": ["P"] },
+                        { "id": 2, "name": "Howard Klein", "title": "Operations Manager", "phone": "630-555-0442", "email": "h.klein@currancontracting.com", "divisionIds": ["P", "G"] },
+                        { "id": 3, "name": "Jessica Palmer", "title": "Paving Crew Lead", "phone": "630-555-0443", "email": "j.palmer@currancontracting.com", "divisionIds": ["P"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 100003, "type": "Rental", "description": "Short-term rental of asphalt paver", "stageId": 2, "revenue": 15000 },
+                { "id": 100027, "type": "Rental", "description": "Rental of double drum rollers", "stageId": 1, "revenue": 5500 },
+                { "id": 300007, "type": "Sales", "description": "Purchase of new CAT AP655F Asphalt Paver", "stageId": 8, "revenue": 180000 },
+                { "id": 300008, "type": "Rental Service", "description": "Paving crew with roller equipment for ramp sections", "stageId": 32, "revenue": 15500 },
+                { "id": 300009, "type": "Parts", "description": "Drum assembly and wear plates for roller fleet", "stageId": 4, "revenue": 6200 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Safety vest required at all times. All personnel must wear high-visibility vests when on or near the roadway.", "createdAt": "2025-02-25T22:30:00.000Z", "createdById": 303, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 2, "content": "Deliveries must be scheduled between 10 PM and 4 AM due to lane closure restrictions.", "createdAt": "2025-02-26T10:15:00.000Z", "createdById": 303, "tagIds": ["COMPLIANCE", "GENERAL"], "attachments": [], "lastModifiedAt": "2025-02-28T08:00:00.000Z", "lastModifiedById": 303, "modificationHistory": [{ "modifiedAt": "2025-02-28T08:00:00.000Z", "modifiedById": 303, "summary": "Content updated", "previousContent": "Deliveries must be scheduled between 9 PM and 5 AM per DOT guidelines." }] },
+                { "id": 3, "content": "IDOT inspector will be on-site every night. All work must meet state highway standards.", "createdAt": "2025-03-01T23:00:00.000Z", "createdById": 303, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 4, "content": "Emergency vehicle access lane must be maintained at all times during night work operations.", "createdAt": "2025-03-05T21:45:00.000Z", "createdById": 303, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1006, "statusId": 2, "salesRepId": 303, "typeId": "P", "date": "2025-02-28T20:30:00.000Z", "description": "Confirmed delivery schedule for paving equipment", "contactName": "Wesley Moss", "notes": "Delivery confirmed for March 3rd at 10 PM." }
+            ],
+            "customerEquipment": [1010, 1011, 1012],
+            "externalReference": {
+                "source": "Dodge Data & Analytics",
+                "url": "https://www.construction.com/projects/5001030/i-55-highway-resurfacing",
+                "name": "I-55 Highway Resurfacing Project (MM 20-35)"
+            }
+        },
+        {
+            "id": 500104,
+            "name": "Fox Valley Mall - Landscaping Refurbishment",
+            "description": "Updating exterior landscaping, tree removal, and new retaining walls.",
+            "statusId": "Completed",
+            "assigneeIds": [292],
+            "projectOwner": {
+                "companyId": "OWN-FXVLY",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "195 Fox Valley Center",
+                "city": "Aurora",
+                "state": "IL",
+                "zipCode": "60504",
+                "country": "USA",
+                "latitude": 41.755,
+                "longitude": -88.214
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-FXVLY",
+                    "companyName": "Centennial Real Estate",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Karen Fields", "title": "Property Manager", "phone": "630-555-1234", "email": "kfields@centennialre.com", "divisionIds": ["C"] },
+                        { "id": 2, "name": "James Whitfield", "title": "VP of Facilities", "phone": "630-555-1235", "email": "jwhitfield@centennialre.com", "divisionIds": ["C", "G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "$1764465",
+                    "companyName": "Christy Webber Landscapes",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Michael Trent", "title": "Landscape Architect", "phone": "217-555-0221", "email": "michael.trent@christywebber.com", "divisionIds": ["C"] },
+                        { "id": 2, "name": "Nancy Rivera", "title": "Project Manager", "phone": "217-555-0222", "email": "n.rivera@christywebber.com", "divisionIds": ["C", "G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "$1019550",
+                    "companyName": "Granite Excavation & Demolition",
+                    "roleId": "SUB-EXC",
+                    "roleDescription": "Subcontractor - Excavation",
+                    "roleIds": ["SUB-EXC", "SUB-SPEC"],
+                    "roleDescriptions": ["Subcontractor - Excavation", "Subcontractor - Specialized"],
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 3, "name": "Carlos Mendez", "title": "Equipment Operator Lead", "phone": "312-555-0194", "email": "c.mendez@graniteexcavation.com", "divisionIds": ["G"] },
+                        { "id": 4, "name": "Tanya Brooks", "title": "Safety Coordinator", "phone": "312-555-0195", "email": "t.brooks@graniteexcavation.com", "divisionIds": ["G", "R"] },
+                        { "id": 5, "name": "William Park", "title": "Project Estimator", "phone": "312-555-0196", "email": "w.park@graniteexcavation.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 100024, "type": "Rental", "description": "Monthly rental of 262D Skid Steer", "stageId": 16, "revenue": 1433.84 },
+                { "id": 300010, "type": "Rent", "description": "3-month rental of mini excavator for utility work", "stageId": 16, "revenue": 4500 },
+                { "id": 300011, "type": "Service", "description": "Skid steer hydraulic system overhaul", "stageId": 2, "revenue": 7800 },
+                { "id": 300012, "type": "Sales", "description": "Purchase of Bobcat T770 Compact Track Loader", "stageId": 32, "revenue": 55000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Project completed successfully. All equipment returned and inspected.", "createdAt": "2024-11-15T16:00:00.000Z", "createdById": 292, "tagIds": ["GENERAL"], "attachments": [] },
+                { "id": 2, "content": "Final safety inspection passed with no incidents recorded during project.", "createdAt": "2024-11-15T17:30:00.000Z", "createdById": 292, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1007, "statusId": 2, "salesRepId": 292, "typeId": "F", "date": "2024-11-15T13:00:00.000Z", "description": "Final walkthrough and project closeout", "contactName": "Michael Trent", "notes": "All equipment returned. Punch list items resolved." }
+            ],
+            "customerEquipment": [1013, 1014, 1015]
+        },
+        {
+            "id": 500105,
+            "name": "Amazon Fulfillment Center #ORD5",
+            "description": "Ground-up construction of 800,000 sq ft distribution warehouse.",
+            "statusId": "Active",
+            "assigneeIds": [305, 313, 292],
+            "projectOwner": {
+                "companyId": "OWN-AMZN",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "3000 Duke Parkway",
+                "city": "Aurora",
+                "state": "IL",
+                "zipCode": "60502",
+                "country": "USA",
+                "latitude": 41.785,
+                "longitude": -88.250
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-AMZN",
+                    "companyName": "Amazon.com Services LLC",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Greg Harmon", "title": "Regional Construction Lead", "phone": "206-555-9999", "email": "construction-ord5@amazon.com", "divisionIds": ["G", "S"] },
+                        { "id": 2, "name": "Priya Patel", "title": "Facilities Program Manager", "phone": "206-555-9998", "email": "ppatel@amazon.com", "divisionIds": ["S", "X"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "$1140350",
+                    "companyName": "Rosendin Electric",
+                    "roleId": "SUB-ELEC",
+                    "roleDescription": "Subcontractor - Electrical",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Wendi Delacruz", "title": "Project Engineer", "phone": "630-555-0992", "email": "wendi.d@rosendin.com", "divisionIds": ["S", "X"] },
+                        { "id": 2, "name": "Aaron Mitchell", "title": "Electrical Superintendent", "phone": "630-555-0993", "email": "a.mitchell@rosendin.com", "divisionIds": ["S"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1035040",
+                    "companyName": "Southland Industries",
+                    "roleId": "SUB-MECH",
+                    "roleDescription": "Subcontractor - Mechanical",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Victoria Flowers", "title": "Purchasing Agent", "phone": "217-555-0774", "email": "v.flowers@southlandind.com", "divisionIds": ["S"] },
+                        { "id": 2, "name": "Edward Stone", "title": "Project Manager", "phone": "217-555-0775", "email": "e.stone@southlandind.com", "divisionIds": ["S", "G"] },
+                        { "id": 3, "name": "Fiona Campbell", "title": "HVAC Specialist", "phone": "217-555-0776", "email": "f.campbell@southlandind.com", "divisionIds": ["S"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1067200",
+                    "companyName": "Mortenson Construction",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 4, "name": "Derek Washington", "title": "Superintendent", "phone": "815-555-0335", "email": "d.washington@mortenson.com", "divisionIds": ["G"] },
+                        { "id": 5, "name": "Elena Martinez", "title": "Quality Control Manager", "phone": "815-555-0336", "email": "e.martinez@mortenson.com", "divisionIds": ["G", "C"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 100004, "type": "Rental", "description": "6-month rental of used 3508 Generator Set", "stageId": 2, "revenue": 5366 },
+                { "id": 100005, "type": "Lease", "description": "24-month lease of new 3516 Diesel Engine", "stageId": 2, "revenue": 2894 },
+                { "id": 300013, "type": "Parts", "description": "Replacement filters and belts for generator fleet", "stageId": 8, "revenue": 14200 },
+                { "id": 300014, "type": "Rent", "description": "12-month rental of telescopic handler", "stageId": 1, "revenue": 28000 },
+                { "id": 300015, "type": "Service", "description": "Preventive maintenance on HVAC equipment", "stageId": 4, "revenue": 11500 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Security clearance required for all deliveries. Drivers must present valid ID and be on the approved vendor list.", "createdAt": "2024-11-01T08:00:00.000Z", "createdById": 305, "tagIds": ["SECURITY"], "attachments": [] },
+                { "id": 2, "content": "All equipment must be delivered to Gate 3. No exceptions - Gate 1 and 2 are for personnel only.", "createdAt": "2024-11-05T10:30:00.000Z", "createdById": 305, "tagIds": ["GENERAL", "SECURITY"], "attachments": [] },
+                { "id": 3, "content": "Site requires OSHA 30 certification for all operators. Verify credentials before dispatching personnel.", "createdAt": "2024-11-10T14:15:00.000Z", "createdById": 305, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] },
+                { "id": 4, "content": "Amazon sustainability requirements: all diesel equipment must meet Tier 4 emissions standards.", "createdAt": "2024-12-01T09:00:00.000Z", "createdById": 305, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 5, "content": "Weekly safety meetings held every Monday at 7:00 AM in the main trailer. Attendance is mandatory.", "createdAt": "2025-01-06T07:30:00.000Z", "createdById": 313, "tagIds": ["SAFETY"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1008, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-01-10T07:00:00.000Z", "description": "Weekly progress meeting with Amazon construction team", "contactName": "Greg Harmon", "notes": "Reviewed generator installation timeline.", "campaignId": 3 },
+                { "id": 1009, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-01-17T09:00:00.000Z", "description": "Generator installation inspection", "contactName": "Derek Washington", "notes": "Units placed per spec. Electrical hookup pending.", "issueId": 4, "customerId": "OWN-AMZN" },
+                { "id": 1010, "statusId": 2, "salesRepId": 313, "typeId": "P", "date": "2025-02-01T15:30:00.000Z", "description": "Discussed additional equipment requirements", "contactName": "Priya Patel", "notes": "Amazon requesting additional telescopic handler for Q2." }
+            ],
+            "customerEquipment": [1016, 1017, 1018, 1019, 1020, 1021],
+            "externalReference": {
+                "source": "Dodge Data & Analytics",
+                "url": "https://www.construction.com/projects/5001050/amazon-fulfillment-center-ord5",
+                "name": "Amazon Fulfillment Center ORD5 - Chicago"
+            }
+        },
+        {
+            "id": 500106,
+            "name": "City Water Treatment Plant Upgrade",
+            "description": "Installation of new filtration pumps and backup power systems.",
+            "statusId": "Active",
+            "assigneeIds": [304],
+            "projectOwner": {
+                "companyId": "OWN-SPRFLD",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "100 Water Works Rd",
+                "city": "Springfield",
+                "state": "IL",
+                "zipCode": "62702",
+                "country": "USA",
+                "latitude": 39.801,
+                "longitude": -89.643
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-SPRFLD",
+                    "companyName": "City of Springfield - Public Works",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Harold Meyers", "title": "Public Works Director", "phone": "217-555-1122", "email": "publicworks@springfield.il.us", "divisionIds": ["S"] },
+                        { "id": 2, "name": "Linda Torres", "title": "Water Utilities Superintendent", "phone": "217-555-1123", "email": "ltorres@springfield.il.us", "divisionIds": ["S", "G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1293500",
+                    "companyName": "Layne Christensen Company",
+                    "roleId": "SUB-SPEC",
+                    "roleDescription": "Subcontractor - Specialized",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Robert Vance", "title": "Owner", "phone": "217-555-0991", "email": "robert.vance@laynechristensen.com", "divisionIds": ["S"] },
+                        { "id": 2, "name": "Irene Collins", "title": "Drilling Supervisor", "phone": "217-555-0992", "email": "i.collins@laynechristensen.com", "divisionIds": ["G", "S"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "$1140350",
+                    "companyName": "Rosendin Electric",
+                    "roleId": "SUB-ELEC",
+                    "roleDescription": "Subcontractor - Electrical",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 3, "name": "Barbara Hughes", "title": "Safety Coordinator", "phone": "630-555-0994", "email": "b.hughes@rosendin.com", "divisionIds": ["S"] },
+                        { "id": 4, "name": "Charles Wright", "title": "Foreman", "phone": "630-555-0995", "email": "c.wright@rosendin.com", "divisionIds": ["S", "X"] },
+                        { "id": 5, "name": "Diana Lopez", "title": "Procurement Manager", "phone": "630-555-0996", "email": "d.lopez@rosendin.com", "divisionIds": ["S"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 100016, "type": "Parts", "description": "High-pressure air compressor rebuild kit", "stageId": 128, "revenue": 12500 },
+                { "id": 200001, "type": "Sales", "description": "Purchase of CAT 3512B Generator Set for backup power", "stageId": 8, "revenue": 185000 },
+                { "id": 200002, "type": "Rent", "description": "6-month rental of portable dewatering pump", "stageId": 16, "revenue": 18500 },
+                { "id": 200003, "type": "Service", "description": "Preventive maintenance on existing pump station motors", "stageId": 4, "revenue": 9200 },
+                { "id": 200004, "type": "Lease", "description": "24-month lease of XQ575 portable generator", "stageId": 2, "revenue": 42000 },
+                { "id": 200005, "type": "Rental Service", "description": "Temp power with operator for filtration building", "stageId": 32, "revenue": 31000 },
+                { "id": 200006, "type": "Sales", "description": "Purchase of replacement filtration valves and actuators", "stageId": 1, "revenue": 67000 },
+                { "id": 300016, "type": "Rent", "description": "Portable pump rental for dewatering operations", "stageId": 8, "revenue": 24000 },
+                { "id": 300017, "type": "Parts", "description": "Drill bit and tooling replacement package", "stageId": 16, "revenue": 9800 },
+                { "id": 300018, "type": "Sales", "description": "Purchase of backup generator for pump station", "stageId": 4, "revenue": 145000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Critical infrastructure site - 24/7 operations must be maintained. No scheduled outages without 72-hour advance notice.", "createdAt": "2025-05-20T08:00:00.000Z", "createdById": 304, "tagIds": ["COMPLIANCE", "GENERAL"], "attachments": [] },
+                { "id": 2, "content": "Confined space entry permits required for all tank and pump room work. Contact site safety officer before entry.", "createdAt": "2025-05-22T10:30:00.000Z", "createdById": 304, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 3, "content": "Municipal security protocols in effect. All visitors must sign in at guard station and display visitor badges.", "createdAt": "2025-05-25T14:00:00.000Z", "createdById": 304, "tagIds": ["SECURITY"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1011, "statusId": 2, "salesRepId": 304, "typeId": "E", "date": "2025-05-15T10:00:00.000Z", "description": "Sent service contract renewal proposal", "contactName": "Harold Meyers", "notes": "Proposal covers preventive maintenance for all pump station motors." }
+            ],
+            "customerEquipment": [1022, 1023, 1024]
+        },
+        {
+            "id": 500107,
+            "name": "Willow Creek Residential Subdivision",
+            "description": "Phase 2 development: Grading and utility installation for 50 new single-family homes.",
+            "statusId": "Planning",
+            "assigneeIds": [260, 304],
+            "projectOwner": {
+                "companyId": "OWN-WLCRK",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "Willow Creek Dr & Route 20",
+                "city": "Rockford",
+                "state": "IL",
+                "zipCode": "61108",
+                "country": "USA",
+                "latitude": 42.259,
+                "longitude": -89.064
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-WLCRK",
+                    "companyName": "Willow Creek Development Group",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Tom Builders", "title": "Development Manager", "phone": "815-555-7788", "email": "tom@willowcreekdev.com", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Sandra Kowalski", "title": "Land Acquisition VP", "phone": "815-555-7789", "email": "s.kowalski@willowcreekdev.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1174395",
+                    "companyName": "Ryan Companies US Inc",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Angelina Cline", "title": "Equipment Manager", "phone": "815-555-0112", "email": "angelina.cline@ryancompanies.com", "divisionIds": ["G", "C"] },
+                        { "id": 2, "name": "Mark Stevens", "title": "Project Manager", "phone": "815-555-0113", "email": "m.stevens@ryancompanies.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1035040",
+                    "companyName": "Southland Industries",
+                    "roleId": "SUB-MECH",
+                    "roleDescription": "Subcontractor - Mechanical",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 4, "name": "George Harris", "title": "Plumbing Lead", "phone": "217-555-0777", "email": "g.harris@southlandind.com", "divisionIds": ["G"] },
+                        { "id": 5, "name": "Helen Brown", "title": "Estimator", "phone": "217-555-0778", "email": "h.brown@southlandind.com", "divisionIds": ["G", "S"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 100018, "type": "Service", "description": "Undercarriage overhaul for fleet Dozer", "stageId": 2, "revenue": 8750 },
+                { "id": 300019, "type": "Sales", "description": "CAT 320 Excavator for utility installation", "stageId": 2, "revenue": 92000 },
+                { "id": 300020, "type": "Rent", "description": "6-month rental of backhoe loader", "stageId": 8, "revenue": 18500 },
+                { "id": 300021, "type": "Lease", "description": "36-month lease of compact dozer", "stageId": 1, "revenue": 48000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Heavy clay soil conditions reported. Recommend track-type equipment over wheeled machines for better flotation.", "createdAt": "2025-04-10T15:30:00.000Z", "createdById": 260, "tagIds": ["GENERAL"], "attachments": [] },
+                { "id": 2, "content": "Residential area - strict noise ordinances. No heavy equipment operation before 7 AM or after 7 PM.", "createdAt": "2025-04-12T09:00:00.000Z", "createdById": 260, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 3, "content": "School bus route runs through site entrance. Extra caution required during morning and afternoon school hours.", "createdAt": "2025-04-15T08:30:00.000Z", "createdById": 260, "tagIds": ["SAFETY"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1012, "statusId": 2, "salesRepId": 260, "typeId": "F", "date": "2025-04-01T13:00:00.000Z", "description": "Initial planning meeting with developer", "contactName": "Tom Builders", "notes": "Discussed grading timeline and equipment needs for Phase 2." },
+                { "id": 1013, "statusId": 2, "salesRepId": 260, "typeId": "F", "date": "2025-04-10T08:30:00.000Z", "description": "Soil assessment and equipment evaluation", "contactName": "Mark Stevens", "notes": "Heavy clay confirmed. Track equipment recommended.", "previousRelatedActivityId": 1012 }
+            ],
+            "customerEquipment": [1025, 1026, 1027, 1028, 1029],
+            "externalReference": {
+                "source": "Dodge Data & Analytics",
+                "url": "https://www.construction.com/projects/5001070/willow-creek-residential-subdivision",
+                "name": "Willow Creek Residential Subdivision Phase 2"
+            }
+        },
+        {
+            "id": 500108,
+            "name": "Downtown Bridge Rehabilitation",
+            "description": "Structural steel repairs and repainting of the main street bridge.",
+            "statusId": "Active",
+            "assigneeIds": [292],
+            "projectOwner": {
+                "companyId": "OWN-BLOOM",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "Main St Bridge",
+                "city": "Bloomington",
+                "state": "IL",
+                "zipCode": "61701",
+                "country": "USA",
+                "latitude": 40.484,
+                "longitude": -88.993
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-BLOOM",
+                    "companyName": "City of Bloomington - Engineering Dept",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Margaret Sinclair", "title": "Chief Engineer", "phone": "309-555-4433", "email": "eng@cityblm.org", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Dennis Cole", "title": "Bridge Program Manager", "phone": "309-555-4434", "email": "dcole@cityblm.org", "divisionIds": ["G", "R"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "$000313",
+                    "companyName": "Stupp Bridge Company",
+                    "roleId": "SUB-STEEL",
+                    "roleDescription": "Subcontractor - Steel",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Betsy Owens", "title": "Parts Coordinator", "phone": "309-555-0663", "email": "betsy.owens@stuppbridge.com", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Steven Price", "title": "Project Manager", "phone": "309-555-0664", "email": "s.price@stuppbridge.com", "divisionIds": ["G", "R"] },
+                        { "id": 3, "name": "Tracy Nelson", "title": "Structural Engineer", "phone": "309-555-0665", "email": "t.nelson@stuppbridge.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "NON-DBS",
+                    "companyName": "Gallagher Asphalt Corporation",
+                    "roleId": "SUB-PAV",
+                    "roleDescription": "Subcontractor - Paving",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 3, "name": "Raymond Cruz", "title": "Night Shift Supervisor", "phone": "309-555-0823", "email": "r.cruz@gallagherasphalt.com", "divisionIds": ["P"] },
+                        { "id": 4, "name": "Samantha White", "title": "Safety Director", "phone": "309-555-0824", "email": "s.white@gallagherasphalt.com", "divisionIds": ["P", "G"] },
+                        { "id": 5, "name": "Thomas Grant", "title": "Equipment Manager", "phone": "309-555-0825", "email": "t.grant@gallagherasphalt.com", "divisionIds": ["P", "R"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 100026, "type": "Parts", "description": "Supply of C7 Industrial Engine parts", "stageId": 16, "revenue": 1300 },
+                { "id": 300022, "type": "Service", "description": "Structural steel inspection and weld repair", "stageId": 4, "revenue": 16500 },
+                { "id": 300023, "type": "Rent", "description": "3-month crane rental for bridge rehabilitation", "stageId": 16, "revenue": 32000 },
+                { "id": 300024, "type": "Sales", "description": "Purchase of CAT 745 Articulated Truck", "stageId": 32, "revenue": 210000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Work barge required for under-bridge access. Barge must be secured at night to prevent drift.", "createdAt": "2025-08-20T11:00:00.000Z", "createdById": 292, "tagIds": ["GENERAL", "SAFETY"], "attachments": [] },
+                { "id": 2, "content": "Fall protection required for all work over water. Personal flotation devices must be worn at all times.", "createdAt": "2025-08-22T09:30:00.000Z", "createdById": 292, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 3, "content": "Bridge remains open to traffic during construction. Work zones must be clearly marked with proper signage.", "createdAt": "2025-09-01T14:00:00.000Z", "createdById": 292, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1014, "statusId": 1, "salesRepId": 292, "typeId": "P", "date": "2026-08-20T11:00:00.000Z", "description": "Coordinated parts delivery schedule", "contactName": "Betsy Owens", "notes": "Parts shipment expected by end of month." }
+            ],
+            "customerEquipment": [1030, 1031, 1032]
+        },
+        {
+            "id": 500109,
+            "name": "University Tech Park - Incubator Building",
+            "description": "New 3-story mixed-use office and lab space.",
+            "statusId": "Planning",
+            "assigneeIds": [313],
+            "projectOwner": {
+                "companyId": "OWN-UIUC",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "1800 Research Park Dr",
+                "city": "Champaign",
+                "state": "IL",
+                "zipCode": "61820",
+                "country": "USA",
+                "latitude": 40.096,
+                "longitude": -88.243
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-UIUC",
+                    "companyName": "University of Illinois Research Park",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Dr. Alan Grant", "title": "University Liaison", "phone": "217-555-3993", "email": "agrant@university.edu", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Susan Cho", "title": "Director of Capital Programs", "phone": "217-555-3994", "email": "scho@university.edu", "divisionIds": ["G", "S"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "$1764465",
+                    "companyName": "Christy Webber Landscapes",
+                    "roleId": "SUB-SPEC",
+                    "roleDescription": "Subcontractor - Specialized",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 3, "name": "Oscar Bennett", "title": "Crew Supervisor", "phone": "217-555-0223", "email": "o.bennett@christywebber.com", "divisionIds": ["C"] },
+                        { "id": 4, "name": "Paula Simmons", "title": "Irrigation Specialist", "phone": "217-555-0224", "email": "p.simmons@christywebber.com", "divisionIds": ["C"] },
+                        { "id": 5, "name": "Quincy Adams", "title": "Arborist", "phone": "217-555-0225", "email": "q.adams@christywebber.com", "divisionIds": ["C", "G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1174395",
+                    "companyName": "Ryan Companies US Inc",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 3, "name": "Nicole Foster", "title": "Site Engineer", "phone": "815-555-0114", "email": "n.foster@ryancompanies.com", "divisionIds": ["G"] },
+                        { "id": 4, "name": "Oliver Green", "title": "Superintendent", "phone": "815-555-0115", "email": "o.green@ryancompanies.com", "divisionIds": ["G", "C"] },
+                        { "id": 5, "name": "Rachel Torres", "title": "Scheduling Coordinator", "phone": "815-555-0116", "email": "r.torres@ryancompanies.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 300025, "type": "Rent", "description": "6-month excavator rental for site preparation", "stageId": 2, "revenue": 19500 },
+                { "id": 300026, "type": "Rental Service", "description": "Boom lift with operator for facade work", "stageId": 8, "revenue": 35000 },
+                { "id": 300027, "type": "Parts", "description": "Concrete forms and accessories for foundation", "stageId": 1, "revenue": 7200 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Awaiting final funding approval. Project timeline contingent on state grant disbursement expected Q3 2025.", "createdAt": "2025-03-15T10:00:00.000Z", "createdById": 313, "tagIds": ["GENERAL"], "attachments": [] },
+                { "id": 2, "content": "University lab safety protocols will apply. All contractors must complete online safety orientation before site access.", "createdAt": "2025-03-20T14:30:00.000Z", "createdById": 313, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1015, "statusId": 2, "salesRepId": 313, "typeId": "E", "date": "2025-03-15T16:45:00.000Z", "description": "Sent equipment catalog and pricing", "contactName": "Dr. Alan Grant", "notes": "Included compact equipment options suitable for campus setting.", "campaignId": 2 }
+            ],
+            "customerEquipment": [1033, 1034, 1035]
+        },
+        {
+            "id": 500110,
+            "name": "Limestone Quarry - South Face Expansion",
+            "description": "Stripping overburden to access new aggregate veins.",
+            "statusId": "Active",
+            "assigneeIds": [305, 303],
+            "projectOwner": {
+                "companyId": "OWN-RKSLD",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "5500 Quarry Rd",
+                "city": "Joliet",
+                "state": "IL",
+                "zipCode": "60436",
+                "country": "USA",
+                "latitude": 41.525,
+                "longitude": -88.081
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-RKSLD",
+                    "companyName": "Rock Solid Materials Inc",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Fred Flint", "title": "Quarry Manager", "phone": "815-555-0011", "email": "fred@rocksolidmaterials.com", "divisionIds": ["G"] },
+                        { "id": 2, "name": "Barney Stone", "title": "Operations Director", "phone": "815-555-0012", "email": "bstone@rocksolidmaterials.com", "divisionIds": ["G", "R"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1067200",
+                    "companyName": "Mortenson Construction",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 6, "name": "Frank Thompson", "title": "Safety Manager", "phone": "815-555-0337", "email": "f.thompson@mortenson.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1293500",
+                    "companyName": "Layne Christensen Company",
+                    "roleId": "SUB-SPEC",
+                    "roleDescription": "Subcontractor - Specialized",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 3, "name": "Jack Morrison", "title": "Hydrogeologist", "phone": "217-555-0993", "email": "j.morrison@laynechristensen.com", "divisionIds": ["G"] },
+                        { "id": 4, "name": "Karen Shaw", "title": "Project Coordinator", "phone": "217-555-0994", "email": "k.shaw@laynechristensen.com", "divisionIds": ["G", "S"] },
+                        { "id": 5, "name": "Larry Watson", "title": "Equipment Operator", "phone": "217-555-0995", "email": "l.watson@laynechristensen.com", "divisionIds": ["G", "R"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "NON-DBS",
+                    "companyName": "Curran Contracting Company",
+                    "roleId": "SUB-PAV",
+                    "roleDescription": "Subcontractor - Paving",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 4, "name": "Kevin Rodriguez", "title": "Quality Assurance", "phone": "630-555-0444", "email": "k.rodriguez@currancontracting.com", "divisionIds": ["P"] },
+                        { "id": 5, "name": "Linda Chang", "title": "Project Coordinator", "phone": "630-555-0445", "email": "l.chang@currancontracting.com", "divisionIds": ["P", "G"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 300028, "type": "Sales", "description": "Purchase of CAT 390F Excavator", "stageId": 8, "revenue": 165000 },
+                { "id": 300029, "type": "Service", "description": "Haul truck undercarriage rebuild", "stageId": 4, "revenue": 13500 },
+                { "id": 300030, "type": "Lease", "description": "24-month lease of Komatsu WA380 wheel loader", "stageId": 2, "revenue": 52000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Mandatory MSHA training for all site visitors. Part 46 or Part 48 certification required depending on role.", "createdAt": "2025-02-20T08:00:00.000Z", "createdById": 305, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] },
+                { "id": 2, "content": "Blasting operations occur daily at 2:00 PM. All personnel must clear blast zone 30 minutes prior.", "createdAt": "2025-02-22T13:30:00.000Z", "createdById": 305, "tagIds": ["SAFETY"], "attachments": [] },
+                { "id": 3, "content": "Dust suppression required per EPA permit conditions. Water trucks must operate during all crushing activities.", "createdAt": "2025-03-01T09:00:00.000Z", "createdById": 305, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 4, "content": "Quarry security is active 24/7. After-hours access requires advance coordination with quarry manager.", "createdAt": "2025-03-05T16:00:00.000Z", "createdById": 305, "tagIds": ["SECURITY"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1016, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-02-20T08:00:00.000Z", "description": "Equipment assessment for overburden removal", "contactName": "Fred Flint", "notes": "Assessed current fleet. Recommending 390F excavator.", "issueId": 5, "customerId": "OWN-RKSLD" },
+                { "id": 1017, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-03-05T10:00:00.000Z", "description": "Quarterly review with quarry operations team", "contactName": "Frank Thompson", "notes": "Reviewed safety metrics and equipment utilization rates." }
+            ],
+            "customerEquipment": [1036, 1037, 1038, 1039, 1040, 1041]
+        },
+        {
+            "id": 500111,
+            "name": "Midway Distribution Center - Phase 2",
+            "description": "Expanding warehouse footprint by 200,000 sq ft with new loading docks and cold storage wing.",
+            "statusId": "Active",
+            "assigneeIds": [313],
+            "valuation": 32000000,
+            "primaryStageId": "PRE_CONSTRUCTION",
+            "primaryProjectTypeId": "COMMERCIAL",
+            "ownershipTypeId": "PRIVATE",
+            "bidDate": "2025-04-10",
+            "targetStartDate": "2025-07-01",
+            "targetCompletionDate": "2027-03-31",
+            "projectOwner": {
+                "companyId": "OWN-MDWAY",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "8800 Logistics Blvd",
+                "city": "Bolingbrook",
+                "state": "IL",
+                "zipCode": "60440",
+                "country": "USA",
+                "latitude": 41.698,
+                "longitude": -88.068
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-MDWAY",
+                    "companyName": "Midway Logistics Group",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Derek Hall", "title": "VP of Facilities", "phone": "630-555-1010", "email": "dhall@midwaylogistics.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1174395",
+                    "companyName": "Ryan Companies US Inc",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Amanda Price", "title": "Project Director", "phone": "630-555-1020", "email": "a.price@ryancompanies.com", "divisionIds": ["G", "C"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 300031, "type": "Sales", "description": "CAT 336 Excavator for foundation work", "stageId": 8, "revenue": 185000 },
+                { "id": 300032, "type": "Rental Service", "description": "Telescoping forklift 12-month rental", "stageId": 16, "revenue": 48000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Site adjacent to active rail yard. PPE and spotter required near tracks at all times.", "createdAt": "2025-04-01T09:00:00.000Z", "createdById": 313, "tagIds": ["SAFETY"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1018, "statusId": 2, "salesRepId": 313, "typeId": "F", "date": "2025-04-05T10:00:00.000Z", "description": "Initial site walk with GC", "contactName": "Amanda Price", "notes": "Reviewed staging area and delivery routes." }
+            ],
+            "customerEquipment": []
+        },
+        {
+            "id": 500112,
+            "name": "Lincoln Park Mixed-Use Development",
+            "description": "6-story mixed-use building with ground-floor retail and 84 residential units above.",
+            "statusId": "Active",
+            "assigneeIds": [305, 313],
+            "valuation": 58000000,
+            "primaryStageId": "UNDER_CONSTRUCTION",
+            "primaryProjectTypeId": "COMMERCIAL",
+            "ownershipTypeId": "PRIVATE",
+            "bidDate": "2024-11-20",
+            "targetStartDate": "2025-03-01",
+            "targetCompletionDate": "2027-06-30",
+            "projectOwner": {
+                "companyId": "OWN-LPDEV",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "2450 N Halsted St",
+                "city": "Chicago",
+                "state": "IL",
+                "zipCode": "60614",
+                "country": "USA",
+                "latitude": 41.926,
+                "longitude": -87.648
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-LPDEV",
+                    "companyName": "Halsted Development Partners",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Victoria Meyers", "title": "Managing Partner", "phone": "312-555-2200", "email": "vmeyers@halsteddev.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "998810",
+                    "companyName": "Turner Construction Company",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Marcus Bell", "title": "Senior Superintendent", "phone": "312-555-2210", "email": "mbell@turnerconstruction.com", "divisionIds": ["G", "R"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 300033, "type": "Sales", "description": "Tower crane purchase for vertical construction", "stageId": 16, "revenue": 320000 },
+                { "id": 300034, "type": "Rent", "description": "Boom lift fleet rental for facade installation", "stageId": 4, "revenue": 27500 },
+                { "id": 300035, "type": "Parts", "description": "Concrete pump replacement parts", "stageId": 16, "revenue": 14200 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Street closure permits required for crane erection. City alderman office must be notified 72 hours in advance.", "createdAt": "2025-03-10T08:00:00.000Z", "createdById": 305, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 2, "content": "Residential neighbors sensitive to early morning noise. No work before 8 AM per city ordinance.", "createdAt": "2025-03-12T14:00:00.000Z", "createdById": 305, "tagIds": ["COMPLIANCE", "GENERAL"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1019, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-03-10T09:30:00.000Z", "description": "Foundation progress inspection", "contactName": "Marcus Bell", "notes": "Piles completed. Ready for grade beams next week." }
+            ],
+            "customerEquipment": []
+        },
+        {
+            "id": 500113,
+            "name": "I-55 Bridge Deck Replacement - Channahon",
+            "description": "Full deck replacement of the I-55 overpass at Channahon Rd including barrier walls and approach slabs.",
+            "statusId": "Active",
+            "assigneeIds": [303],
+            "valuation": 18000000,
+            "primaryStageId": "UNDER_CONSTRUCTION",
+            "primaryProjectTypeId": "INSTITUTIONAL",
+            "ownershipTypeId": "PUBLIC",
+            "bidDate": "2024-09-05",
+            "targetStartDate": "2025-04-15",
+            "targetCompletionDate": "2026-10-31",
+            "projectOwner": {
+                "companyId": "OWN-IDOT",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "I-55 & Channahon Rd",
+                "city": "Channahon",
+                "state": "IL",
+                "zipCode": "60410",
+                "country": "USA",
+                "latitude": 41.428,
+                "longitude": -88.228
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-IDOT",
+                    "companyName": "Illinois Dept of Transportation",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Thomas Keane", "title": "District Engineer", "phone": "815-555-3300", "email": "tkeane@illinois.gov", "divisionIds": ["G", "P"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1067200",
+                    "companyName": "Mortenson Construction",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Steve Novak", "title": "Bridge Division PM", "phone": "815-555-3310", "email": "s.novak@mortenson.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 300036, "type": "Rent", "description": "Crane rental for girder placement", "stageId": 16, "revenue": 75000 },
+                { "id": 300037, "type": "Sales", "description": "Concrete barrier forms and hardware", "stageId": 2, "revenue": 42000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "IDOT work zone safety standards apply. Temporary traffic control plan must be approved before any lane closures.", "createdAt": "2025-04-10T07:00:00.000Z", "createdById": 303, "tagIds": ["SAFETY", "COMPLIANCE"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1020, "statusId": 2, "salesRepId": 303, "typeId": "E", "date": "2025-04-12T11:00:00.000Z", "description": "Sent crane specs and availability", "contactName": "Steve Novak", "notes": "300-ton crane needed for precast girders." }
+            ],
+            "customerEquipment": []
+        },
+        {
+            "id": 500114,
+            "name": "O'Hare Cargo Facility Renovation",
+            "description": "Interior renovation and MEP upgrades to existing 120,000 sq ft air cargo handling facility.",
+            "statusId": "Pending",
+            "assigneeIds": [313, 303],
+            "valuation": 22000000,
+            "primaryStageId": "PRE_CONSTRUCTION",
+            "primaryProjectTypeId": "COMMERCIAL",
+            "ownershipTypeId": "PUBLIC",
+            "bidDate": "2025-06-01",
+            "targetStartDate": "2025-10-01",
+            "targetCompletionDate": "2026-12-31",
+            "projectOwner": {
+                "companyId": "OWN-CDA",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "11601 W Touhy Ave",
+                "city": "Chicago",
+                "state": "IL",
+                "zipCode": "60666",
+                "country": "USA",
+                "latitude": 41.978,
+                "longitude": -87.904
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-CDA",
+                    "companyName": "Chicago Dept of Aviation",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Maria Santos", "title": "Capital Projects Manager", "phone": "773-555-4400", "email": "msantos@cityofchicago.org", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "998810",
+                    "companyName": "Turner Construction Company",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "James Whitfield", "title": "Aviation Division Lead", "phone": "773-555-4410", "email": "jwhitfield@turnerconstruction.com", "divisionIds": ["G", "S"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 300038, "type": "Sales", "description": "Skid steer loaders for interior demo", "stageId": 4, "revenue": 95000 },
+                { "id": 300039, "type": "Rental Service", "description": "Scissor lift fleet for ceiling work", "stageId": 1, "revenue": 18500 }
+            ],
+            "notes": [
+                { "id": 1, "content": "TSA background checks required for all personnel. Badge applications take 4-6 weeks — plan accordingly.", "createdAt": "2025-05-01T10:00:00.000Z", "createdById": 313, "tagIds": ["SECURITY", "COMPLIANCE"], "attachments": [] }
+            ],
+            "activities": [],
+            "customerEquipment": []
+        },
+        {
+            "id": 500115,
+            "name": "Prairie Wind Solar Farm - Kankakee County",
+            "description": "500-acre utility-scale solar installation with access roads, inverter pads, and substation grading.",
+            "statusId": "Active",
+            "assigneeIds": [305],
+            "valuation": 75000000,
+            "primaryStageId": "UNDER_CONSTRUCTION",
+            "primaryProjectTypeId": "INDUSTRIAL",
+            "ownershipTypeId": "PRIVATE",
+            "bidDate": "2024-08-20",
+            "targetStartDate": "2025-02-01",
+            "targetCompletionDate": "2026-08-31",
+            "projectOwner": {
+                "companyId": "OWN-PRWND",
+                "contactIds": [1]
+            },
+            "address": {
+                "street": "County Road 3000E",
+                "city": "Kankakee",
+                "state": "IL",
+                "zipCode": "60901",
+                "country": "USA",
+                "latitude": 41.120,
+                "longitude": -87.860
+            },
+            "siteCompanies": [
+                {
+                    "companyId": "OWN-PRWND",
+                    "companyName": "Prairie Wind Energy LLC",
+                    "roleId": "OWNER",
+                    "roleDescription": "Property Owner",
+                    "isPrimaryContact": false,
+                    "companyContacts": [
+                        { "id": 1, "name": "Nathan Cole", "title": "Construction Director", "phone": "815-555-5500", "email": "ncole@prairiewindenergy.com", "divisionIds": ["G", "S"] },
+                        { "id": 2, "name": "Samantha Lewis", "title": "Environmental Manager", "phone": "815-555-5501", "email": "slewis@prairiewindenergy.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                },
+                {
+                    "companyId": "1067200",
+                    "companyName": "Mortenson Construction",
+                    "roleId": "GC",
+                    "roleDescription": "General Contractor",
+                    "isPrimaryContact": true,
+                    "companyContacts": [
+                        { "id": 1, "name": "Chris Dawson", "title": "Renewables PM", "phone": "815-555-5510", "email": "c.dawson@mortenson.com", "divisionIds": ["G"] }
+                    ],
+                    "primaryContactIndex": 0
+                }
+            ],
+            "associatedOpportunities": [
+                { "id": 300040, "type": "Sales", "description": "CAT D6 Dozer fleet for grading", "stageId": 16, "revenue": 410000 },
+                { "id": 300041, "type": "Rent", "description": "Compact track loaders for panel staging", "stageId": 8, "revenue": 36000 },
+                { "id": 300042, "type": "Service", "description": "Preventive maintenance on customer fleet", "stageId": 16, "revenue": 28000 }
+            ],
+            "notes": [
+                { "id": 1, "content": "Wetland setback zones marked with orange fencing. No equipment operation within 50 ft of flagged areas.", "createdAt": "2025-02-15T08:00:00.000Z", "createdById": 305, "tagIds": ["COMPLIANCE"], "attachments": [] },
+                { "id": 2, "content": "County road weight limits in effect during spring thaw. Route deliveries via state highway.", "createdAt": "2025-03-01T07:30:00.000Z", "createdById": 305, "tagIds": ["GENERAL"], "attachments": [] }
+            ],
+            "activities": [
+                { "id": 1021, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-02-20T09:00:00.000Z", "description": "Equipment mobilization planning", "contactName": "Chris Dawson", "notes": "Coordinated dozer and loader delivery schedule for March start." },
+                { "id": 1022, "statusId": 2, "salesRepId": 305, "typeId": "F", "date": "2025-03-15T14:00:00.000Z", "description": "Monthly progress review", "contactName": "Nathan Cole", "notes": "Grading 40% complete. On track for panel installation in Q3." }
+            ],
+            "customerEquipment": []
+        }
+    ],
+    "sorting": "id",
+    "pagination": {
+        "size": 10,
+        "page": 0,
+        "totalPages": 732,
+        "totalElements": 7318,
+        "last": false,
+        "first": true
+    },
+    "duration": "1.842 seconds"
+}
